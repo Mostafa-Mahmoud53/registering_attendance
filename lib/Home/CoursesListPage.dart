@@ -904,12 +904,13 @@ class _CoursesListPageState extends State<CoursesListPage> {
                           ),
                           Builder(
                             builder: (context) {
+                              final loc = AppLocalizations.of(context)!;
                               final count = course['studentCount'];
                               return Chip(
                                 label: Text(
                                   count == null
-                                      ? '— students'
-                                      : '$count student${count == 1 ? '' : 's'}',
+                                      ? '— ${loc.students}'
+                                      : loc.studentEnrolled(count),
                                   style: const TextStyle(fontSize: 11),
                                 ),
                                 backgroundColor: AppColors.lightColor,
@@ -935,26 +936,35 @@ class _CoursesListPageState extends State<CoursesListPage> {
                       if (course['doctorName']?.toString().isNotEmpty ==
                           true) ...[
                         const SizedBox(height: 4),
-                        Text(
-                          'Dr. ${course['doctorName']}',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: AppColors.darkColor.withOpacity(0.65),
-                          ),
-                        ),
+                        Builder(builder: (context) {
+                          final loc = AppLocalizations.of(context)!;
+                          return Text(
+                            '${loc.doctor} ${course['doctorName']}',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.darkColor.withOpacity(0.65),
+                            ),
+                          );
+                        }),
                       ],
 
                       // Role Chip (للدكتور/TA فقط — Main Doctor = أزرق / Assistant = رمادي)
                       if (role != null) ...[
                         const SizedBox(height: 8),
                         Chip(
-                          label: Text(
-                            role,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                          ),
+                          label: Builder(builder: (context) {
+                            final loc = AppLocalizations.of(context)!;
+                            final roleLabel = role.toLowerCase().contains('main')
+                                ? loc.doctor
+                                : loc.teachingAssistant;
+                            return Text(
+                              roleLabel,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            );
+                          }),
                           backgroundColor: role.toLowerCase().contains('main')
                               ? Colors.blue
                               : Colors.grey,
@@ -994,11 +1004,14 @@ class _CoursesListPageState extends State<CoursesListPage> {
                 ),
                 const SizedBox(width: 8),
                 if (_userRole == 'Admin')
-                  IconButton(
-                    icon: const Icon(Icons.delete_outline, color: Colors.red),
-                    onPressed: () => _deleteCourseDirectly(course['id'].toString(), course['name'].toString()),
-                    tooltip: 'Delete Course',
-                  )
+                  Builder(builder: (context) {
+                    final loc = AppLocalizations.of(context)!;
+                    return IconButton(
+                      icon: const Icon(Icons.delete_outline, color: Colors.red),
+                      onPressed: () => _deleteCourseDirectly(course['id'].toString(), course['name'].toString()),
+                      tooltip: loc.delete,
+                    );
+                  })
                 else
                   Icon(
                     Icons.arrow_forward_ios,

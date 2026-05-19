@@ -1124,6 +1124,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get viewDashboardSubtitle => 'Analytics and session management';
 
   @override
+  String get courseCreationSteps => 'Course Creation Steps';
+
+  @override
+  String get courseCreationStep1 =>
+      'Enter a clear, descriptive name for the course.';
+
+  @override
+  String get courseCreationStep2 =>
+      'Provide a unique Course Code (e.g., CS4710).';
+
+  @override
+  String get courseCreationStep3 =>
+      'Enter the exact University Code of the Doctor assigned to this course.';
+
+  @override
+  String get courseCreationStep4 =>
+      'Provide a brief description of the course contents.';
+
+  @override
+  String get courseCreationStep5 => 'Click \"Create Course\" to finalize.';
+
+  @override
+  String get doctorUniversityCode => 'Doctor University Code';
+
+  @override
+  String get enterDoctorUniversityCode =>
+      'Enter doctor university code (e.g., DR-1234)';
+
+  @override
+  String get courseNameIsRequired => 'Course name is required';
+
+  @override
+  String get courseNameMustBeAtLeast2Chars =>
+      'Course name must be at least 2 characters';
+
+  @override
+  String get courseCodeIsRequired => 'Course code is required';
+
+  @override
+  String get courseCodeMustBeAtLeast2Chars =>
+      'Course code must be at least 2 characters';
+
+  @override
+  String get courseDescriptionIsRequired => 'Description is required';
+
+  @override
+  String get courseDescriptionMustBeAtLeast5Chars =>
+      'Description must be at least 5 characters';
+
+  @override
+  String get doctorUniversityCodeIsRequired =>
+      'Doctor University Code is required';
+
+  @override
+  String get doctorUniversityCodeMustBeValid =>
+      'Please enter a valid University Code (e.g., DR-1234)';
+
+  @override
   String get deleteSession => 'Delete Session';
 
   @override

@@ -6,6 +6,7 @@ import '../../Auth/colors.dart';
 import '../../Auth/api_service.dart';
 import '../../Auth/auth_storage.dart';
 import '../../features/session/session_models.dart';
+import '../../l10n/app_localizations.dart';
 import 'LiveDashboardPage.dart';
 
 class CreateSessionPage extends StatefulWidget {
@@ -31,6 +32,7 @@ class _CreateSessionPageState extends State<CreateSessionPage> {
   bool _isLoading = false;
 
   Future<void> _createSession() async {
+    final loc = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
     
     setState(() => _isLoading = true);
@@ -41,11 +43,11 @@ class _CreateSessionPageState extends State<CreateSessionPage> {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          throw Exception('Location permissions are denied');
+          throw Exception(loc.locationPermissionsDenied);
         }
       }
       if (permission == LocationPermission.deniedForever) {
-        throw Exception('Location permissions are permanently denied');
+        throw Exception(loc.locationPermissionsPermanentlyDenied);
       }
 
       // 2. Fetch User Location
@@ -99,14 +101,14 @@ class _CreateSessionPageState extends State<CreateSessionPage> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to create session: ${response.body}'), backgroundColor: AppColors.errorColor),
+            SnackBar(content: Text('${loc.somethingWentWrong}: ${response.body}'), backgroundColor: AppColors.errorColor),
           );
         }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${e.toString()}'), backgroundColor: AppColors.errorColor),
+          SnackBar(content: Text('${loc.somethingWentWrong}: ${e.toString()}'), backgroundColor: AppColors.errorColor),
         );
       }
     } finally {
@@ -118,10 +120,11 @@ class _CreateSessionPageState extends State<CreateSessionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.lightColor2,
       appBar: AppBar(
-        title: const Text('Create Session', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        title: Text(loc.createSession, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         backgroundColor: Colors.indigo,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -165,7 +168,7 @@ class _CreateSessionPageState extends State<CreateSessionPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text('Course', style: TextStyle(color: Colors.indigo, fontSize: 12, fontWeight: FontWeight.bold)),
+                                  Text(loc.course, style: const TextStyle(color: Colors.indigo, fontSize: 12, fontWeight: FontWeight.bold)),
                                   Text(
                                     widget.courseName,
                                     // Mobile Layout: smaller font / Desktop Layout: standard font
@@ -185,7 +188,7 @@ class _CreateSessionPageState extends State<CreateSessionPage> {
 
                       // ── Session Title ────────────────────────────────────────
                       Text(
-                        'Session Title',
+                        loc.sessionTitle,
                         // Mobile Layout: smaller label / Desktop Layout: standard label
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -196,19 +199,19 @@ class _CreateSessionPageState extends State<CreateSessionPage> {
                       TextFormField(
                         controller: _titleController,
                         decoration: InputDecoration(
-                          hintText: 'e.g. Chapter 4: Data Structures',
+                          hintText: loc.enterSessionTitle,
                           filled: true,
                           fillColor: Colors.white,
                           prefixIcon: const Icon(Icons.title, color: Colors.grey),
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                         ),
-                        validator: (val) => val == null || val.isEmpty ? 'Title is required' : null,
+                        validator: (val) => val == null || val.isEmpty ? loc.pleaseFixErrorsForm : null,
                       ),
                       SizedBox(height: isMobile ? 16 : 24), // Mobile: 16 / Desktop: 24
 
                       // ── Session Type ─────────────────────────────────────────
                       Text(
-                        'Session Type',
+                        loc.sessionType,
                         // Mobile Layout: smaller label / Desktop Layout: standard label
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -227,7 +230,8 @@ class _CreateSessionPageState extends State<CreateSessionPage> {
                             value: _sessionType,
                             isExpanded: true,
                             items: ['Lecture', 'Section'].map((type) {
-                              return DropdownMenuItem(value: type, child: Text(type));
+                              final label = type == 'Lecture' ? loc.lecture : loc.section;
+                              return DropdownMenuItem(value: type, child: Text(label));
                             }).toList(),
                             onChanged: (val) {
                               if (val != null) setState(() => _sessionType = val);
@@ -242,7 +246,7 @@ class _CreateSessionPageState extends State<CreateSessionPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Geofencing Radius',
+                            loc.allowedRadius,
                             // Mobile Layout: smaller label / Desktop Layout: standard label
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -260,7 +264,7 @@ class _CreateSessionPageState extends State<CreateSessionPage> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
-                              '${_radius.toInt()} meters',
+                              loc.meters(_radius.toInt()),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -312,7 +316,7 @@ class _CreateSessionPageState extends State<CreateSessionPage> {
                                     const Icon(Icons.rocket_launch, color: Colors.white),
                                     const SizedBox(width: 8),
                                     Text(
-                                      'Launch Live Session',
+                                      loc.startSession,
                                       // Mobile Layout: smaller text / Desktop Layout: standard text
                                       style: TextStyle(
                                         color: Colors.white,

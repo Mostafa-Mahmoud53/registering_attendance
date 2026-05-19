@@ -2162,6 +2162,102 @@ abstract class AppLocalizations {
   /// **'Analytics and session management'**
   String get viewDashboardSubtitle;
 
+  /// No description provided for @courseCreationSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Course Creation Steps'**
+  String get courseCreationSteps;
+
+  /// No description provided for @courseCreationStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a clear, descriptive name for the course.'**
+  String get courseCreationStep1;
+
+  /// No description provided for @courseCreationStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Provide a unique Course Code (e.g., CS4710).'**
+  String get courseCreationStep2;
+
+  /// No description provided for @courseCreationStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the exact University Code of the Doctor assigned to this course.'**
+  String get courseCreationStep3;
+
+  /// No description provided for @courseCreationStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Provide a brief description of the course contents.'**
+  String get courseCreationStep4;
+
+  /// No description provided for @courseCreationStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Click \"Create Course\" to finalize.'**
+  String get courseCreationStep5;
+
+  /// No description provided for @doctorUniversityCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor University Code'**
+  String get doctorUniversityCode;
+
+  /// No description provided for @enterDoctorUniversityCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter doctor university code (e.g., DR-1234)'**
+  String get enterDoctorUniversityCode;
+
+  /// No description provided for @courseNameIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Course name is required'**
+  String get courseNameIsRequired;
+
+  /// No description provided for @courseNameMustBeAtLeast2Chars.
+  ///
+  /// In en, this message translates to:
+  /// **'Course name must be at least 2 characters'**
+  String get courseNameMustBeAtLeast2Chars;
+
+  /// No description provided for @courseCodeIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Course code is required'**
+  String get courseCodeIsRequired;
+
+  /// No description provided for @courseCodeMustBeAtLeast2Chars.
+  ///
+  /// In en, this message translates to:
+  /// **'Course code must be at least 2 characters'**
+  String get courseCodeMustBeAtLeast2Chars;
+
+  /// No description provided for @courseDescriptionIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Description is required'**
+  String get courseDescriptionIsRequired;
+
+  /// No description provided for @courseDescriptionMustBeAtLeast5Chars.
+  ///
+  /// In en, this message translates to:
+  /// **'Description must be at least 5 characters'**
+  String get courseDescriptionMustBeAtLeast5Chars;
+
+  /// No description provided for @doctorUniversityCodeIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor University Code is required'**
+  String get doctorUniversityCodeIsRequired;
+
+  /// No description provided for @doctorUniversityCodeMustBeValid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid University Code (e.g., DR-1234)'**
+  String get doctorUniversityCodeMustBeValid;
+
   /// No description provided for @deleteSession.
   ///
   /// In en, this message translates to:

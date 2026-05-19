@@ -48,6 +48,8 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
     final bool isDoctor = _userRole == 'Doctor' || _userRole == 'TA';
     final bool isAdmin = _userRole == 'Admin';
 
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.lightColor2,
       body: Center(
@@ -114,24 +116,24 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                                 : CrossAxisAlignment.start,
                             children: [
                               Text(
-                                courseName,
-                                textAlign: Responsive.isDesktop(context) ? TextAlign.center : TextAlign.left,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: Responsive.isDesktop(context) ? 28 : 22,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                              if (doctorName.isNotEmpty) ...[
-                                const SizedBox(height: 2),
-                                Text(
-                                  'Dr. $doctorName',
-                                  style: TextStyle(
-                                    color: Colors.white.withOpacity(0.9),
-                                    fontSize: Responsive.isDesktop(context) ? 14 : 12,
-                                  ),
-                                ),
-                              ],
+                                            courseName,
+                                            textAlign: Responsive.isDesktop(context) ? TextAlign.center : TextAlign.left,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: Responsive.isDesktop(context) ? 28 : 22,
+                                              fontWeight: FontWeight.w900,
+                                            ),
+                                          ),
+                                          if (doctorName.isNotEmpty) ...[
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              '${loc.doctor} $doctorName',
+                                              style: TextStyle(
+                                                color: Colors.white.withOpacity(0.9),
+                                                fontSize: Responsive.isDesktop(context) ? 14 : 12,
+                                              ),
+                                            ),
+                                          ],
                               const SizedBox(height: 8),
                               Wrap(
                                 spacing: 8,
@@ -142,11 +144,11 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                                 children: [
                                   _infoPill(
                                     Icons.people_outline,
-                                    '$studentCountLabel Students',
+                                    count == null ? '— ${loc.students}' : loc.studentEnrolled(count),
                                   ),
                                   _infoPill(
                                     Icons.tag,
-                                    'ID: ${widget.course['id']} • $courseCode',
+                                    '${loc.courseId}: ${widget.course['id']} • $courseCode',
                                   ),
                                 ],
                               ),
@@ -172,7 +174,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 4, bottom: 8),
                       child: Text(
-                        'Reports & Analytics',
+                        loc.reports,
                         style: TextStyle(
                           fontSize: Responsive.isDesktop(context) ? 18 : 16,
                           fontWeight: FontWeight.bold,
@@ -184,36 +186,36 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                       final w = MediaQuery.of(context).size.width;
                       // Desktop Layout: 4 cols ≥ 1100 / Tablet: 3 cols ≥ 850 / Mobile Layout: 2 cols < 600
                       final cols = w >= 1100 ? 4 : w >= 850 ? 3 : 2;
-                      // Mobile Layout: portrait-friendly ratio / Desktop Layout: wide-card ratio
-                      final ratio = w >= 1100 ? 1.8 : w >= 850 ? 1.3 : (w < 600 ? 1.0 : 1.3);
+                      // Mobile cards were too tall for their content; slightly wider ratio makes content feel larger.
+                      final ratio = w >= 1100 ? 1.8 : w >= 850 ? 1.3 : (w < 600 ? 1.15 : 1.3);
                       return GridView.count(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         crossAxisCount: cols,
                         // Desktop Layout: 8px spacing / Mobile Layout: 6px spacing
-                        crossAxisSpacing: w < 600 ? 6 : 8,
-                        mainAxisSpacing: w < 600 ? 6 : 8,
+                        crossAxisSpacing: w < 600 ? 8 : 8,
+                        mainAxisSpacing: w < 600 ? 8 : 8,
                         childAspectRatio: ratio,
                         children: [
                           _reportCard(
-                            title: 'Lecture Report',
-                            subtitle: 'Attendance insights',
+                            title: loc.lectureReport,
+                            subtitle: loc.lectureReportSubtitle,
                             icon: Icons.menu_book,
                             color: AppColors.primaryColor,
                             onTap: () =>
                                 _goto(LectureReportPage(courseId: courseId)),
                           ),
                           _reportCard(
-                            title: 'Section Report',
-                            subtitle: 'Labs & Exercises',
+                            title: loc.sectionReport,
+                            subtitle: loc.sectionReportSubtitle,
                             icon: Icons.science,
                             color: const Color(0xFF2E7D32),
                             onTap: () =>
                                 _goto(SectionReportPage(courseId: courseId)),
                           ),
                           _reportCard(
-                            title: 'Session History',
-                            subtitle: 'Past sessions',
+                            title: loc.sessionHistory,
+                            subtitle: loc.sessionHistorySubtitle,
                             icon: Icons.history_edu,
                             color: Colors.indigo,
                             onTap: () => _goto(
@@ -221,8 +223,8 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                             ),
                           ),
                           _reportCard(
-                            title: 'Absence Warnings',
-                            subtitle: 'At-risk students',
+                            title: loc.absenceWarnings,
+                            subtitle: loc.absenceWarningsSubtitle,
                             icon: Icons.warning_amber_rounded,
                             color: AppColors.errorColor,
                             onTap: () =>
@@ -237,7 +239,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                   // ═══ Doctor/TA — Session Management ═════════════════════════
                   if (isDoctor) ...[
                     Text(
-                      'Session Management',
+                      loc.sessionManagement,
                       style: TextStyle(
                         fontSize: Responsive.isDesktop(context) ? 22 : 18,
                         fontWeight: FontWeight.bold,
@@ -246,8 +248,8 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                     ),
                     const SizedBox(height: 16),
                     _actionCard(
-                      title: 'Start New Session',
-                      subtitle: 'Create a Lecture or Section session with GPS',
+                      title: loc.startNewSession,
+                      subtitle: loc.createSessionSubtitle,
                       icon: Icons.play_circle_fill,
                       color: AppColors.darkColor,
                       onTap: () => _goto(
@@ -259,17 +261,16 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                     ),
                     const SizedBox(height: 12),
                     _actionCard(
-                      title: 'Stop Active Session',
-                      subtitle: 'Manually stop a running session by ID',
+                      title: loc.stopActiveSession,
+                      subtitle: loc.stopActiveSessionSubtitle,
                       icon: Icons.stop_circle,
                       color: AppColors.errorColor,
                       onTap: _showStopSessionDialog,
                     ),
                     const SizedBox(height: 12),
                     _actionCard(
-                      title: 'View All Sessions',
-                      subtitle:
-                          'Lectures & Sections history · Tap to see attendees',
+                      title: loc.viewAllSessions,
+                      subtitle: loc.viewAllSessionsSubtitle,
                       icon: Icons.list_alt,
                       color: Colors.indigo,
                       onTap: () =>
@@ -280,7 +281,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                   // ═══ Admin — Course Management ═══════════════════════════════
                   if (isAdmin) ...[
                     Text(
-                      'Course Management',
+                      loc.courseManagement,
                       style: TextStyle(
                         fontSize: Responsive.isDesktop(context) ? 22 : 18,
                         fontWeight: FontWeight.bold,
@@ -289,7 +290,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                     ),
                     const SizedBox(height: 16),
                     _actionCard(
-                      title: 'Enrolled Students',
+                      title: loc.enrolledStudents,
                       subtitle:
                           'View and search enrolled students · Debounce search',
                       icon: Icons.group,
@@ -367,17 +368,17 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
           onTap: onTap,
           borderRadius: BorderRadius.circular(24),
           child: Padding(
-            // Desktop Layout: 24px / Mobile Layout: 12px
+            // Desktop Layout: 24px / Mobile Layout: tighter padding for denser content
             padding: EdgeInsets.all(
-              Responsive.isDesktop(context) ? 24 : (isMobile ? 12 : 16),
+              Responsive.isDesktop(context) ? 24 : (isMobile ? 8 : 16),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  // Desktop Layout: 20px icon padding / Mobile Layout: 10px icon padding
+                  // Desktop Layout: 20px icon padding / Mobile Layout: slightly larger icon container
                   padding: EdgeInsets.all(
-                    Responsive.isDesktop(context) ? 20 : (isMobile ? 10 : 12),
+                    Responsive.isDesktop(context) ? 20 : (isMobile ? 12 : 12),
                   ),
                   decoration: BoxDecoration(
                     color: color.withOpacity(0.1),
@@ -385,20 +386,20 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                   ),
                   child: Icon(
                     icon,
-                    // Desktop Layout: 44px / Mobile Layout: 24px
-                    size: Responsive.isDesktop(context) ? 44 : (isMobile ? 24 : 28),
+                    // Desktop Layout: 44px / Mobile Layout: larger icon for readability
+                    size: Responsive.isDesktop(context) ? 44 : (isMobile ? 30 : 28),
                     color: color,
                   ),
                 ),
                 SizedBox(
-                  height: Responsive.isDesktop(context) ? 20 : (isMobile ? 8 : 14),
+                  height: Responsive.isDesktop(context) ? 20 : (isMobile ? 10 : 14),
                 ),
                 Text(
                   title,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    // Desktop Layout: 18px / Mobile Layout: 12px
-                    fontSize: Responsive.isDesktop(context) ? 18 : (isMobile ? 12 : 14),
+                    // Desktop Layout: 18px / Mobile Layout: larger title text
+                    fontSize: Responsive.isDesktop(context) ? 18 : (isMobile ? 17 : 14),
                     fontWeight: FontWeight.bold,
                     color: AppColors.darkColor,
                   ),
@@ -408,8 +409,8 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                   subtitle,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    // Desktop Layout: 13px / Mobile Layout: 9px
-                    fontSize: Responsive.isDesktop(context) ? 13 : (isMobile ? 9 : 10),
+                    // Desktop Layout: 13px / Mobile Layout: larger subtitle text
+                    fontSize: Responsive.isDesktop(context) ? 13 : (isMobile ? 13 : 10),
                     color: AppColors.darkColor.withOpacity(0.5),
                     height: 1.2,
                   ),
@@ -494,6 +495,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
   );
 
   Future<void> _showStopSessionDialog() async {
+    final loc = AppLocalizations.of(context)!;
     final TextEditingController idController = TextEditingController();
     bool isSubmitting = false;
 
@@ -508,13 +510,13 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('Enter the Session ID you wish to stop:'),
+                  Text(loc.enterSessionIdStop),
                   const SizedBox(height: 16),
                   TextField(
                     controller: idController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      labelText: 'Session ID',
+                      labelText: loc.enterSessionId,
                       prefixIcon: const Icon(Icons.numbers, color: AppColors.primaryColor),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -545,14 +547,14 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                           final idText = idController.text.trim();
                           if (idText.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Please enter a Session ID')),
+                              SnackBar(content: Text(loc.pleaseEnterSessionId)),
                             );
                             return;
                           }
                           final sessionId = int.tryParse(idText);
                           if (sessionId == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Invalid Session ID format')),
+                              SnackBar(content: Text(loc.invalidSessionIdFormat)),
                             );
                             return;
                           }
@@ -565,7 +567,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                             Navigator.pop(ctx);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Session $sessionId stopped successfully.'),
+                                content: Text(loc.sessionStopped),
                                 backgroundColor: AppColors.successColor,
                               ),
                             );
@@ -573,7 +575,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                             setState(() => isSubmitting = false);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Error stopping session: $e'),
+                                content: Text(loc.errorStopping(e.toString())),
                                 backgroundColor: AppColors.errorColor,
                               ),
                             );
