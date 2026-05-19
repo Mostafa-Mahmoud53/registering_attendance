@@ -129,7 +129,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                                             Text(
                                               '${loc.doctor} $doctorName',
                                               style: TextStyle(
-                                                color: Colors.white.withOpacity(0.9),
+                                                color: Colors.white.withAlpha((0.9 * 255).round()),
                                                 fontSize: Responsive.isDesktop(context) ? 14 : 12,
                                               ),
                                             ),
@@ -321,9 +321,9 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
       vertical: Responsive.isDesktop(context) ? 8 : 6
     ),
     decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.15),
+      color: Colors.white.withAlpha((0.15 * 255).round()),
       borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+      border: Border.all(color: Colors.white.withAlpha((0.2 * 255).round()), width: 1),
     ),
     child: Row(
       mainAxisSize: MainAxisSize.min,
@@ -356,7 +356,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withAlpha((0.04 * 255).round()),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -381,7 +381,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                     Responsive.isDesktop(context) ? 20 : (isMobile ? 12 : 12),
                   ),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withAlpha((0.1 * 255).round()),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Icon(
@@ -411,7 +411,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                   style: TextStyle(
                     // Desktop Layout: 13px / Mobile Layout: larger subtitle text
                     fontSize: Responsive.isDesktop(context) ? 13 : (isMobile ? 13 : 10),
-                    color: AppColors.darkColor.withOpacity(0.5),
+                    color: AppColors.darkColor.withAlpha((0.5 * 255).round()),
                     height: 1.2,
                   ),
                 ),
@@ -435,7 +435,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
       borderRadius: BorderRadius.circular(24),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.03),
+          color: Colors.black.withAlpha((0.03 * 255).round()),
           blurRadius: 15,
           offset: const Offset(0, 8),
         ),
@@ -453,7 +453,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
               Container(
                 padding: EdgeInsets.all(Responsive.isDesktop(context) ? 20 : 14),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withAlpha((0.1 * 255).round()),
                   borderRadius: BorderRadius.circular(18),
                 ),
                 child: Icon(icon, size: Responsive.isDesktop(context) ? 36 : 24, color: color),
@@ -476,7 +476,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                       subtitle,
                       style: TextStyle(
                         fontSize: Responsive.isDesktop(context) ? 15 : 12,
-                        color: AppColors.darkColor.withOpacity(0.5),
+                        color: AppColors.darkColor.withAlpha((0.5 * 255).round()),
                       ),
                     ),
                   ],
@@ -485,7 +485,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
               Icon(
                 Icons.arrow_forward_ios_rounded,
                 size: Responsive.isDesktop(context) ? 20 : 14,
-                color: AppColors.darkColor.withOpacity(0.2),
+                color: AppColors.darkColor.withAlpha((0.2 * 255).round()),
               ),
             ],
           ),

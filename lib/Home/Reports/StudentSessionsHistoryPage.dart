@@ -214,10 +214,10 @@ class _StudentSessionsHistoryPageState extends State<StudentSessionsHistoryPage>
                         ),
                       ),
                       const SizedBox(height: 48),
-                      const Text(
-                        'Register Attendance',
+                      Text(
+                        AppLocalizations.of(context)!.registerAttendance,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.darkColor),
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.darkColor),
                       ),
                       const SizedBox(height: 24),
                       ElevatedButton.icon(
@@ -269,15 +269,15 @@ class _StudentSessionsHistoryPageState extends State<StudentSessionsHistoryPage>
                             color: AppColors.successColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.info_outline, size: 20, color: AppColors.successColor),
-                              SizedBox(width: 8),
+                              const Icon(Icons.info_outline, size: 20, color: AppColors.successColor),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  'An active session is open!',
-                                  style: TextStyle(color: AppColors.successColor, fontSize: 14, fontWeight: FontWeight.bold),
+                                  AppLocalizations.of(context)!.activeSessionOpen,
+                                  style: const TextStyle(color: AppColors.successColor, fontSize: 14, fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ],
@@ -459,8 +459,8 @@ class _ActiveSessionPageState extends State<_ActiveSessionPage> {
       if (response.statusCode == 200) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Attendance submitted!'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.attendanceSubmitted),
             backgroundColor: AppColors.successColor,
           ),
         );
@@ -518,13 +518,13 @@ class _ActiveSessionPageState extends State<_ActiveSessionPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Active Session',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Text(
+                    AppLocalizations.of(context)!.activeSession,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Please enter the 4-digit PIN provided by the Doctor to register your attendance.',
+                    AppLocalizations.of(context)!.enterPinDescription,
                     style: TextStyle(
                       color: AppColors.darkColor.withOpacity(0.6),
                     ),
@@ -542,16 +542,16 @@ class _ActiveSessionPageState extends State<_ActiveSessionPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Enter PIN',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      Text(
+                        AppLocalizations.of(context)!.enterPinTitle,
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 12),
                       TextField(
                         controller: _pinController,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                          hintText: 'PIN Code',
+                          hintText: AppLocalizations.of(context)!.pinCodeLabel,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -579,9 +579,9 @@ class _ActiveSessionPageState extends State<_ActiveSessionPage> {
                                     strokeWidth: 2,
                                   ),
                                 )
-                              : const Text(
-                                  'Submit PIN',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                              : Text(
+                                  AppLocalizations.of(context)!.submitPinBtn,
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
                                 ),
                         ),
                       ),
@@ -725,7 +725,7 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                isAttended ? 'Attended' : 'Absent',
+                isAttended ? AppLocalizations.of(context)!.attended : AppLocalizations.of(context)!.absent,
                 style: TextStyle(
                   color: isAttended ? Colors.green.shade700 : AppColors.errorColor,
                   fontSize: MediaQuery.of(context).size.width >= 850 ? 14 : 12,
@@ -747,7 +747,7 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
           children: [
             Icon(Icons.history_toggle_off, size: 60, color: AppColors.primaryColor.withOpacity(0.3)),
             const SizedBox(height: 16),
-            Text('No sessions found.', style: TextStyle(fontSize: 16, color: AppColors.darkColor.withOpacity(0.5))),
+            Text(AppLocalizations.of(context)!.noSessionsFound, style: TextStyle(fontSize: 16, color: AppColors.darkColor.withOpacity(0.5))),
           ],
         ),
       );
@@ -789,7 +789,7 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
     return Scaffold(
       backgroundColor: AppColors.lightColor2,
       appBar: AppBar(
-        title: const Text('Attendance Reports', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(AppLocalizations.of(context)!.attendanceReports, style: const TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: AppColors.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -813,9 +813,9 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildCounterItem('Attended', totalAttended, Colors.green),
-                        _buildCounterItem('Absent', totalAbsent, AppColors.errorColor),
-                        _buildCounterItem('Total', pastSessions.length, AppColors.primaryColor),
+                        _buildCounterItem(AppLocalizations.of(context)!.attended, totalAttended, Colors.green),
+                        _buildCounterItem(AppLocalizations.of(context)!.absent, totalAbsent, AppColors.errorColor),
+                        _buildCounterItem(AppLocalizations.of(context)!.totalStats, pastSessions.length, AppColors.primaryColor),
                       ],
                     ),
                     if (totalAbsent >= 3)
@@ -826,14 +826,14 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
                           color: AppColors.errorColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Row(
+                        child: Row(
                           children: [
-                            Icon(Icons.warning_amber_rounded, color: AppColors.errorColor),
-                            SizedBox(width: 8),
+                            const Icon(Icons.warning_amber_rounded, color: AppColors.errorColor),
+                            const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                'Danger: You have exceeded the allowed absence limit (3) and may be deprived of exams.',
-                                style: TextStyle(color: AppColors.errorColor, fontWeight: FontWeight.bold),
+                                AppLocalizations.of(context)!.dangerYouExceededAbsenceLimit,
+                                style: const TextStyle(color: AppColors.errorColor, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
@@ -853,9 +853,9 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
                   unselectedLabelColor: Colors.grey,
                   indicatorWeight: 3,
                   labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: Responsive.isDesktop(context) ? 18 : 16),
-                  tabs: const [
-                    Tab(text: 'Lectures', icon: Icon(Icons.school)),
-                    Tab(text: 'Sections', icon: Icon(Icons.science)),
+                  tabs: [
+                    Tab(text: AppLocalizations.of(context)!.lecturesTab, icon: const Icon(Icons.school)),
+                    Tab(text: AppLocalizations.of(context)!.sectionsTab, icon: const Icon(Icons.science)),
                   ],
                 ),
               ),

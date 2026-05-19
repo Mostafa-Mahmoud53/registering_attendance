@@ -314,7 +314,7 @@ class _LectureReportPageState extends State<LectureReportPage> {
                 CircleAvatar(
                   // Mobile Layout: smaller avatar / Desktop Layout: standard avatar
                   radius: isMobile ? 18 : 20, // Mobile: 18 / Desktop: 20
-                  backgroundColor: AppColors.primaryColor.withOpacity(0.1),
+                  backgroundColor: AppColors.primaryColor.withAlpha((0.1 * 255).round()),
                   child: Text(
                     name.isNotEmpty ? name[0].toUpperCase() : '?',
                     style: TextStyle(
@@ -342,7 +342,7 @@ class _LectureReportPageState extends State<LectureReportPage> {
                       Text(
                         'Code: $code',
                         style: TextStyle(
-                          color: AppColors.darkColor.withOpacity(0.5),
+                          color: AppColors.darkColor.withAlpha((0.5 * 255).round()),
                           fontSize: isMobile ? 11 : 12, // Mobile: 11 / Desktop: 12
                         ),
                       ),
@@ -356,7 +356,7 @@ class _LectureReportPageState extends State<LectureReportPage> {
                       vertical: isMobile ? 4 : 5,    // Mobile: 4 / Desktop: 5
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.warningColor.withOpacity(0.1),
+                      color: AppColors.warningColor.withAlpha((0.1 * 255).round()),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -421,14 +421,14 @@ class _LectureReportPageState extends State<LectureReportPage> {
         Icon(
           Icons.speaker_notes_off,
           size: 72,
-          color: AppColors.darkColor.withOpacity(0.2),
+          color: AppColors.darkColor.withAlpha((0.2 * 255).round()),
         ),
         const SizedBox(height: 16),
         Text(
           'No attendance records found',
           style: TextStyle(
             fontSize: 16,
-            color: AppColors.darkColor.withOpacity(0.5),
+            color: AppColors.darkColor.withAlpha((0.5 * 255).round()),
           ),
         ),
       ],
@@ -438,7 +438,7 @@ class _LectureReportPageState extends State<LectureReportPage> {
   Widget _pill(IconData icon, String label, Color color) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     decoration: BoxDecoration(
-      color: color.withOpacity(0.1),
+      color: color.withAlpha((0.1 * 255).round()),
       borderRadius: BorderRadius.circular(20),
     ),
     child: Row(
@@ -473,7 +473,7 @@ class _LectureReportPageState extends State<LectureReportPage> {
         label,
         style: TextStyle(
           fontSize: isMobile ? 11 : 12, // Mobile: 11 / Desktop: 12
-          color: AppColors.darkColor.withOpacity(0.5),
+          color: AppColors.darkColor.withAlpha((0.5 * 255).round()),
         ),
       ),
     ],

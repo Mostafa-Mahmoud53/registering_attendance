@@ -622,7 +622,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get lecture => 'محاضرة';
 
   @override
-  String get section => 'سكشن';
+  String get section => 'سكاشن';
 
   @override
   String get allowedRadius => 'نطاق مسموح (متر)';

@@ -672,10 +672,10 @@ class _LiveDashboardPageState extends State<LiveDashboardPage>
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.indigo.withOpacity(0.2)),
+            border: Border.all(color: Colors.indigo.withAlpha((0.2 * 255).round())),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withAlpha((0.05 * 255).round()),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -692,7 +692,7 @@ class _LiveDashboardPageState extends State<LiveDashboardPage>
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: Colors.indigo.withOpacity(0.3),
+                        color: Colors.indigo.withAlpha((0.3 * 255).round()),
                         width: 2,
                       ),
                     ),
