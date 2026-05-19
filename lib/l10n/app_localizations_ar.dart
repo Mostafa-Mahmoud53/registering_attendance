@@ -622,7 +622,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get lecture => 'محاضرة';
 
   @override
-  String get section => 'قسم';
+  String get section => 'سكشن';
 
   @override
   String get allowedRadius => 'نطاق مسموح (متر)';
@@ -756,7 +756,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get lectureReportSubtitle => 'رؤى الحضور';
 
   @override
-  String get sectionReport => 'تقرير القسم';
+  String get sectionReport => 'تقرير السكشن';
 
   @override
   String get sectionReportSubtitle => 'المختبرات والتمارين';
