@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Auth/api_service.dart';
 import '../../Auth/colors.dart';
+import '../../l10n/app_localizations.dart';
 
 class AbsenceWarningsPage extends StatefulWidget {
   final String courseId;
@@ -61,10 +62,11 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.lightColor2,
       appBar: AppBar(
-        title: const Text('Absence Warnings'),
+        title: Text(loc.absenceWarningsPageTitle),
         backgroundColor: AppColors.errorColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -76,24 +78,24 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
           child: _isLoading
               ? const Center(child: CircularProgressIndicator(color: AppColors.errorColor))
               : _errorMessage.isNotEmpty
-                  ? _buildError()
+                  ? _buildError(loc)
                   : _warnings.isEmpty
-                      ? _buildEmpty()
+                      ? _buildEmpty(loc)
                       : _buildList(),
         ),
       ),
     );
   }
 
-  Widget _buildError() => Center(child: Padding(padding: const EdgeInsets.all(24), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+  Widget _buildError(AppLocalizations loc) => Center(child: Padding(padding: const EdgeInsets.all(24), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
     const Icon(Icons.error_outline, size: 64, color: AppColors.errorColor),
     const SizedBox(height: 16),
     Text(_errorMessage, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.errorColor)),
     const SizedBox(height: 16),
-    ElevatedButton(onPressed: _fetch, style: ElevatedButton.styleFrom(backgroundColor: AppColors.errorColor), child: const Text('Retry')),
+    ElevatedButton(onPressed: _fetch, style: ElevatedButton.styleFrom(backgroundColor: AppColors.errorColor), child: Text(loc.retry)),
   ])));
 
-  Widget _buildEmpty() {
+  Widget _buildEmpty(AppLocalizations loc) {
     final bool notEnough = _totalLectures <= 3;
     return Center(child: Padding(padding: const EdgeInsets.all(32), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       Icon(notEnough ? Icons.schedule : Icons.check_circle_outline,
@@ -101,8 +103,8 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
       const SizedBox(height: 20),
       Text(
         notEnough
-            ? 'No warnings yet — not enough lectures held'
-            : 'No absence warnings!\nAll students are within limits.',
+            ? loc.noDataAvailable
+            : loc.noStudentsFound,
         textAlign: TextAlign.center,
         style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
       ),
@@ -116,7 +118,7 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
           width: double.infinity,
           color: AppColors.errorColor.withOpacity(0.08),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          child: Text('${_warnings.length} student(s) at risk',
+          child: Text('${_warnings.length} ${AppLocalizations.of(context)!.students}',
               style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.errorColor)),
         ),
         Expanded(
@@ -194,7 +196,7 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
                 overflow: TextOverflow.ellipsis,
               ),
               Text(
-                'Code: $code',
+                '${AppLocalizations.of(context)!.code}: $code',
                 style: TextStyle(
                   color: AppColors.darkColor.withOpacity(0.5),
                   fontSize: isMobile ? 11 : 12, // Mobile: 11 / Desktop: 12
@@ -234,7 +236,7 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
           SizedBox(height: isMobile ? 6 : 8), // Mobile: 6 / Desktop: 8
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text(
-              'Attended: $attended',
+              '${AppLocalizations.of(context)!.attended}: $attended',
               style: TextStyle(
                 color: Colors.green,
                 // Mobile Layout: smaller stat text / Desktop Layout: standard stat text
@@ -243,7 +245,7 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
               ),
             ),
             Text(
-              'Absent: $absent',
+              '${AppLocalizations.of(context)!.absent}: $absent',
               style: TextStyle(
                 color: AppColors.errorColor,
                 fontSize: isMobile ? 12 : 13, // Mobile: 12 / Desktop: 13

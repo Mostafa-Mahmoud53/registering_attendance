@@ -26,7 +26,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
   String? _authToken;
   Timer? _refreshTimer;
 
-  static const String _doctorsUrl = 'http://msngroup-001-site1.ktempurl.com/api/Admin/list-doctors';
+  static const String _doctorsUrl = 'http://77.83.242.94:5000/api/Admin/list-doctors';
 
   @override
   void initState() {
@@ -147,7 +147,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
 
     try {
       final response = await http.delete(
-        Uri.parse('http://msngroup-001-site1.ktempurl.com/api/Admin/delete-user/$universityCode'),
+        Uri.parse('http://77.83.242.94:5000/api/Admin/delete-user/$universityCode'),
         headers: {
           'accept': '*/*',
           'Authorization': 'Bearer $_authToken',

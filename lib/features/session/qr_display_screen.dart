@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'package:registering_attendance/core/http_interceptor.dart' as http;
+import '../../Auth/api_service.dart';
+import '../../Auth/auth_storage.dart';
 import 'dart:async';
 import '../../l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +32,10 @@ class _QrDisplayScreenState extends State<QrDisplayScreen> {
   bool isLoading = false;
   int _countdown = 10;
   int attendeeCount = 0;
+  List<dynamic> _attendees = [];
   Timer? _qrTimer;
   Timer? _countdownTimer;
+  Timer? _attendeeTimer;
 
   @override
   void initState() {
@@ -54,6 +60,10 @@ class _QrDisplayScreenState extends State<QrDisplayScreen> {
   void _startTimers() {
     _qrTimer?.cancel();
     _countdownTimer?.cancel();
+    _attendeeTimer?.cancel();
+    
+    // Fetch attendees immediately when starting
+    _fetchAttendees();
 
     _qrTimer = Timer.periodic(const Duration(seconds: 10), (_) async {
       try {
@@ -81,11 +91,60 @@ class _QrDisplayScreenState extends State<QrDisplayScreen> {
         });
       }
     });
+
+    _attendeeTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+      _fetchAttendees();
+    });
+  }
+
+  Future<void> _fetchAttendees() async {
+    if (!mounted || !isSessionActive) return;
+    try {
+      final token = await AuthStorage.getToken() ?? '';
+      final url = '${ApiService.baseUrl}/Attendance/session-attendees/${widget.sessionId}';
+      
+      final response = await http.get(Uri.parse(url), headers: {
+        'Authorization': 'Bearer $token',
+        'accept': '*/*',
+      });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        List<dynamic> listData = [];
+        
+        if (decoded is List) {
+          listData = decoded;
+        } else if (decoded is Map) {
+          if (decoded.containsKey('\$values')) {
+            listData = decoded['\$values'];
+          } else if (decoded.containsKey('attendees')) {
+             var att = decoded['attendees'];
+             listData = att is List ? att : (att is Map && att.containsKey('\$values') ? att['\$values'] : []);
+          } else if (decoded.containsKey('students')) {
+             var stu = decoded['students'];
+             listData = stu is List ? stu : (stu is Map && stu.containsKey('\$values') ? stu['\$values'] : []);
+          } else if (decoded.containsKey('data')) {
+             var dat = decoded['data'];
+             listData = dat is List ? dat : (dat is Map && dat.containsKey('\$values') ? dat['\$values'] : []);
+          }
+        }
+
+        if (mounted) {
+          setState(() {
+            _attendees = List.from(listData);
+            attendeeCount = _attendees.length;
+          });
+        }
+      }
+    } catch (e) {
+      print('Error fetching attendees: $e');
+    }
   }
 
   void _stopTimers() {
     _qrTimer?.cancel();
     _countdownTimer?.cancel();
+    _attendeeTimer?.cancel();
   }
 
   @override
@@ -173,9 +232,12 @@ class _QrDisplayScreenState extends State<QrDisplayScreen> {
         centerTitle: false,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Status Badge
@@ -228,7 +290,7 @@ class _QrDisplayScreenState extends State<QrDisplayScreen> {
                   children: [
                     if (isSessionActive)
                       QrImageView(
-                        data: qrContent,
+                        data: qrContent.isEmpty ? 'generating...' : qrContent,
                         size: 220,
                         backgroundColor: Colors.white,
                       )
@@ -300,6 +362,54 @@ class _QrDisplayScreenState extends State<QrDisplayScreen> {
                 ],
               ),
               
+              // Attendees List
+              const Divider(height: 40),
+              const Text(
+                'Attended Students',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.darkColor,
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (_attendees.isEmpty)
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'No students have attended yet',
+                    style: TextStyle(color: Colors.grey, fontSize: 16),
+                  ),
+                )
+              else
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _attendees.length,
+                  itemBuilder: (context, index) {
+                    final student = _attendees[index];
+                    final name = student['studentName'] ?? student['name'] ?? student['fullName'] ?? student['userName'] ?? student['userFullName'] ?? 'Unknown Student';
+                    final code = student['universityCode'] ?? student['code'] ?? student['studentCode'] ?? '';
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(color: Colors.grey.shade200),
+                      ),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: AppColors.primaryColor.withOpacity(0.1),
+                          child: const Icon(Icons.person, color: AppColors.primaryColor),
+                        ),
+                        title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text(code),
+                      ),
+                    );
+                  },
+                ),
+              
               const SizedBox(height: 40),
 
               // Action Button
@@ -326,6 +436,8 @@ class _QrDisplayScreenState extends State<QrDisplayScreen> {
             ],
           ),
         ),
+      ),
+      ),
       ),
     );
   }

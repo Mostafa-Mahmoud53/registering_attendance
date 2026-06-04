@@ -12,7 +12,8 @@ import '../widgets/AppInstructionsCard.dart';
 
 class BulkCourseEnrollmentPage extends StatefulWidget {
   final String? initialCourseId;
-  const BulkCourseEnrollmentPage({Key? key, this.initialCourseId}) : super(key: key);
+  final bool isTab;
+  const BulkCourseEnrollmentPage({Key? key, this.initialCourseId, this.isTab = false}) : super(key: key);
 
   @override
   _BulkCourseEnrollmentPageState createState() => _BulkCourseEnrollmentPageState();
@@ -21,7 +22,6 @@ class BulkCourseEnrollmentPage extends StatefulWidget {
 class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late final TextEditingController _courseIdController;
-  final TextEditingController _manualCodeController = TextEditingController();
 
   bool _isLoading = false;
   bool _isImporting = false;
@@ -31,7 +31,7 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
   
   String? _authToken;
 
-  static const String _apiUrl = 'http://msngroup-001-site1.ktempurl.com/api/Course/enroll-bulk';
+  static const String _apiUrl = 'http://77.83.242.94:5000/api/Course/enroll-bulk';
 
   @override
   void initState() {
@@ -43,7 +43,6 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
   @override
   void dispose() {
     _courseIdController.dispose();
-    _manualCodeController.dispose();
     super.dispose();
   }
 
@@ -80,21 +79,6 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
   String _cellValue(List<excel.Data?> row, int? idx) {
     if (idx == null || idx >= row.length) return '';
     return row[idx]?.value?.toString().trim() ?? '';
-  }
-
-  // ── Manual add ────────────────────────────────────────────────
-  void _addManualCode() {
-    final code = _manualCodeController.text.trim();
-    if (code.isEmpty) return;
-    if (_codesList.contains(code)) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Code "$code" already in list'), backgroundColor: Colors.orange));
-      return;
-    }
-    setState(() {
-      _codesList.add(code);
-      _manualCodeController.clear();
-    });
   }
 
   // ── Excel import ──────────────────────────────────────────────
@@ -316,7 +300,8 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
       body: CustomScrollView(
         slivers: [
           // App Bar
-          SliverAppBar(
+          if (!widget.isTab)
+            SliverAppBar(
             expandedHeight: 120,
             collapsedHeight: 80,
             pinned: true,
@@ -369,59 +354,12 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: AppColors.lightColor,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: AppColors.primaryColor.withOpacity(0.2),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.group_add,
-                          color: AppColors.primaryColor,
-                          size: 24,
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Bulk Enroll Students',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.darkColor,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Enroll multiple students in a course at once using their university codes',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: AppColors.darkColor.withOpacity(0.6),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  
                   const AppInstructionsCard(
-                    title: 'How to Bulk Enroll Students',
+                    title: 'How to Enroll Students via Excel',
                     instructions: [
-                      'Option 1: Use "Import from Excel" to upload a .xlsx file with a "University Code" column.',
-                      'Option 2: Manually enter university codes one by one in the "Add Manually" section.',
-                      'Review the compiled list of students below.',
                       'Enter the Course ID in the top field.',
+                      'Use "Upload Excel" to select a .xlsx file containing a "University Code" column.',
+                      'Review the compiled list of students below.',
                       'Click "Enroll Students" to finalize the registration.',
                       'A report will show which students were added, skipped, or not found.',
                     ],
@@ -445,9 +383,6 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
                         const SizedBox(height: 24),
                         
                         _buildImportCard(),
-                        const SizedBox(height: 16),
-                        
-                        _buildManualCard(),
                         const SizedBox(height: 16),
                         
                         if (_codesList.isNotEmpty) ...[
@@ -667,51 +602,6 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
           Text('...and ${_importErrors.length - 5} more errors',
               style: TextStyle(fontSize: 12, color: AppColors.errorColor)),
       ],
-    ]),
-  );
-
-  Widget _buildManualCard() => Container(
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      color: Colors.white, borderRadius: BorderRadius.circular(16),
-      boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
-    ),
-    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text('Add Manually',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.darkColor)),
-      const SizedBox(height: 8),
-      Text('Enter a university code and press Add',
-          style: TextStyle(fontSize: 13, color: AppColors.darkColor.withOpacity(0.6))),
-      const SizedBox(height: 16),
-      Row(children: [
-        Expanded(
-          child: TextFormField(
-            controller: _manualCodeController,
-            onFieldSubmitted: (_) => _addManualCode(),
-            decoration: InputDecoration(
-              hintText: 'e.g. ST-20205522',
-              hintStyle: TextStyle(color: AppColors.darkColor.withOpacity(0.35)),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5)),
-              filled: true, fillColor: AppColors.lightColor2,
-              prefixIcon: Icon(Icons.badge_outlined, color: AppColors.darkColor.withOpacity(0.4)),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            ),
-            style: TextStyle(color: AppColors.darkColor, fontSize: 15),
-          ),
-        ),
-        const SizedBox(width: 10),
-        ElevatedButton(
-          onPressed: _addManualCode,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primaryColor, foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-          child: const Text('Add', style: TextStyle(fontWeight: FontWeight.bold)),
-        ),
-      ]),
     ]),
   );
 

@@ -9,7 +9,8 @@ import '../widgets/AppInstructionsCard.dart';
 
 class CourseEnrollmentPage extends StatefulWidget {
   final String? initialCourseId;
-  const CourseEnrollmentPage({Key? key, this.initialCourseId}) : super(key: key);
+  final bool isTab;
+  const CourseEnrollmentPage({Key? key, this.initialCourseId, this.isTab = false}) : super(key: key);
 
   @override
   _CourseEnrollmentPageState createState() => _CourseEnrollmentPageState();
@@ -25,7 +26,7 @@ class _CourseEnrollmentPageState extends State<CourseEnrollmentPage> {
   bool _isSuccess = false;
   String? _authToken;
 
-  static const String _apiUrl = 'http://msngroup-001-site1.ktempurl.com/api/Course/enroll';
+  static const String _apiUrl = 'http://77.83.242.94:5000/api/Course/enroll';
 
   @override
   void initState() {
@@ -193,7 +194,8 @@ class _CourseEnrollmentPageState extends State<CourseEnrollmentPage> {
       body: CustomScrollView(
         slivers: [
           // App Bar
-          SliverAppBar(
+          if (!widget.isTab)
+            SliverAppBar(
             expandedHeight: 120,
             collapsedHeight: 80,
             pinned: true,
@@ -212,18 +214,14 @@ class _CourseEnrollmentPageState extends State<CourseEnrollmentPage> {
             ),
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: const EdgeInsetsDirectional.only(start: 20, bottom: 16),
-              title: Row(
-                children: [
-                  const Text(
-                    'Course Enrollment',
-                    style: TextStyle(
+              title: Text(
+                    AppLocalizations.of(context)!.courseEnrollmentPage,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
-              ),
               background: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -246,58 +244,11 @@ class _CourseEnrollmentPageState extends State<CourseEnrollmentPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: AppColors.lightColor,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: AppColors.primaryColor.withOpacity(0.2),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.school,
-                          color: AppColors.primaryColor,
-                          size: 24,
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Enroll Student in Course',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.darkColor,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Enter course ID and student university code to enroll student in a course',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: AppColors.darkColor.withOpacity(0.6),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  
                   const AppInstructionsCard(
                     title: 'How to Enroll a Student',
                     instructions: [
-                      'Find the internal Course ID number of the target course.',
                       'Obtain the student\'s exact University Code.',
-                      'Enter both details into the fields below.',
+                      'Enter the detail into the field below.',
                       'Click "Enroll Student" to finalize the registration.',
                     ],
                   ),
@@ -308,22 +259,11 @@ class _CourseEnrollmentPageState extends State<CourseEnrollmentPage> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        // Course ID Field
-                        _buildTextField(
-                          controller: _courseIdController,
-                          label: 'Course ID',
-                          hint: 'Enter course ID number',
-                          prefixIcon: Icons.book,
-                          keyboardType: TextInputType.number,
-                          validator: _validateCourseId,
-                        ),
-                        const SizedBox(height: 24),
-
                         // Student University Code Field
                         _buildTextField(
                           controller: _studentCodeController,
-                          label: 'Student University Code',
-                          hint: 'Enter student university code',
+                          label: AppLocalizations.of(context)!.studentUniversityCode,
+                          hint: AppLocalizations.of(context)!.universityCodeHint,
                           prefixIcon: Icons.badge,
                           validator: _validateStudentCode,
                         ),
@@ -354,14 +294,14 @@ class _CourseEnrollmentPageState extends State<CourseEnrollmentPage> {
                                 strokeWidth: 2,
                               ),
                             )
-                                : const Row(
+                                : Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.person_add_alt, size: 20),
-                                SizedBox(width: 8),
+                                const Icon(Icons.person_add_alt, size: 20),
+                                const SizedBox(width: 8),
                                 Text(
-                                  'Enroll Student',
-                                  style: TextStyle(
+                                  AppLocalizations.of(context)!.enroll,
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),

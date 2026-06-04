@@ -141,7 +141,7 @@ class _ResetStudentsForNewYearPageState extends State<ResetStudentsForNewYearPag
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Users & Courses → Preserved',
+                          AppLocalizations.of(context)!.dataPreserved,
                           style: TextStyle(fontSize: 13, color: Colors.green.shade700, fontWeight: FontWeight.w500),
                         ),
                       ),
@@ -154,7 +154,7 @@ class _ResetStudentsForNewYearPageState extends State<ResetStudentsForNewYearPag
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Sessions, Attendance, Enrollments → Deleted',
+                          AppLocalizations.of(context)!.dataDeleted,
                           style: TextStyle(fontSize: 13, color: AppColors.errorColor, fontWeight: FontWeight.w500),
                         ),
                       ),

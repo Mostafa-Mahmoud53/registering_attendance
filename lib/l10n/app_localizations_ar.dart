@@ -15,6 +15,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appDescription => 'مشروع فلاتر جديد.';
 
   @override
+  String get createSingle => 'طالب واحد';
+
+  @override
+  String get deleteSingle => 'حذف طالب';
+
+  @override
+  String get deleteMultiple => 'حذف عدة طلاب';
+
+  @override
+  String get createStudentsScreen => 'إضافة طلاب';
+
+  @override
+  String get deleteStudentsScreen => 'حذف طلاب';
+
+  @override
+  String get createStudentSingleBtn => 'إنشاء حساب الطالب';
+
+  @override
+  String get deleteStudentSingleBtn => 'حذف الطالب';
+
+  @override
   String get studentAttendanceApplication => 'تطبيق حضور وغياب الطلاب';
 
   @override
@@ -144,7 +165,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminDashboard => 'لوحة تحكم الإدارة';
 
   @override
-  String get doctorDashboard => 'لوحة تحكم الطبيب';
+  String get doctorDashboard => 'لوحة تحكم عضو هيئة التدريس';
 
   @override
   String get dashboardMenu => 'قائمة لوحة التحكم';
@@ -180,7 +201,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get retry => 'إعادة محاولة';
 
   @override
-  String get doctors => 'أطباء';
+  String get doctors => 'أعضاء هيئة تدريس';
 
   @override
   String get tas => 'معيدون';
@@ -210,16 +231,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get staffManagement => 'إدارة الموظفين';
 
   @override
-  String get createDoctorTA => 'إنشاء د/م';
+  String get createDoctorTA => 'إضافة عضو هيئة تدريس/معيد';
 
   @override
-  String get createDoctor => 'إنشاء طبيب';
+  String get createDoctor => 'إضافة عضو هيئة تدريس';
 
   @override
   String get createTA => 'إنشاء معيد';
 
   @override
-  String get listDoctors => 'قائمة الأطباء';
+  String get listDoctors => 'عرض أعضاء هيئة التدريس';
 
   @override
   String get listTAs => 'قائمة المعيدين';
@@ -228,7 +249,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deleteUser => 'حذف مستخدم';
 
   @override
-  String get createDoctorAccount => 'إنشاء حساب طبيب';
+  String get createDoctorAccount => 'إنشاء حساب عضو هيئة تدريس';
 
   @override
   String get createTAAccount => 'إنشاء حساب معيد';
@@ -243,7 +264,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountCreationSteps => 'خطوات إنشاء الحساب';
 
   @override
-  String get selectAccountType => 'حدد نوع الحساب (طبيب أو معيد).';
+  String get selectAccountType => 'حدد نوع الحساب (عضو هيئة تدريس أو معيد).';
 
   @override
   String get enterFullName => 'أدخل الاسم الكامل لموظف الكادر.';
@@ -262,7 +283,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountType => 'نوع الحساب';
 
   @override
-  String get doctor => 'طبيب';
+  String get doctor => 'عضو هيئة تدريس';
 
   @override
   String get teachingAssistant => 'معيد';
@@ -271,7 +292,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get fullName => 'الاسم الكامل';
 
   @override
-  String get enterDoctorName => 'أدخل اسم الطبيب';
+  String get enterDoctorName => 'أدخل اسم عضو هيئة التدريس';
 
   @override
   String get enterTAName => 'أدخل اسم المعيد';
@@ -286,7 +307,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get createAccount => 'إنشاء حساب';
 
   @override
-  String get doctorAccountCreatedSuccessfully => 'تم إنشاء حساب الطبيب بنجاح';
+  String get doctorAccountCreatedSuccessfully =>
+      'تم إنشاء حساب عضو هيئة التدريس بنجاح';
 
   @override
   String get taAccountCreatedSuccessfully => 'تم إنشاء حساب المعيد بنجاح';
@@ -452,7 +474,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get assignStaffToCourse => 'تعيين الموظفين للمقرر';
 
   @override
-  String get assignDoctorOrTA => 'تعيين طبيب أو معيد';
+  String get assignDoctorOrTA => 'تعيين عضو هيئة تدريس أو معيد';
 
   @override
   String get courseCode => 'كود المقرر';
@@ -621,7 +643,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get lecture => 'محاضرة';
 
   @override
-  String get section => 'قسم';
+  String get section => 'سكشن';
 
   @override
   String get allowedRadius => 'نطاق مسموح (متر)';
@@ -755,7 +777,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get lectureReportSubtitle => 'رؤى الحضور';
 
   @override
-  String get sectionReport => 'تقرير القسم';
+  String get sectionReport => 'تقرير السكشن';
 
   @override
   String get sectionReportSubtitle => 'المختبرات والتمارين';
@@ -1113,6 +1135,60 @@ class AppLocalizationsAr extends AppLocalizations {
   String get viewDashboardSubtitle => 'التحليلات وإدارة الجلسات';
 
   @override
+  String get courseCreationSteps => 'خطوات إنشاء المقرر';
+
+  @override
+  String get courseCreationStep1 => 'أدخل اسمًا واضحًا ووصفيًا للمقرر.';
+
+  @override
+  String get courseCreationStep2 => 'وفر كود مقرر فريدًا (مثال: CS4710).';
+
+  @override
+  String get courseCreationStep3 =>
+      'أدخل كود الجامعة الصحيح للعضو المسؤول عن هذا المقرر.';
+
+  @override
+  String get courseCreationStep4 => 'أضف وصفًا مختصرًا لمحتوى المقرر.';
+
+  @override
+  String get courseCreationStep5 => 'اضغط \"إنشاء مقرر\" لإتمام العملية.';
+
+  @override
+  String get doctorUniversityCode => 'كود الأستاذ الجامعي';
+
+  @override
+  String get enterDoctorUniversityCode =>
+      'أدخل كود الأستاذ الجامعي (مثال: DR-1234)';
+
+  @override
+  String get courseNameIsRequired => 'اسم المقرر مطلوب';
+
+  @override
+  String get courseNameMustBeAtLeast2Chars =>
+      'اسم المقرر يجب أن يكون على الأقل حرفين';
+
+  @override
+  String get courseCodeIsRequired => 'كود المقرر مطلوب';
+
+  @override
+  String get courseCodeMustBeAtLeast2Chars =>
+      'كود المقرر يجب أن يكون على الأقل حرفين';
+
+  @override
+  String get courseDescriptionIsRequired => 'الوصف مطلوب';
+
+  @override
+  String get courseDescriptionMustBeAtLeast5Chars =>
+      'الوصف يجب أن يكون على الأقل 5 أحرف';
+
+  @override
+  String get doctorUniversityCodeIsRequired => 'كود الأستاذ الجامعي مطلوب';
+
+  @override
+  String get doctorUniversityCodeMustBeValid =>
+      'يرجى إدخال كود جامعي صحيح (مثال: DR-1234)';
+
+  @override
   String get deleteSession => 'حذف الجلسة';
 
   @override
@@ -1157,4 +1233,153 @@ class AppLocalizationsAr extends AppLocalizations {
   String resetSystemError(String error) {
     return 'فشل تهيئة النظام: $error';
   }
+
+  @override
+  String get dataPreserved => 'حسابات المستخدمين والمقررات → محفوظة';
+
+  @override
+  String get dataDeleted => 'الجلسات والحضور والتسجيلات → محذوفة';
+
+  @override
+  String get singleAccount => 'حساب واحد';
+
+  @override
+  String get newYearReset => 'إعادة تعيين السنة الجديدة';
+
+  @override
+  String get resetStudentAccount => 'إعادة تعيين حساب الطالب';
+
+  @override
+  String get enterStudentUniversityCodeReset =>
+      'أدخل كود الجامعة للطالب لإعادة تعيين حسابه. سيسمح له هذا باستخدام شاشة \"التفعيل\" مرة أخرى.';
+
+  @override
+  String get howToResetAccount => 'كيفية إعادة تعيين الحساب';
+
+  @override
+  String get obtainStudentUniversityCode => 'احصل على كود جامعة الطالب.';
+
+  @override
+  String get enterExactUniversityCode =>
+      'أدخل كود الجامعة الدقيق في الحقل أدناه.';
+
+  @override
+  String get clickResetAccountButton => 'انقر على \"إعادة تعيين الحساب\".';
+
+  @override
+  String get studentWillActivateAgain =>
+      'بعد النجاح، سيتمكن الطالب من تفعيل حسابه مرة أخرى من جهازه الخاص.';
+
+  @override
+  String get studentUniversityCodeReset => 'كود جامعة الطالب';
+
+  @override
+  String get enterUniversityCodeExample =>
+      'أدخل كود الجامعة (مثال: ST-20205522)';
+
+  @override
+  String get resetAccount => 'إعادة تعيين الحساب';
+
+  @override
+  String get accountResetSuccessfully => 'تم إعادة تعيين الحساب بنجاح';
+
+  @override
+  String failedToResetAccount(String error) {
+    return 'فشل في إعادة تعيين الحساب: $error';
+  }
+
+  @override
+  String get studentUniversityCodeRequired => 'كود جامعة الطالب مطلوب';
+
+  @override
+  String get invalidUniversityCode =>
+      'يرجى إدخال كود جامعة صحيح (مثال: ST-20205522)';
+
+  @override
+  String get whatHappensResetStudent =>
+      'ماذا يحدث عند إعادة تعيين حساب الطالب؟';
+
+  @override
+  String get studentCanUseActivateScreen =>
+      'يمكن للطالب استخدام شاشة ال\"التفعيل\" مرة أخرى';
+
+  @override
+  String get accountStatusReset => 'حالة الحساب معاد تعيينها';
+
+  @override
+  String get completeActivationAgain => 'يحتاج لإكمال عملية التفعيل مرة أخرى';
+
+  @override
+  String get previousAccountDataAffected => 'قد تتأثر بيانات الحساب السابقة';
+
+  @override
+  String get enrollStudentsScreen => 'تسجيل الطلاب';
+
+  @override
+  String get enrollSingle => 'تسجيل طالب واحد';
+
+  @override
+  String get enrollMultiple => 'تسجيل أكثر من طالب';
+
+  @override
+  String get excelSheet => 'ملف Excel';
+
+  @override
+  String get enrollAll => 'تسجيل الكل';
+
+  @override
+  String get universityCodeHint => 'أدخل الكود الجامعي';
+
+  @override
+  String get multipleCodesHint =>
+      'أدخل الأكواد الجامعية مفصولة بفواصل أو أسطر جديدة';
+
+  @override
+  String get excelColumnNote => 'يجب أن يحتوي الملف على عمود الكود الجامعي';
+
+  @override
+  String get noStaffAssigned =>
+      'لا يوجد معيد أو دكتور مساعد مُعيَّن لهذه المادة';
+
+  @override
+  String get assignRemoveStaff => 'تعيين / إزالة معيد أو دكتور مساعد';
+
+  @override
+  String get assignRemoveStaffSubtitle =>
+      'إدارة المعيدين والدكاترة المساعدين لهذه المادة';
+
+  @override
+  String get removeAssignedStaff => 'إزالة معيد أو دكتور مساعد';
+
+  @override
+  String confirmRemoveStaff(String name) {
+    return 'هل أنت متأكد أنك تريد إزالة $name من هذه المادة؟';
+  }
+
+  @override
+  String get staffRemovedSuccess => 'تم إزالة المعيد / الدكتور المساعد بنجاح';
+
+  @override
+  String get courseCodeLabel => 'الكود';
+
+  @override
+  String get courseIdLabel => 'الرقم';
+
+  @override
+  String get remove => 'إزالة';
+
+  @override
+  String get loadingStaff => 'جاري تحميل الموظفين...';
+
+  @override
+  String get errorLoadingStaff => 'فشل في تحميل قائمة الموظفين';
+
+  @override
+  String get enroll => 'تسجيل';
+
+  @override
+  String get createMultiple => 'عدة طلاب';
+
+  @override
+  String get deleteStudentMultipleBtn => 'حذف الطلاب';
 }

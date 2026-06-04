@@ -55,9 +55,7 @@ class _LanguageToggleButtonState extends State<LanguageToggleButton> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  app_main.localeProvider.isArabic
-                      ? Icons.translate
-                      : Icons.language,
+                  Icons.public,
                   color: widget.textColor,
                   size: 20,
                 ),

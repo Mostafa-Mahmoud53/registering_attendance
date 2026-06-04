@@ -457,10 +457,7 @@ class _LiveDashboardPageState extends State<LiveDashboardPage>
             padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
             decoration: BoxDecoration(
               color: AppColors.lightColor2,
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(32),
-                bottomRight: Radius.circular(32),
-              ),
+              borderRadius: BorderRadius.circular(24),
             ),
             child: Column(
               children: [
@@ -540,48 +537,14 @@ class _LiveDashboardPageState extends State<LiveDashboardPage>
             ),
           );
 
-          if (isWide) {
-            // Desktop: two-column layout
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                headerStats,
-                const SizedBox(height: 24),
-                IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Left column: QR section
-                      Expanded(
-                        flex: 5,
-                        child: _buildQrSection(),
-                      ),
-                      const SizedBox(width: 24),
-                      // Right column: Attendees + buttons
-                      Expanded(
-                        flex: 5,
-                        child: Column(
-                          children: [
-                            _buildAttendeesSection(),
-                            const SizedBox(height: 24),
-                            _buildControlButton(),
-                            const SizedBox(height: 32),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          }
-
-          // Mobile/Tablet: single column
+          // Single Column Layout for all screen sizes
           return Column(
             children: [
+              const SizedBox(height: 24),
+              _buildQrSection(),
+              const SizedBox(height: 32),
               headerStats,
               const SizedBox(height: 32),
-              _buildQrSection(),
               _buildAttendeesSection(),
               const SizedBox(height: 48),
               _buildControlButton(),
@@ -766,7 +729,6 @@ class _LiveDashboardPageState extends State<LiveDashboardPage>
   }
 
   Widget _buildAttendeesSection() {
-    if (_attendees.isEmpty) return const SizedBox();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -795,17 +757,37 @@ class _LiveDashboardPageState extends State<LiveDashboardPage>
           ),
         ),
         const SizedBox(height: 12),
-        ListView.builder(
+        if (_attendees.isEmpty)
+          Container(
+            padding: const EdgeInsets.all(24),
+            alignment: Alignment.center,
+            child: const Text(
+              'No students have attended yet',
+              style: TextStyle(color: Colors.grey, fontSize: 16),
+            ),
+          )
+        else
+          ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 24),
           itemCount: _attendees.length,
           itemBuilder: (_, i) {
             final attendee = _attendees[i];
-            final name =
+            final nameStr =
                 attendee['studentName']?.toString() ??
+                attendee['StudentName']?.toString() ??
                 attendee['name']?.toString() ??
-                'Unknown';
+                attendee['Name']?.toString() ??
+                attendee['fullName']?.toString() ??
+                attendee['FullName']?.toString() ??
+                attendee['userName']?.toString() ??
+                attendee['UserName']?.toString() ??
+                attendee['userFullName']?.toString() ??
+                (attendee['firstName'] != null ? '${attendee['firstName']} ${attendee['lastName'] ?? ''}' : null) ??
+                (attendee['FirstName'] != null ? '${attendee['FirstName']} ${attendee['LastName'] ?? ''}' : null);
+
+            final name = nameStr ?? 'Unknown (${attendee.keys.join(", ")})';
             final time =
                 attendee['timestamp']?.toString() ??
                 attendee['time']?.toString() ??
@@ -938,7 +920,9 @@ class _ProjectorModePage extends StatelessWidget {
                         "qrContent": qrContent,
                       }),
                       version: QrVersions.auto,
-                      size: MediaQuery.of(context).size.width * 0.7,
+                      size: MediaQuery.of(context).size.width < MediaQuery.of(context).size.height 
+                          ? MediaQuery.of(context).size.width * 0.6 
+                          : MediaQuery.of(context).size.height * 0.5,
                       gapless: false,
                     ),
                   ),

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:registering_attendance/core/http_interceptor.dart' as http;
 
 class ApiService {
-  static const String baseUrl = 'http://msngroup-001-site1.ktempurl.com/api';
+  static const String baseUrl = 'http://77.83.242.94:5000/api';
 
   static const String sessionExpiredMessage =
       'Your session has expired. Please log in again.';
@@ -450,21 +450,16 @@ class ApiService {
   /// PUT /Admin/reassign-doctor
   /// Reassigns a course from one doctor to another using their university codes
   static Future<Map<String, dynamic>> reassignDoctor({
-    required int courseId,
+    required String courseCode,
     required String newDoctorUniversityCode,
     required String token,
   }) async {
     final response = await http.put(
-      Uri.parse('$baseUrl/Admin/reassign-doctor'),
+      Uri.parse('$baseUrl/Admin/update-course-doctor?courseCode=${Uri.encodeComponent(courseCode)}&newDoctorUniversityCode=${Uri.encodeComponent(newDoctorUniversityCode)}'),
       headers: {
         'accept': '*/*',
         'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
       },
-      body: jsonEncode({
-        "courseId": courseId,
-        "newDoctorUniversityCode": newDoctorUniversityCode,
-      }),
     );
     return {'statusCode': response.statusCode, 'body': response.body};
   }
@@ -477,6 +472,39 @@ class ApiService {
   }) async {
     final response = await http.delete(
       Uri.parse('$baseUrl/Session/delete-session/$sessionId'),
+      headers: {
+        'accept': '*/*',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    return {'statusCode': response.statusCode, 'body': response.body};
+  }
+
+  /// GET /Admin/get-assigned-staff/{courseId}
+  /// Fetches the list of staff members assigned to a course
+  static Future<Map<String, dynamic>> getAssignedStaff({
+    required String courseCode,
+    required String token,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/Admin/${Uri.encodeComponent(courseCode)}/assigned-staff'),
+      headers: {
+        'accept': '*/*',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    return {'statusCode': response.statusCode, 'body': response.body};
+  }
+
+  /// DELETE /Admin/remove-staff?courseCode=...&staffUniversityCode=...
+  /// Removes a staff member from a course
+  static Future<Map<String, dynamic>> removeStaff({
+    required String courseCode,
+    required String staffUniversityCode,
+    required String token,
+  }) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/Admin/remove-staff?courseCode=${Uri.encodeComponent(courseCode)}&staffUniversityCode=${Uri.encodeComponent(staffUniversityCode)}'),
       headers: {
         'accept': '*/*',
         'Authorization': 'Bearer $token',

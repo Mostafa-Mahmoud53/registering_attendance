@@ -6,7 +6,7 @@ import '../../core/network/app_exception.dart';
 import 'session_models.dart';
 
 class SessionService {
-  static const String baseUrl = 'http://msngroup-001-site1.ktempurl.com/api';
+  static const String baseUrl = 'http://77.83.242.94:5000/api';
 
   Future<String> _getToken() async {
     final token = await AuthStorage.getToken();

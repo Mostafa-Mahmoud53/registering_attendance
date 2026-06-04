@@ -27,8 +27,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   String? _authToken;
 
   // الـ URLs للـ APIs
-  static const String _doctorApiUrl = 'http://msngroup-001-site1.ktempurl.com/api/Admin/create-doctor';
-  static const String _taApiUrl = 'http://msngroup-001-site1.ktempurl.com/api/Admin/create-TA';
+  static const String _doctorApiUrl = 'http://77.83.242.94:5000/api/Admin/create-doctor';
+  static const String _taApiUrl = 'http://77.83.242.94:5000/api/Admin/create-TA';
 
   @override
   void initState() {

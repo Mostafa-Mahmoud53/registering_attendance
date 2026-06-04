@@ -110,6 +110,48 @@ abstract class AppLocalizations {
   /// **'A new Flutter project.'**
   String get appDescription;
 
+  /// No description provided for @createSingle.
+  ///
+  /// In en, this message translates to:
+  /// **'Single Student'**
+  String get createSingle;
+
+  /// No description provided for @deleteSingle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Single'**
+  String get deleteSingle;
+
+  /// No description provided for @deleteMultiple.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Multiple'**
+  String get deleteMultiple;
+
+  /// No description provided for @createStudentsScreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Students'**
+  String get createStudentsScreen;
+
+  /// No description provided for @deleteStudentsScreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Students'**
+  String get deleteStudentsScreen;
+
+  /// No description provided for @createStudentSingleBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Student'**
+  String get createStudentSingleBtn;
+
+  /// No description provided for @deleteStudentSingleBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Student'**
+  String get deleteStudentSingleBtn;
+
   /// No description provided for @studentAttendanceApplication.
   ///
   /// In en, this message translates to:
@@ -2162,6 +2204,102 @@ abstract class AppLocalizations {
   /// **'Analytics and session management'**
   String get viewDashboardSubtitle;
 
+  /// No description provided for @courseCreationSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Course Creation Steps'**
+  String get courseCreationSteps;
+
+  /// No description provided for @courseCreationStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a clear, descriptive name for the course.'**
+  String get courseCreationStep1;
+
+  /// No description provided for @courseCreationStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Provide a unique Course Code (e.g., CS4710).'**
+  String get courseCreationStep2;
+
+  /// No description provided for @courseCreationStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the exact University Code of the Doctor assigned to this course.'**
+  String get courseCreationStep3;
+
+  /// No description provided for @courseCreationStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Provide a brief description of the course contents.'**
+  String get courseCreationStep4;
+
+  /// No description provided for @courseCreationStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Click \"Create Course\" to finalize.'**
+  String get courseCreationStep5;
+
+  /// No description provided for @doctorUniversityCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor University Code'**
+  String get doctorUniversityCode;
+
+  /// No description provided for @enterDoctorUniversityCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter doctor university code (e.g., DR-1234)'**
+  String get enterDoctorUniversityCode;
+
+  /// No description provided for @courseNameIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Course name is required'**
+  String get courseNameIsRequired;
+
+  /// No description provided for @courseNameMustBeAtLeast2Chars.
+  ///
+  /// In en, this message translates to:
+  /// **'Course name must be at least 2 characters'**
+  String get courseNameMustBeAtLeast2Chars;
+
+  /// No description provided for @courseCodeIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Course code is required'**
+  String get courseCodeIsRequired;
+
+  /// No description provided for @courseCodeMustBeAtLeast2Chars.
+  ///
+  /// In en, this message translates to:
+  /// **'Course code must be at least 2 characters'**
+  String get courseCodeMustBeAtLeast2Chars;
+
+  /// No description provided for @courseDescriptionIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Description is required'**
+  String get courseDescriptionIsRequired;
+
+  /// No description provided for @courseDescriptionMustBeAtLeast5Chars.
+  ///
+  /// In en, this message translates to:
+  /// **'Description must be at least 5 characters'**
+  String get courseDescriptionMustBeAtLeast5Chars;
+
+  /// No description provided for @doctorUniversityCodeIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor University Code is required'**
+  String get doctorUniversityCodeIsRequired;
+
+  /// No description provided for @doctorUniversityCodeMustBeValid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid University Code (e.g., DR-1234)'**
+  String get doctorUniversityCodeMustBeValid;
+
   /// No description provided for @deleteSession.
   ///
   /// In en, this message translates to:
@@ -2239,6 +2377,276 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to reset system: {error}'**
   String resetSystemError(String error);
+
+  /// No description provided for @dataPreserved.
+  ///
+  /// In en, this message translates to:
+  /// **'Users & Courses → Preserved'**
+  String get dataPreserved;
+
+  /// No description provided for @dataDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions, Attendance, Enrollments → Deleted'**
+  String get dataDeleted;
+
+  /// No description provided for @singleAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Single Account'**
+  String get singleAccount;
+
+  /// No description provided for @newYearReset.
+  ///
+  /// In en, this message translates to:
+  /// **'New Year Reset'**
+  String get newYearReset;
+
+  /// No description provided for @resetStudentAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Student Account'**
+  String get resetStudentAccount;
+
+  /// No description provided for @enterStudentUniversityCodeReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the student University Code to reset their account. This will allow them to use the \"Activate\" screen again.'**
+  String get enterStudentUniversityCodeReset;
+
+  /// No description provided for @howToResetAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'How to Reset an Account'**
+  String get howToResetAccount;
+
+  /// No description provided for @obtainStudentUniversityCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Obtain the student\'s University Code.'**
+  String get obtainStudentUniversityCode;
+
+  /// No description provided for @enterExactUniversityCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the exact University Code in the field below.'**
+  String get enterExactUniversityCode;
+
+  /// No description provided for @clickResetAccountButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Click \"Reset Account\".'**
+  String get clickResetAccountButton;
+
+  /// No description provided for @studentWillActivateAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Once successful, the student will be able to activate their account again from their own device.'**
+  String get studentWillActivateAgain;
+
+  /// No description provided for @studentUniversityCodeReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Student University Code'**
+  String get studentUniversityCodeReset;
+
+  /// No description provided for @enterUniversityCodeExample.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter university code (e.g., ST-20205522)'**
+  String get enterUniversityCodeExample;
+
+  /// No description provided for @resetAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Account'**
+  String get resetAccount;
+
+  /// No description provided for @accountResetSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Account reset successfully'**
+  String get accountResetSuccessfully;
+
+  /// No description provided for @failedToResetAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to reset account: {error}'**
+  String failedToResetAccount(String error);
+
+  /// No description provided for @studentUniversityCodeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Student University Code is required'**
+  String get studentUniversityCodeRequired;
+
+  /// No description provided for @invalidUniversityCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid University Code (e.g., ST-20205522)'**
+  String get invalidUniversityCode;
+
+  /// No description provided for @whatHappensResetStudent.
+  ///
+  /// In en, this message translates to:
+  /// **'What happens when you reset a student account?'**
+  String get whatHappensResetStudent;
+
+  /// No description provided for @studentCanUseActivateScreen.
+  ///
+  /// In en, this message translates to:
+  /// **'The student can use the \"Activate\" screen again'**
+  String get studentCanUseActivateScreen;
+
+  /// No description provided for @accountStatusReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Their account status is reset'**
+  String get accountStatusReset;
+
+  /// No description provided for @completeActivationAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'They need to complete the activation process again'**
+  String get completeActivationAgain;
+
+  /// No description provided for @previousAccountDataAffected.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous account data may be affected'**
+  String get previousAccountDataAffected;
+
+  /// No description provided for @enrollStudentsScreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Enroll Students'**
+  String get enrollStudentsScreen;
+
+  /// No description provided for @enrollSingle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enroll Single'**
+  String get enrollSingle;
+
+  /// No description provided for @enrollMultiple.
+  ///
+  /// In en, this message translates to:
+  /// **'Enroll Multiple'**
+  String get enrollMultiple;
+
+  /// No description provided for @excelSheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Excel Sheet'**
+  String get excelSheet;
+
+  /// No description provided for @enrollAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Enroll All'**
+  String get enrollAll;
+
+  /// No description provided for @universityCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter University Code'**
+  String get universityCodeHint;
+
+  /// No description provided for @multipleCodesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter University Codes separated by commas or new lines'**
+  String get multipleCodesHint;
+
+  /// No description provided for @excelColumnNote.
+  ///
+  /// In en, this message translates to:
+  /// **'The Excel file must contain a University Code column'**
+  String get excelColumnNote;
+
+  /// No description provided for @noStaffAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'No staff assigned to this course'**
+  String get noStaffAssigned;
+
+  /// No description provided for @assignRemoveStaff.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign / Remove Staff'**
+  String get assignRemoveStaff;
+
+  /// No description provided for @assignRemoveStaffSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage staff assigned to this course'**
+  String get assignRemoveStaffSubtitle;
+
+  /// No description provided for @removeAssignedStaff.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Assigned Staff'**
+  String get removeAssignedStaff;
+
+  /// No description provided for @confirmRemoveStaff.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove {name} from this course?'**
+  String confirmRemoveStaff(String name);
+
+  /// No description provided for @staffRemovedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Staff member removed successfully'**
+  String get staffRemovedSuccess;
+
+  /// No description provided for @courseCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get courseCodeLabel;
+
+  /// No description provided for @courseIdLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ID'**
+  String get courseIdLabel;
+
+  /// No description provided for @remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
+
+  /// No description provided for @loadingStaff.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading staff...'**
+  String get loadingStaff;
+
+  /// No description provided for @errorLoadingStaff.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load staff list'**
+  String get errorLoadingStaff;
+
+  /// No description provided for @enroll.
+  ///
+  /// In en, this message translates to:
+  /// **'Enroll'**
+  String get enroll;
+
+  /// No description provided for @createMultiple.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiple Students'**
+  String get createMultiple;
+
+  /// No description provided for @deleteStudentMultipleBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Students'**
+  String get deleteStudentMultipleBtn;
 }
 
 class _AppLocalizationsDelegate

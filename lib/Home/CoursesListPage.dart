@@ -13,8 +13,9 @@ import '../Auth/colors.dart';
 import '../Auth/api_service.dart';
 import 'Reports/CourseDashboardPage.dart';
 import 'Reports/StudentSessionsHistoryPage.dart';
-import 'package:registering_attendance/Home/CourseEnrollmentPage.dart';
-import 'package:registering_attendance/Home/BulkCourseEnrollmentPage.dart';
+import 'package:registering_attendance/Home/EnrollStudentsTabsPage.dart';
+import 'package:registering_attendance/Home/RemoveAssignedStaffPage.dart';
+import 'package:registering_attendance/Home/AssignStaffPage.dart';
 import '../core/responsive.dart';
 
 class CoursesListPage extends StatefulWidget {
@@ -42,11 +43,11 @@ class _CoursesListPageState extends State<CoursesListPage> {
   String _email = '';
 
   static const String _adminCoursesUrl =
-      'http://msngroup-001-site1.ktempurl.com/api/Admin/list-courses';
+      'http://77.83.242.94:5000/api/Admin/list-courses';
   static const String _studentCoursesUrl =
-      'http://msngroup-001-site1.ktempurl.com/api/Course/student-courses';
+      'http://77.83.242.94:5000/api/Course/student-courses';
   static const String _myCoursesUrl =
-      'http://msngroup-001-site1.ktempurl.com/api/Course/my-courses';
+      'http://77.83.242.94:5000/api/Course/my-courses';
 
   final List<Color> _colors = [
     const Color(0xFF1A9E8F),
@@ -234,7 +235,7 @@ class _CoursesListPageState extends State<CoursesListPage> {
     });
 
     try {
-      final deleteUrl = 'http://msngroup-001-site1.ktempurl.com/api/Admin/delete-course/$courseId';
+      final deleteUrl = 'http://77.83.242.94:5000/api/Admin/delete-course/$courseId';
       final response = await http.delete(
         Uri.parse(deleteUrl),
         headers: {
@@ -884,38 +885,54 @@ class _CoursesListPageState extends State<CoursesListPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              color: color.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              'ID: ${course['id']}',
-                              style: TextStyle(
-                                color: color,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Builder(
-                            builder: (context) {
-                              final count = course['studentCount'];
-                              return Chip(
-                                label: Text(
-                                  count == null
-                                      ? '— students'
-                                      : '$count student${count == 1 ? '' : 's'}',
-                                  style: const TextStyle(fontSize: 11),
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 3,
                                 ),
-                                backgroundColor: AppColors.lightColor,
-                                visualDensity: VisualDensity.compact,
-                              );
-                            },
+                                decoration: BoxDecoration(
+                                  color: color.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Builder(builder: (context) {
+                                  final loc = AppLocalizations.of(context)!;
+                                  return Text(
+                                    '${loc.courseIdLabel}: ${course['id']}',
+                                    style: TextStyle(
+                                      color: color,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                }),
+                              ),
+                              if (course['code']?.toString().isNotEmpty == true) ...[
+                                const SizedBox(width: 8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Builder(builder: (context) {
+                                    final loc = AppLocalizations.of(context)!;
+                                    return Text(
+                                      '${loc.courseCodeLabel}: ${course['code']}',
+                                      style: TextStyle(
+                                        color: Colors.grey.shade800,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ],
+                            ],
                           ),
                         ],
                       ),
@@ -935,26 +952,35 @@ class _CoursesListPageState extends State<CoursesListPage> {
                       if (course['doctorName']?.toString().isNotEmpty ==
                           true) ...[
                         const SizedBox(height: 4),
-                        Text(
-                          'Dr. ${course['doctorName']}',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: AppColors.darkColor.withOpacity(0.65),
-                          ),
-                        ),
+                        Builder(builder: (context) {
+                          final loc = AppLocalizations.of(context)!;
+                          return Text(
+                            '${loc.doctor} ${course['doctorName']}',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.darkColor.withOpacity(0.65),
+                            ),
+                          );
+                        }),
                       ],
 
                       // Role Chip (للدكتور/TA فقط — Main Doctor = أزرق / Assistant = رمادي)
                       if (role != null) ...[
                         const SizedBox(height: 8),
                         Chip(
-                          label: Text(
-                            role,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                          ),
+                          label: Builder(builder: (context) {
+                            final loc = AppLocalizations.of(context)!;
+                            final roleLabel = role.toLowerCase().contains('main')
+                                ? loc.doctor
+                                : loc.teachingAssistant;
+                            return Text(
+                              roleLabel,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            );
+                          }),
                           backgroundColor: role.toLowerCase().contains('main')
                               ? Colors.blue
                               : Colors.grey,
@@ -994,11 +1020,14 @@ class _CoursesListPageState extends State<CoursesListPage> {
                 ),
                 const SizedBox(width: 8),
                 if (_userRole == 'Admin')
-                  IconButton(
-                    icon: const Icon(Icons.delete_outline, color: Colors.red),
-                    onPressed: () => _deleteCourseDirectly(course['id'].toString(), course['name'].toString()),
-                    tooltip: 'Delete Course',
-                  )
+                  Builder(builder: (context) {
+                    final loc = AppLocalizations.of(context)!;
+                    return IconButton(
+                      icon: const Icon(Icons.delete_outline, color: Colors.red),
+                      onPressed: () => _deleteCourseDirectly(course['id'].toString(), course['name'].toString()),
+                      tooltip: loc.delete,
+                    );
+                  })
                 else
                   Icon(
                     Icons.arrow_forward_ios,
@@ -1050,12 +1079,36 @@ class _CoursesListPageState extends State<CoursesListPage> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
-              Text(
-                'Course ID: ${course['id']}',
-                style: TextStyle(
-                  color: AppColors.darkColor.withOpacity(0.5),
-                  fontSize: 14,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${AppLocalizations.of(context)!.courseIdLabel}: ${course['id']}',
+                    style: TextStyle(
+                      color: AppColors.darkColor.withOpacity(0.5),
+                      fontSize: 14,
+                    ),
+                  ),
+                  if (course['code']?.toString().isNotEmpty == true) ...[
+                    const SizedBox(width: 12),
+                    Container(
+                      width: 4,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: AppColors.darkColor.withOpacity(0.5),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      '${AppLocalizations.of(context)!.courseCodeLabel}: ${course['code']}',
+                      style: TextStyle(
+                        color: AppColors.darkColor.withOpacity(0.5),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ],
               ),
               const SizedBox(height: 24),
               _buildOptionTile(
@@ -1073,36 +1126,33 @@ class _CoursesListPageState extends State<CoursesListPage> {
               ),
               const SizedBox(height: 12),
               _buildOptionTile(
-                icon: Icons.person_add_alt_1_outlined,
-                title: AppLocalizations.of(context)!.enrollStudent,
-                subtitle: AppLocalizations.of(context)!.enrollStudentManually,
+                icon: Icons.group_add_outlined,
+                title: AppLocalizations.of(context)!.enrollStudentsScreen,
+                subtitle: AppLocalizations.of(context)!.bulkEnrollStudents,
                 color: Colors.blue,
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => CourseEnrollmentPage(initialCourseId: course['id'].toString()),
+                      builder: (_) => EnrollStudentsTabsPage(courseId: course['id'].toString()),
                     ),
                   );
                 },
               ),
-              const SizedBox(height: 12),
-              _buildOptionTile(
-                icon: Icons.group_add_outlined,
-                title: AppLocalizations.of(context)!.bulkEnrollPage,
-                subtitle: AppLocalizations.of(context)!.bulkEnrollStudents,
-                color: Colors.teal,
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BulkCourseEnrollmentPage(initialCourseId: course['id'].toString()),
-                    ),
-                  );
-                },
-              ),
+              if (_userRole == 'Admin') ...[
+                const SizedBox(height: 12),
+                _buildOptionTile(
+                  icon: Icons.manage_accounts_outlined,
+                  title: AppLocalizations.of(context)!.assignRemoveStaff,
+                  subtitle: AppLocalizations.of(context)!.assignRemoveStaffSubtitle,
+                  color: Colors.purple,
+                  onTap: () {
+                    Navigator.pop(context);
+                    _showAssignRemoveStaffBottomSheet(course);
+                  },
+                ),
+              ],
               // Reassign Doctor option — Admin only
               if (_userRole == 'Admin') ...[
                 const SizedBox(height: 12),
@@ -1121,6 +1171,79 @@ class _CoursesListPageState extends State<CoursesListPage> {
             ],
           ),
         ),
+        );
+      },
+    );
+  }
+
+  void _showAssignRemoveStaffBottomSheet(Map<String, dynamic> course) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                AppLocalizations.of(context)!.assignRemoveStaff,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: AppColors.darkColor,
+                ),
+              ),
+              const SizedBox(height: 24),
+              _buildOptionTile(
+                icon: Icons.person_add_alt_1,
+                title: AppLocalizations.of(context)!.assignStaff,
+                subtitle: AppLocalizations.of(context)!.assignStaffToCourse,
+                color: Colors.green,
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => AssignStaffPage(initialCourseCode: course['code']?.toString() ?? ''),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 12),
+              _buildOptionTile(
+                icon: Icons.person_remove_alt_1,
+                title: AppLocalizations.of(context)!.removeAssignedStaff,
+                subtitle: AppLocalizations.of(context)!.assignRemoveStaffSubtitle,
+                color: Colors.red,
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => RemoveAssignedStaffPage(
+                        courseId: int.tryParse(course['id'].toString()) ?? 0,
+                        courseCode: course['code']?.toString() ?? '',
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
         );
       },
     );
@@ -1243,7 +1366,7 @@ class _CoursesListPageState extends State<CoursesListPage> {
 
                                 try {
                                   final result = await ApiService.reassignDoctor(
-                                    courseId: int.parse(course['id'].toString()),
+                                    courseCode: course['code'].toString(),
                                     newDoctorUniversityCode: code,
                                     token: _authToken!,
                                   );
@@ -1253,13 +1376,13 @@ class _CoursesListPageState extends State<CoursesListPage> {
                                   if (result['statusCode'] == 200) {
                                     Navigator.pop(dialogContext);
 
-                                    // Update the local state immediately
+                                    // Update the local state to show it's refreshing
                                     setState(() {
                                       final index = _allCourses.indexWhere(
                                         (c) => c['id'].toString() == course['id'].toString(),
                                       );
                                       if (index != -1) {
-                                        _allCourses[index]['doctorName'] = code;
+                                        _allCourses[index]['doctorName'] = 'Updating...';
                                       }
                                     });
 

@@ -196,8 +196,7 @@ class _StudentSessionsHistoryPageState extends State<StudentSessionsHistoryPage>
                             MaterialPageRoute(
                               builder: (_) => StudentAttendanceReportPage(
                                 courseName: widget.courseName,
-                                lectures: _lectures,
-                                sections: _sections,
+                                courseId: widget.courseId,
                               ),
                             ),
                           );
@@ -547,13 +546,37 @@ class _ActiveSessionPageState extends State<_ActiveSessionPage> {
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 12),
-                      TextField(
-                        controller: _pinController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          hintText: 'PIN Code',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+                      Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: TextField(
+                          controller: _pinController,
+                          keyboardType: TextInputType.number,
+                          style: const TextStyle(fontSize: 18, letterSpacing: 2),
+                          decoration: InputDecoration(
+                            hintText: 'PIN Code',
+                            filled: true,
+                            fillColor: Colors.grey.shade50,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.grey.shade300),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.grey.shade300),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(color: AppColors.primaryColor, width: 2),
+                            ),
                           ),
                         ),
                       ),
@@ -623,14 +646,12 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
 
 class StudentAttendanceReportPage extends StatefulWidget {
   final String courseName;
-  final List<dynamic> lectures;
-  final List<dynamic> sections;
+  final String courseId;
 
   const StudentAttendanceReportPage({
     Key? key,
     required this.courseName,
-    required this.lectures,
-    required this.sections,
+    required this.courseId,
   }) : super(key: key);
 
   @override
@@ -639,11 +660,17 @@ class StudentAttendanceReportPage extends StatefulWidget {
 
 class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool _isLoading = true;
+  String? _errorMessage;
+  List<dynamic> _lectures = [];
+  List<dynamic> _sections = [];
+  String _rawJson = '';
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _fetchMyHistory();
   }
 
   @override
@@ -652,8 +679,122 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
     super.dispose();
   }
 
-  bool _didAttend(dynamic session) =>
-      session['isAttended'] == true || session['studentAttended'] == true || session['attended'] == true;
+  Future<void> _fetchMyHistory() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final token = await AuthStorage.getToken() ?? '';
+      final response = await http.get(
+        Uri.parse('${ApiService.baseUrl}/Attendance/my-history/${widget.courseId}'),
+        headers: {'Authorization': 'Bearer $token', 'accept': '*/*'},
+      );
+
+      if (response.statusCode == 200) {
+        _rawJson = response.body;
+        final decoded = jsonDecode(response.body);
+        print('my-history raw response: $decoded');
+
+        List<dynamic> lectures = [];
+        List<dynamic> sections = [];
+
+        if (decoded is Map) {
+          // Check for the new JSON structure: { "lecturesData": { "history": [...] }, "sectionsData": { ... } }
+          if (decoded.containsKey('lecturesData') || decoded.containsKey('sectionsData')) {
+            final lecData = decoded['lecturesData'] ?? {};
+            final secData = decoded['sectionsData'] ?? {};
+            lectures = _extractList(lecData['history'] ?? []);
+            sections = _extractList(secData['history'] ?? []);
+          } else {
+            // Fallback for older shapes
+            lectures = _extractList(decoded['lectures'] ?? decoded['Lectures'] ?? decoded['lectureHistory'] ?? []);
+            sections = _extractList(decoded['sections'] ?? decoded['Sections'] ?? decoded['sectionHistory'] ?? []);
+          }
+
+          // If the API returns a flat list, separate by type
+          if (lectures.isEmpty && sections.isEmpty) {
+            final allSessions = _extractList(decoded[r'$values'] ?? decoded['sessions'] ?? decoded['data'] ?? decoded['history'] ?? []);
+            if (allSessions.isEmpty && decoded.keys.length <= 3) {
+              // Maybe the whole response IS a flat list wrapper
+              final flatList = _extractList(decoded);
+              for (final s in flatList) {
+                if (s is Map) {
+                  final type = (s['type'] ?? s['sessionType'] ?? '').toString().toLowerCase();
+                  if (type.contains('section')) {
+                    sections.add(s);
+                  } else {
+                    lectures.add(s);
+                  }
+                }
+              }
+            } else {
+              for (final s in allSessions) {
+                if (s is Map) {
+                  final type = (s['type'] ?? s['sessionType'] ?? '').toString().toLowerCase();
+                  if (type.contains('section')) {
+                    sections.add(s);
+                  } else {
+                    lectures.add(s);
+                  }
+                }
+              }
+            }
+          }
+        } else if (decoded is List) {
+          // Flat list response — separate by type
+          for (final s in decoded) {
+            if (s is Map) {
+              final type = (s['type'] ?? s['sessionType'] ?? '').toString().toLowerCase();
+              if (type.contains('section')) {
+                sections.add(s);
+              } else {
+                lectures.add(s);
+              }
+            }
+          }
+        }
+
+        if (mounted) {
+          setState(() {
+            _lectures = lectures;
+            _sections = sections;
+            _isLoading = false;
+          });
+        }
+      } else {
+        if (mounted) {
+          setState(() {
+            _errorMessage = 'Failed to load attendance history (${response.statusCode})';
+            _isLoading = false;
+          });
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Network error: $e';
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  List<dynamic> _extractList(dynamic data) {
+    if (data is List) return data;
+    if (data is Map && data.containsKey(r'$values')) return data[r'$values'] ?? [];
+    return [];
+  }
+
+  bool _didAttend(dynamic session) {
+    if (session is! Map) return false;
+    // Check all possible boolean field names from the API
+    final attended = session['isAttended'] ?? session['studentAttended'] ?? session['attended'] ?? session['IsAttended'] ?? session['Attended'];
+    if (attended is bool) return attended;
+    if (attended is String) return attended.toLowerCase() == 'true';
+    return false;
+  }
 
   Widget _buildCounterItem(String label, int value, Color color) {
     return Column(
@@ -666,8 +807,20 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
 
   Widget _buildSessionCard(dynamic sessionData) {
     final session = Map<String, dynamic>.from(sessionData);
-    final sessionId = session['id']?.toString() ?? session['sessionId']?.toString() ?? '0';
-    final title = session['title'] ?? 'Session #$sessionId';
+    final sessionId = session['id']?.toString() ?? session['sessionId']?.toString() ?? session['SessionId']?.toString() ?? '0';
+    final fallbackSessionName = session['sessionName'] ?? session['SessionName'];
+    final titleStr =
+        session['title']?.toString() ??
+        session['Title']?.toString() ??
+        session['sessionTitle']?.toString() ??
+        session['SessionTitle']?.toString() ??
+        session['name']?.toString() ??
+        session['Name']?.toString() ??
+        (fallbackSessionName != null && !fallbackSessionName.toString().startsWith('Lecture') && !fallbackSessionName.toString().startsWith('Section') ? fallbackSessionName.toString() : null) ??
+        fallbackSessionName?.toString() ??
+        'Session #$sessionId';
+
+    final title = titleStr.isNotEmpty ? titleStr : 'Session #$sessionId';
     final bool isAttended = _didAttend(session);
 
     return Card(
@@ -779,8 +932,49 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
 
   @override
   Widget build(BuildContext context) {
-    final pastLectures = widget.lectures.where((s) => s['isActive'] != true).toList();
-    final pastSections = widget.sections.where((s) => s['isActive'] != true).toList();
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: AppColors.lightColor2,
+        appBar: AppBar(
+          title: const Text('Attendance Reports', style: TextStyle(fontWeight: FontWeight.bold)),
+          backgroundColor: AppColors.primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
+        body: const Center(child: CircularProgressIndicator(color: AppColors.primaryColor)),
+      );
+    }
+
+    if (_errorMessage != null) {
+      return Scaffold(
+        backgroundColor: AppColors.lightColor2,
+        appBar: AppBar(
+          title: const Text('Attendance Reports', style: TextStyle(fontWeight: FontWeight.bold)),
+          backgroundColor: AppColors.primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 64, color: AppColors.errorColor),
+              const SizedBox(height: 16),
+              Text(_errorMessage!, style: const TextStyle(color: AppColors.errorColor)),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _fetchMyHistory,
+                style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryColor),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final pastLectures = _lectures;
+    final pastSections = _sections;
     final pastSessions = [...pastLectures, ...pastSections];
 
     final totalAttended = pastSessions.where((s) => _didAttend(s)).length;

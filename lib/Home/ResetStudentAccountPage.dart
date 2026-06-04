@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../Auth/colors.dart';
 import '../Auth/auth_storage.dart';
 import '../Auth/api_service.dart';
+import '../l10n/app_localizations.dart';
 import '../widgets/AppInstructionsCard.dart';
 
 class ResetStudentAccountPage extends StatefulWidget {
@@ -52,8 +53,8 @@ class _ResetStudentAccountPageState extends State<ResetStudentAccountPage> {
     if (token == null) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Authentication token not found'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.authenticationTokenNotFound),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -77,7 +78,7 @@ class _ResetStudentAccountPageState extends State<ResetStudentAccountPage> {
       final responseBody = response['body'] as String;
 
       if (statusCode == 200) {
-        String msg = 'Account reset successfully';
+        String msg = AppLocalizations.of(context)!.accountResetSuccessfully;
         try {
           final responseData = jsonDecode(responseBody);
           if (responseData['message'] != null) {
@@ -116,14 +117,15 @@ class _ResetStudentAccountPageState extends State<ResetStudentAccountPage> {
       }
     } catch (e) {
       if (!mounted) return;
+      final errorMsg = e.toString().replaceFirst('Exception: ', '');
       setState(() {
-        _apiResponse = 'Error: ${e.toString()}';
+        _apiResponse = AppLocalizations.of(context)!.failedToResetAccount(errorMsg);
         _isSuccess = false;
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: ${e.toString()}'),
+          content: Text(AppLocalizations.of(context)!.failedToResetAccount(errorMsg)),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
@@ -167,9 +169,9 @@ class _ResetStudentAccountPageState extends State<ResetStudentAccountPage> {
             ),
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: const EdgeInsetsDirectional.only(start: 20, bottom: 16),
-              title: const Text(
-                    'Reset Student Account',
-                    style: TextStyle(
+              title: Text(
+                    AppLocalizations.of(context)!.resetStudentAccount,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -196,59 +198,15 @@ class _ResetStudentAccountPageState extends State<ResetStudentAccountPage> {
               padding: const EdgeInsets.all(24),
               child: Column(
                 children: [
-                  // Header
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: AppColors.lightColor,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: AppColors.primaryColor.withOpacity(0.2),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.info_outline,
-                          color: AppColors.primaryColor,
-                          size: 24,
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Reset Student Account',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.darkColor,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Enter the student University Code to reset their account. This will allow them to use the "Activate" screen again.',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: AppColors.darkColor.withOpacity(0.6),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
+
                   
-                  const AppInstructionsCard(
-                    title: 'How to Reset an Account',
+                  AppInstructionsCard(
+                    title: AppLocalizations.of(context)!.howToResetAccount,
                     instructions: [
-                      'Obtain the student\'s University Code.',
-                      'Enter the exact University Code in the field below.',
-                      'Click "Reset Account".',
-                      'Once successful, the student will be able to activate their account again from their own device.',
+                      AppLocalizations.of(context)!.obtainStudentUniversityCode,
+                      AppLocalizations.of(context)!.enterExactUniversityCode,
+                      AppLocalizations.of(context)!.clickResetAccountButton,
+                      AppLocalizations.of(context)!.studentWillActivateAgain,
                     ],
                   ),
                   const SizedBox(height: 32),
@@ -274,8 +232,8 @@ class _ResetStudentAccountPageState extends State<ResetStudentAccountPage> {
                           child: TextFormField(
                             controller: _studentCodeController,
                             decoration: InputDecoration(
-                              labelText: 'Student University Code',
-                              hintText: 'Enter university code (e.g., ST-20205522)',
+                              labelText: AppLocalizations.of(context)!.studentUniversityCodeReset,
+                              hintText: AppLocalizations.of(context)!.enterUniversityCodeExample,
                               prefixIcon: Icon(
                                 Icons.badge,
                                 color: AppColors.darkColor.withOpacity(0.5),
@@ -346,9 +304,9 @@ class _ResetStudentAccountPageState extends State<ResetStudentAccountPage> {
                                 strokeWidth: 2,
                               ),
                             )
-                                : const Text(
-                              'Reset Account',
-                              style: TextStyle(
+                                : Text(
+                              AppLocalizations.of(context)!.resetAccount,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -410,7 +368,7 @@ class _ResetStudentAccountPageState extends State<ResetStudentAccountPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'What happens when you reset a student account?',
+                          AppLocalizations.of(context)!.whatHappensResetStudent,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -420,19 +378,19 @@ class _ResetStudentAccountPageState extends State<ResetStudentAccountPage> {
                         const SizedBox(height: 12),
                         _buildInfoItem(
                           icon: Icons.refresh,
-                          text: 'The student can use the "Activate" screen again',
+                          text: AppLocalizations.of(context)!.studentCanUseActivateScreen,
                         ),
                         _buildInfoItem(
                           icon: Icons.lock_open,
-                          text: 'Their account status is reset',
+                          text: AppLocalizations.of(context)!.accountStatusReset,
                         ),
                         _buildInfoItem(
                           icon: Icons.settings_backup_restore,
-                          text: 'They need to complete the activation process again',
+                          text: AppLocalizations.of(context)!.completeActivationAgain,
                         ),
                         _buildInfoItem(
                           icon: Icons.warning,
-                          text: 'Previous account data may be affected',
+                          text: AppLocalizations.of(context)!.previousAccountDataAffected,
                         ),
                       ],
                     ),

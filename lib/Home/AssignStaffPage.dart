@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import '../l10n/app_localizations.dart';
+import 'package:registering_attendance/l10n/app_localizations.dart';
 import 'package:registering_attendance/core/http_interceptor.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Auth/colors.dart';
 import '../Auth/api_service.dart';
 
 class AssignStaffPage extends StatefulWidget {
-  const AssignStaffPage({Key? key}) : super(key: key);
+  final String? initialCourseCode;
+  const AssignStaffPage({Key? key, this.initialCourseCode}) : super(key: key);
 
   @override
   _AssignStaffPageState createState() => _AssignStaffPageState();
@@ -18,13 +19,21 @@ class _AssignStaffPageState extends State<AssignStaffPage> {
   final TextEditingController _staffCodeController = TextEditingController();
   bool _isLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialCourseCode != null && widget.initialCourseCode!.isNotEmpty) {
+      _courseCodeController.text = widget.initialCourseCode!;
+    }
+  }
+
   Future<void> _assignStaff() async {
     final courseCode = _courseCodeController.text.trim();
     final staffCode = _staffCodeController.text.trim();
 
     if (courseCode.isEmpty || staffCode.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter both codes.'), backgroundColor: AppColors.errorColor),
+        SnackBar(content: Text(AppLocalizations.of(context)!.pleaseBothCodes), backgroundColor: AppColors.errorColor),
       );
       return;
     }
@@ -45,20 +54,20 @@ class _AssignStaffPageState extends State<AssignStaffPage> {
       if (response.statusCode == 200) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Staff assigned successfully!'), backgroundColor: AppColors.successColor),
+          SnackBar(content: Text('Staff assigned successfully!'), backgroundColor: AppColors.successColor),
         );
         _courseCodeController.clear();
         _staffCodeController.clear();
       } else {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${response.body}'), backgroundColor: AppColors.errorColor),
+          SnackBar(content: Text('Error connecting to server'), backgroundColor: AppColors.errorColor),
         );
       }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to connect: $e'), backgroundColor: AppColors.errorColor),
+        SnackBar(content: Text('Failed to connect: ${e.toString()}'), backgroundColor: AppColors.errorColor),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -105,9 +114,9 @@ class _AssignStaffPageState extends State<AssignStaffPage> {
                   child: const Icon(Icons.assignment_ind, size: 48, color: AppColors.primaryColor),
                 ),
                 const SizedBox(height: 24),
-                const Text(
-                  'Assign Doctor or TA',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.darkColor),
+                Text(
+                  AppLocalizations.of(context)!.assignDoctorOrTA,
+                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.darkColor),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -118,16 +127,16 @@ class _AssignStaffPageState extends State<AssignStaffPage> {
                 const SizedBox(height: 32),
                 _buildTextField(
                   controller: _courseCodeController,
-                  label: 'Course Code',
+                  label: AppLocalizations.of(context)!.courseCode,
                   icon: Icons.qr_code,
-                  hint: 'e.g., CS101',
+                  hint: AppLocalizations.of(context)!.enterCourseCode,
                 ),
                 const SizedBox(height: 16),
                 _buildTextField(
                   controller: _staffCodeController,
-                  label: 'Staff University Code',
+                  label: AppLocalizations.of(context)!.staffUniversityCode,
                   icon: Icons.person_search,
-                  hint: 'e.g., 202012345',
+                  hint: AppLocalizations.of(context)!.enterStaffUniversityCode,
                 ),
                 const SizedBox(height: 32),
                 SizedBox(
@@ -142,9 +151,9 @@ class _AssignStaffPageState extends State<AssignStaffPage> {
                     ),
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                            'Assign Staff',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                        : Text(
+                            AppLocalizations.of(context)!.assignStaff,
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                   ),
                 ),

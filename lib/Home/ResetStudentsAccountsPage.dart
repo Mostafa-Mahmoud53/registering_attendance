@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../Auth/colors.dart';
+import '../l10n/app_localizations.dart';
 import 'ResetStudentAccountPage.dart';
 import 'ResetStudentsForNewYearPage.dart';
 
@@ -14,26 +15,26 @@ class ResetStudentsAccountsPage extends StatelessWidget {
         backgroundColor: AppColors.lightColor2,
         appBar: AppBar(
           backgroundColor: AppColors.primaryColor,
-          title: const Text(
-            'Reset Accounts',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          title: Text(
+            AppLocalizations.of(context)!.resetAccounts,
+            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
           centerTitle: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
             onPressed: () => Navigator.pop(context),
           ),
-          bottom: const TabBar(
+          bottom: TabBar(
             isScrollable: true,
             tabAlignment: TabAlignment.center,
             indicatorColor: Colors.white,
             indicatorWeight: 3,
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white70,
-            labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
             tabs: [
-              Tab(text: 'Single Account', icon: Icon(Icons.person_off)),
-              Tab(text: 'New Year Reset', icon: Icon(Icons.autorenew)),
+              Tab(text: AppLocalizations.of(context)!.singleAccount, icon: const Icon(Icons.person_off)),
+              Tab(text: AppLocalizations.of(context)!.newYearReset, icon: const Icon(Icons.autorenew)),
             ],
           ),
           elevation: 0,

@@ -8,9 +8,9 @@ import 'package:registering_attendance/core/http_interceptor.dart' as http;
 import 'package:registering_attendance/Home/BulkCourseEnrollmentPage.dart';
 import 'package:registering_attendance/Home/CourseEnrollmentPage.dart';
 import 'package:registering_attendance/Home/CoursesListPage.dart';
-import 'package:registering_attendance/Home/CreateStudentsBulkPage.dart';
+import 'package:registering_attendance/Home/CreateStudentsTabsPage.dart';
 import 'package:registering_attendance/Home/DeleteCoursePage.dart';
-import 'package:registering_attendance/Home/DeleteStudentsBulkPage.dart';
+import 'package:registering_attendance/Home/DeleteStudentsTabsPage.dart';
 import 'package:registering_attendance/Home/DeleteUserPage.dart';
 import 'package:registering_attendance/Home/DoctorsListPage.dart';
 import 'package:registering_attendance/Home/ResetStudentAccountPage.dart';
@@ -46,7 +46,7 @@ class AdminDashboard extends StatefulWidget {
 
 class _AdminDashboardState extends State<AdminDashboard> {
   final StreamController<Map<String, dynamic>> _statsStreamController =
-  StreamController<Map<String, dynamic>>.broadcast();
+      StreamController<Map<String, dynamic>>.broadcast();
   late Timer _refreshTimer;
   String? _userRole;
   bool _isLoading = true;
@@ -161,7 +161,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
               const SizedBox(height: 12),
               Text(
                 AppLocalizations.of(context)!.logout,
-                style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -182,10 +186,15 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     onPressed: () => Navigator.pop(context, false),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       side: BorderSide(color: Colors.grey.shade300),
                     ),
-                    child: Text(AppLocalizations.of(context)!.cancel, style: TextStyle(color: Colors.grey.shade600)),
+                    child: Text(
+                      AppLocalizations.of(context)!.cancel,
+                      style: TextStyle(color: Colors.grey.shade600),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -196,10 +205,15 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       backgroundColor: AppColors.errorColor,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       elevation: 0,
                     ),
-                    child: Text(AppLocalizations.of(context)!.logout, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    child: Text(
+                      AppLocalizations.of(context)!.logout,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ],
@@ -233,7 +247,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
         'tas': 0,
         'students': 0,
         'courses': 0,
-        'error': 'no_token'
+        'error': 'no_token',
       });
       return;
     }
@@ -247,36 +261,50 @@ class _AdminDashboardState extends State<AdminDashboard> {
         {'key': 'courses', 'endpoint': 'number-of-courses'},
       ];
 
-      final results = await Future.wait(
-          endpoints.map((item) => _fetchApiData(item['endpoint']!))
-      );
-
-      // معالجة النتائج
-      final Map<String, dynamic> stats = {};
+      // معالجة النتائج بشكل متسلسل وإرسالها أولاً بأول لتحديث واجهة المستخدم
+      final Map<String, dynamic> stats = {
+        'doctors': -2,
+        'tas': -2,
+        'students': -2,
+        'courses': -2,
+      };
       bool hasError = false;
+      final List<String> errors = [];
+      
+      // إرسال حالة التحميل الأولية
+      _statsStreamController.add(Map.from(stats));
 
-      for (int i = 0; i < results.length; i++) {
-        final result = results[i];
-        final key = endpoints[i]['key']!;
+      for (final item in endpoints) {
+        final key = item['key']!;
+        final result = await _fetchApiData(item['endpoint']!);
 
         if (result.containsKey('error')) {
           hasError = true;
-          stats[key] = 0;
+          errors.add(result['error']);
+          stats[key] = -1;
           print('⚠️ Error for $key: ${result['error']}');
         } else if (result.containsKey('count')) {
           final count = result['count'];
           stats[key] = _parseCount(count);
           print('✅ $key: ${stats[key]}');
         } else {
-          stats[key] = 0;
+          hasError = true;
+          stats[key] = -1;
           print('⚠️ No count for $key');
         }
+        
+        // تحديث الواجهة فوراً بعد كل طلب بدلاً من الانتظار
+        _statsStreamController.add(Map.from(stats));
       }
 
       if (hasError) {
-        bool hasUnauthorized = results.any((r) => r['error'] == 'unauthorized' || r['error'] == 'api_401');
-        bool has403 = results.any((r) => r['error'] == 'api_403' || r['error'] == 'api_404');
-        
+        bool hasUnauthorized = errors.any(
+          (err) => err == 'unauthorized' || err == 'api_401',
+        );
+        bool has403 = errors.any(
+          (err) => err == 'api_403' || err == 'api_404',
+        );
+
         if (hasUnauthorized) {
           stats['error'] = 'unauthorized';
           // ملاحظة: الـ http_interceptor سيقوم بالتحويل لصفحة تسجيل الدخول تلقائياً
@@ -289,8 +317,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       }
 
       print('📈 Final Stats: $stats');
-      _statsStreamController.add(stats);
-
+      _statsStreamController.add(Map.from(stats));
     } catch (e) {
       print('❌ Error in _fetchStatistics: $e');
       _statsStreamController.add({
@@ -298,7 +325,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
         'tas': 0,
         'students': 0,
         'courses': 0,
-        'error': 'fetch_error'
+        'error': 'fetch_error',
       });
     }
   }
@@ -321,7 +348,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       final response = await ApiService.getAdminStatistic(
         endpoint: endpoint,
         token: token,
-      ).timeout(const Duration(seconds: 10));
+      ).timeout(const Duration(seconds: 30));
 
       final statusCode = response['statusCode'] as int;
       final responseBody = response['body'] as String;
@@ -357,342 +384,394 @@ class _AdminDashboardState extends State<AdminDashboard> {
           constraints: const BoxConstraints(maxWidth: 1400),
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
-        slivers: [
-          // App Bar مع تأثير زجاجي (بدون زر refresh)
-          SliverAppBar(
-            expandedHeight: 140,
-            collapsedHeight: 80,
-            pinned: true,
-            floating: true,
-            backgroundColor: AppColors.primaryColor,
-            elevation: 8,
-            shape: const ContinuousRectangleBorder(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(40),
-                bottomRight: Radius.circular(40),
-              ),
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              centerTitle: Responsive.isDesktop(context),
-              titlePadding: Responsive.isDesktop(context) 
-                  ? const EdgeInsets.only(bottom: 16) 
-                  : const EdgeInsetsDirectional.only(start: 20, bottom: 16),
-              title: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.white.withOpacity(0.2),
-                    child: Icon(
-                      Icons.admin_panel_settings,
-                      color: Colors.white,
-                      size: 24,
-                    ),
+            slivers: [
+              // App Bar مع تأثير زجاجي (بدون زر refresh)
+              SliverAppBar(
+                expandedHeight: 140,
+                collapsedHeight: 80,
+                pinned: true,
+                floating: true,
+                backgroundColor: AppColors.primaryColor,
+                elevation: 8,
+                shape: const ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(40),
+                    bottomRight: Radius.circular(40),
                   ),
-                  const SizedBox(width: 12),
-                  Flexible(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          widget.role == 'Admin' ? AppLocalizations.of(context)!.adminDashboard : (widget.role == 'Doctor' ? AppLocalizations.of(context)!.doctorDashboard : '${widget.role} Dashboard'),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          overflow: TextOverflow.visible,
+                ),
+                flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: Responsive.isDesktop(context),
+                  titlePadding: Responsive.isDesktop(context)
+                      ? const EdgeInsets.only(bottom: 16)
+                      : const EdgeInsetsDirectional.only(start: 20, bottom: 16),
+                  title: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.white.withOpacity(0.2),
+                        child: Icon(
+                          Icons.admin_panel_settings,
+                          color: Colors.white,
+                          size: 24,
                         ),
-                        Text(
-                          widget.userName,
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
-                            fontSize: 11,
-                          ),
-                          overflow: TextOverflow.visible,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      AppColors.primaryColor,
-                      AppColors.darkColor,
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            actions: [
-              LanguageToggleButton(),
-              // إزالة زر Refresh وإبقاء زر Logout فقط
-              IconButton(
-                icon: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.logout, size: 22, color: Colors.white),
-                ),
-                onPressed: _logout,
-              ),
-              const SizedBox(width: 10),
-            ],
-          ),
-
-          // Welcome Card
-          SliverToBoxAdapter(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: Responsive.isDesktop(context) ? 1000 : 1200),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-                  child: Container(
-                    padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      blurRadius: 20,
-                      spreadRadius: 2,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      AppColors.lightColor,
-                      Colors.white,
-                    ],
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: Responsive.isDesktop(context) ? MainAxisAlignment.center : MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [
-                            AppColors.secondaryColor,
-                            AppColors.accentColor,
+                      ),
+                      const SizedBox(width: 12),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              widget.role == 'Admin'
+                                  ? AppLocalizations.of(context)!.adminDashboard
+                                  : (widget.role == 'Doctor'
+                                        ? AppLocalizations.of(
+                                            context,
+                                          )!.doctorDashboard
+                                        : '${widget.role} Dashboard'),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.visible,
+                            ),
+                            Text(
+                              widget.userName,
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 11,
+                              ),
+                              overflow: TextOverflow.visible,
+                            ),
                           ],
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.secondaryColor.withOpacity(0.4),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        Icons.verified_user,
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${AppLocalizations.of(context)!.welcome} ${widget.role},',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.darkColor.withOpacity(0.7),
-                            ),
-                          ),
-                          Text(
-                            widget.userName,
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.darkColor,
-                            ),
-                          ),
-                          Text(
-                            widget.email,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: AppColors.darkColor.withOpacity(0.5),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          // إضافة مؤشر حالة التحميل
-                          _isLoading
-                              ? Row(
-                            children: [
-                              SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    AppColors.primaryColor,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                AppLocalizations.of(context)!.loadingStatistics,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.darkColor.withOpacity(0.6),
-                                ),
-                              ),
-                            ],
-                          )
-                              : StreamBuilder<Map<String, dynamic>>(
-                            stream: _statsStreamController.stream,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData &&
-                                  snapshot.data!.containsKey('error') &&
-                                  snapshot.data!['error'] != null) {
-                                return Text(
-                                  AppLocalizations.of(context)!.updatesAutomatically,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.darkColor.withOpacity(0.5),
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                );
-                              }
-                              return const SizedBox();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-
-          // Statistics Cards Grid
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: StreamBuilder<Map<String, dynamic>>(
-                stream: _statsStreamController.stream,
-                builder: (context, snapshot) {
-                  // عرض حالة التحميل
-                  if (_isLoading) {
-                    return _buildLoadingStatsGrid();
-                  }
-
-                  // عرض حالة الخطأ
-                  if (snapshot.hasError) {
-                    return _buildErrorStatsGrid(
-                      message: AppLocalizations.of(context)!.connectionError,
-                      onRetry: _fetchStatistics,
-                    );
-                  }
-
-                  // عرض حالة لا توجد بيانات
-                  if (!snapshot.hasData) {
-                    return _buildErrorStatsGrid(
-                      message: AppLocalizations.of(context)!.noDataAvailable,
-                      onRetry: _fetchStatistics,
-                    );
-                  }
-
-                  final stats = snapshot.data!;
-
-                  // التحقق من وجود أخطاء
-                  if (stats.containsKey('error') && stats['error'] != null) {
-                    if (stats['error'] == 'api_403' || widget.role != 'Admin') {
-                      return _buildForbiddenStatsGrid(message: AppLocalizations.of(context)!.noAccessPermission);
-                    }
-                    
-                    String errorMessage = AppLocalizations.of(context)!.networkError;
-                    if (stats['error'] == 'no_token') {
-                      errorMessage = AppLocalizations.of(context)!.authenticationRequired;
-                    } else if (stats['error'] == 'unauthorized') {
-                      errorMessage = AppLocalizations.of(context)!.sessionExpired;
-                    }
-
-                    return _buildErrorStatsGrid(
-                      message: errorMessage,
-                      onRetry: _fetchStatistics,
-                    );
-                  }
-
-                  // عرض الإحصائيات العادية
-                  final doctors = (stats['doctors'] as int?) ?? 0;
-                  final tas = (stats['tas'] as int?) ?? 0;
-                  final students = (stats['students'] as int?) ?? 0;
-                  final courses = (stats['courses'] as int?) ?? 0;
-
-                  return Column(
-                    children: [
-                      _buildStatsGrid(
-                        doctors: doctors,
-                        tas: tas,
-                        students: students,
-                        courses: courses,
-                      ),
-                      const SizedBox(height: 8),
-                      // رسالة تلقائية للـ auto-refresh
-                      Text(
-                        AppLocalizations.of(context)!.updatesAutomatically,
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: AppColors.darkColor.withOpacity(0.4),
-                        ),
                       ),
                     ],
-                  );
-                },
+                  ),
+                  background: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [AppColors.primaryColor, AppColors.darkColor],
+                      ),
+                    ),
+                  ),
+                ),
+                actions: [
+                  LanguageToggleButton(),
+                  // إزالة زر Refresh وإبقاء زر Logout فقط
+                  IconButton(
+                    icon: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.logout,
+                        size: 22,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: _logout,
+                  ),
+                  const SizedBox(width: 10),
+                ],
               ),
-            ),
-          ),
 
-          // Main Categories Menu
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsetsDirectional.only(start: 20, top: 30, end: 20, bottom: 10),
-              child: Text(
-                AppLocalizations.of(context)!.dashboardMenu,
-                textAlign: Responsive.isDesktop(context) ? TextAlign.center : TextAlign.start,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.darkColor,
+              // Welcome Card
+              SliverToBoxAdapter(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: Responsive.isDesktop(context) ? 1000 : 1200,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 24,
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              blurRadius: 20,
+                              spreadRadius: 2,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [AppColors.lightColor, Colors.white],
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: Responsive.isDesktop(context)
+                              ? MainAxisAlignment.center
+                              : MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    AppColors.secondaryColor,
+                                    AppColors.accentColor,
+                                  ],
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.secondaryColor.withOpacity(
+                                      0.4,
+                                    ),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                Icons.verified_user,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${AppLocalizations.of(context)!.welcome} ${widget.role},',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: AppColors.darkColor.withOpacity(
+                                        0.7,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    widget.userName,
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.darkColor,
+                                    ),
+                                  ),
+                                  Text(
+                                    widget.email,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColors.darkColor.withOpacity(
+                                        0.5,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  // إضافة مؤشر حالة التحميل
+                                  _isLoading
+                                      ? Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 16,
+                                              height: 16,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                      Color
+                                                    >(AppColors.primaryColor),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.loadingStatistics,
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: AppColors.darkColor
+                                                    .withOpacity(0.6),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : StreamBuilder<Map<String, dynamic>>(
+                                          stream: _statsStreamController.stream,
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasData &&
+                                                snapshot.data!.containsKey(
+                                                  'error',
+                                                ) &&
+                                                snapshot.data!['error'] !=
+                                                    null) {
+                                              return Text(
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.updatesAutomatically,
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: AppColors.darkColor
+                                                      .withOpacity(0.5),
+                                                  fontStyle: FontStyle.italic,
+                                                ),
+                                              );
+                                            }
+                                            return const SizedBox();
+                                          },
+                                        ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
 
-          // Categories Grid
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            sliver: _buildCategoriesGrid(context),
-          ),
+              // Statistics Cards Grid
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  child: StreamBuilder<Map<String, dynamic>>(
+                    stream: _statsStreamController.stream,
+                    builder: (context, snapshot) {
+                      // عرض حالة التحميل
+                      if (_isLoading) {
+                        return _buildLoadingStatsGrid();
+                      }
 
-          // Bottom Space
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 40),
+                      // عرض حالة الخطأ
+                      if (snapshot.hasError) {
+                        return _buildErrorStatsGrid(
+                          message: AppLocalizations.of(
+                            context,
+                          )!.connectionError,
+                          onRetry: _fetchStatistics,
+                        );
+                      }
+
+                      // عرض حالة لا توجد بيانات
+                      if (!snapshot.hasData) {
+                        return _buildErrorStatsGrid(
+                          message: AppLocalizations.of(
+                            context,
+                          )!.noDataAvailable,
+                          onRetry: _fetchStatistics,
+                        );
+                      }
+
+                      final stats = snapshot.data!;
+
+                      // التحقق من وجود أخطاء
+                      if (stats.containsKey('error') &&
+                          stats['error'] != null &&
+                          stats['error'] != 'partial_error') {
+                        if (stats['error'] == 'api_403' ||
+                            widget.role != 'Admin') {
+                          return _buildForbiddenStatsGrid(
+                            message: AppLocalizations.of(
+                              context,
+                            )!.noAccessPermission,
+                          );
+                        }
+
+                        String errorMessage = AppLocalizations.of(
+                          context,
+                        )!.networkError;
+                        if (stats['error'] == 'no_token') {
+                          errorMessage = AppLocalizations.of(
+                            context,
+                          )!.authenticationRequired;
+                        } else if (stats['error'] == 'unauthorized') {
+                          errorMessage = AppLocalizations.of(
+                            context,
+                          )!.sessionExpired;
+                        }
+
+                        return _buildErrorStatsGrid(
+                          message: errorMessage,
+                          onRetry: _fetchStatistics,
+                        );
+                      }
+
+                      // عرض الإحصائيات العادية (أو حالة التحميل -2)
+                      final doctors = (stats['doctors'] as int?) ?? -2;
+                      final tas = (stats['tas'] as int?) ?? -2;
+                      final students = (stats['students'] as int?) ?? -2;
+                      final courses = (stats['courses'] as int?) ?? -2;
+
+                      return Column(
+                        children: [
+                          _buildStatsGrid(
+                            doctors: doctors,
+                            tas: tas,
+                            students: students,
+                            courses: courses,
+                          ),
+                          const SizedBox(height: 8),
+                          // رسالة تلقائية للـ auto-refresh
+                          Text(
+                            AppLocalizations.of(context)!.updatesAutomatically,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: AppColors.darkColor.withOpacity(0.4),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+
+              // Main Categories Menu
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: 20,
+                    top: 30,
+                    end: 20,
+                    bottom: 10,
+                  ),
+                  child: Text(
+                    AppLocalizations.of(context)!.dashboardMenu,
+                    textAlign: Responsive.isDesktop(context)
+                        ? TextAlign.center
+                        : TextAlign.start,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.darkColor,
+                    ),
+                  ),
+                ),
+              ),
+
+              // Categories Grid
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                sliver: _buildCategoriesGrid(context),
+              ),
+
+              // Bottom Space
+              const SliverToBoxAdapter(child: SizedBox(height: 40)),
+            ],
           ),
-        ],
-      ),
         ),
       ),
     );
@@ -701,10 +780,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
   double _statCardWidth(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
     final available = w > 1400 ? 1400.0 : w;
-    if (w >= 1100) return (available - 80) / 4; // Desktop Layout: 4 cards per row
-    if (w >= 850)  return (available - 60) / 3; // Tablet Layout:  3 cards per row
-    if (w >= 600)  return (w - 56) / 2 - 6;    // Mobile Layout:  2 cards per row
-    return (w - 52) / 2;                        // Mobile Layout (small): 2 compact cards per row
+    if (w >= 1100)
+      return (available - 80) / 4; // Desktop Layout: 4 cards per row
+    if (w >= 850)
+      return (available - 60) / 3; // Tablet Layout:  3 cards per row
+    if (w >= 600) return (w - 56) / 2 - 6; // Mobile Layout:  2 cards per row
+    return (w - 52) / 2; // Mobile Layout (small): 2 compact cards per row
   }
 
   Widget _buildLoadingStatsGrid() {
@@ -714,16 +795,19 @@ class _AdminDashboardState extends State<AdminDashboard> {
           spacing: 12,
           runSpacing: 12,
           alignment: WrapAlignment.center,
-          children: List.generate(4, (index) => SizedBox(
-            width: _statCardWidth(context),
-            child: _buildCompactStatCard(
-              icon: Icons.hourglass_empty,
-              title: AppLocalizations.of(context)!.updatesAutomatically,
-              count: '...',
-              color: Colors.grey[400]!,
-              isLoading: true,
+          children: List.generate(
+            4,
+            (index) => SizedBox(
+              width: _statCardWidth(context),
+              child: _buildCompactStatCard(
+                icon: Icons.hourglass_empty,
+                title: AppLocalizations.of(context)!.updatesAutomatically,
+                count: '...',
+                color: Colors.grey[400]!,
+                isLoading: true,
+              ),
             ),
-          )),
+          ),
         ),
         const SizedBox(height: 8),
         Text(
@@ -747,15 +831,18 @@ class _AdminDashboardState extends State<AdminDashboard> {
           spacing: 12,
           runSpacing: 12,
           alignment: WrapAlignment.center,
-          children: List.generate(4, (index) => SizedBox(
-            width: _statCardWidth(context),
-            child: _buildCompactStatCard(
-              icon: Icons.error_outline,
-              title: 'Error',
-              count: '!',
-              color: AppColors.errorColor,
+          children: List.generate(
+            4,
+            (index) => SizedBox(
+              width: _statCardWidth(context),
+              child: _buildCompactStatCard(
+                icon: Icons.error_outline,
+                title: 'Error',
+                count: '!',
+                color: AppColors.errorColor,
+              ),
             ),
-          )),
+          ),
         ),
         const SizedBox(height: 12),
         Padding(
@@ -779,7 +866,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryColor,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -800,10 +890,42 @@ class _AdminDashboardState extends State<AdminDashboard> {
           runSpacing: 12,
           alignment: WrapAlignment.center,
           children: [
-            SizedBox(width: _statCardWidth(context), child: _buildCompactStatCard(icon: Icons.groups, title: AppLocalizations.of(context)!.doctors, count: '-', color: Colors.grey)),
-            SizedBox(width: _statCardWidth(context), child: _buildCompactStatCard(icon: Icons.school, title: AppLocalizations.of(context)!.tas, count: '-', color: Colors.grey)),
-            SizedBox(width: _statCardWidth(context), child: _buildCompactStatCard(icon: Icons.people, title: AppLocalizations.of(context)!.students, count: '-', color: Colors.grey)),
-            SizedBox(width: _statCardWidth(context), child: _buildCompactStatCard(icon: Icons.book_online, title: AppLocalizations.of(context)!.courses, count: '-', color: Colors.grey)),
+            SizedBox(
+              width: _statCardWidth(context),
+              child: _buildCompactStatCard(
+                icon: Icons.groups,
+                title: AppLocalizations.of(context)!.doctors,
+                count: '-',
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(
+              width: _statCardWidth(context),
+              child: _buildCompactStatCard(
+                icon: Icons.school,
+                title: AppLocalizations.of(context)!.tas,
+                count: '-',
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(
+              width: _statCardWidth(context),
+              child: _buildCompactStatCard(
+                icon: Icons.people,
+                title: AppLocalizations.of(context)!.students,
+                count: '-',
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(
+              width: _statCardWidth(context),
+              child: _buildCompactStatCard(
+                icon: Icons.book_online,
+                title: AppLocalizations.of(context)!.courses,
+                count: '-',
+                color: Colors.grey,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 12),
@@ -844,37 +966,41 @@ class _AdminDashboardState extends State<AdminDashboard> {
         SizedBox(
           width: _statCardWidth(context),
           child: _buildCompactStatCard(
-            icon: Icons.groups,
+            icon: doctors == -1 ? Icons.error_outline : Icons.groups,
             title: AppLocalizations.of(context)!.doctors,
-            count: doctors.toString(),
-            color: AppColors.primaryColor,
+            count: doctors == -1 ? '!' : (doctors == -2 ? '...' : doctors.toString()),
+            color: doctors == -1 ? AppColors.errorColor : AppColors.primaryColor,
+            isLoading: doctors == -2,
           ),
         ),
         SizedBox(
           width: _statCardWidth(context),
           child: _buildCompactStatCard(
-            icon: Icons.school,
+            icon: tas == -1 ? Icons.error_outline : Icons.school,
             title: AppLocalizations.of(context)!.tas,
-            count: tas.toString(),
-            color: Colors.blueGrey,
+            count: tas == -1 ? '!' : (tas == -2 ? '...' : tas.toString()),
+            color: tas == -1 ? AppColors.errorColor : Colors.blueGrey,
+            isLoading: tas == -2,
           ),
         ),
         SizedBox(
           width: _statCardWidth(context),
           child: _buildCompactStatCard(
-            icon: Icons.people,
+            icon: students == -1 ? Icons.error_outline : Icons.people,
             title: AppLocalizations.of(context)!.students,
-            count: students.toString(),
-            color: AppColors.successColor,
+            count: students == -1 ? '!' : (students == -2 ? '...' : students.toString()),
+            color: students == -1 ? AppColors.errorColor : AppColors.successColor,
+            isLoading: students == -2,
           ),
         ),
         SizedBox(
           width: _statCardWidth(context),
           child: _buildCompactStatCard(
-            icon: Icons.book_online,
+            icon: courses == -1 ? Icons.error_outline : Icons.book_online,
             title: AppLocalizations.of(context)!.courses,
-            count: courses.toString(),
-            color: AppColors.accentColor,
+            count: courses == -1 ? '!' : (courses == -2 ? '...' : courses.toString()),
+            color: courses == -1 ? AppColors.errorColor : AppColors.accentColor,
+            isLoading: courses == -2,
           ),
         ),
       ],
@@ -900,10 +1026,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
             offset: const Offset(0, 4),
           ),
         ],
-        border: Border.all(
-          color: color.withOpacity(0.1),
-          width: 1,
-        ),
+        border: Border.all(color: color.withOpacity(0.1), width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -927,11 +1050,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           valueColor: AlwaysStoppedAnimation<Color>(color),
                         ),
                       )
-                    : Icon(
-                        icon,
-                        color: color,
-                        size: 22,
-                      ),
+                    : Icon(icon, color: color, size: 22),
               ),
             ),
             const SizedBox(width: 12),
@@ -974,7 +1093,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
   Widget _buildCategoriesGrid(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
     final List<Map<String, dynamic>> categories = [];
-    
+
     if (widget.role == 'Admin') {
       categories.add({
         'title': AppLocalizations.of(context)!.staffManagement,
@@ -1008,16 +1127,16 @@ class _AdminDashboardState extends State<AdminDashboard> {
         'color': Colors.orange,
         'operations': [
           {
-            'title': AppLocalizations.of(context)!.bulkCreateStudents,
-            'icon': Icons.upload_file,
+            'title': AppLocalizations.of(context)!.createStudentsScreen,
+            'icon': Icons.person_add,
             'color': AppColors.secondaryColor,
-            'page': () => CreateStudentsBulkPage(),
+            'page': () => const CreateStudentsTabsPage(),
           },
           {
-            'title': AppLocalizations.of(context)!.bulkDeleteStudents,
-            'icon': Icons.delete_forever,
+            'title': AppLocalizations.of(context)!.deleteStudentsScreen,
+            'icon': Icons.person_remove,
             'color': AppColors.errorColor,
-            'page': () => DeleteStudentsBulkPage(),
+            'page': () => const DeleteStudentsTabsPage(),
           },
           {
             'title': AppLocalizations.of(context)!.resetAccounts,
@@ -1067,7 +1186,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
             final cat = categories[index];
             final isMobile = w < 600;
             final available = w > 1400 ? 1400.0 : w;
-            final cardW = w >= 1100 ? (available - 80) / 4 : w >= 850 ? (available - 60) / 2 : isMobile ? available - 40 : (w - 56) / 2 - 6;
+            final cardW = w >= 1100
+                ? (available - 80) / 4
+                : w >= 850
+                ? (available - 60) / 2
+                : isMobile
+                ? available - 40
+                : (w - 56) / 2 - 6;
             return SizedBox(
               width: cardW,
               child: _buildSimpleOperationCard(
@@ -1081,7 +1206,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     MaterialPageRoute(
                       builder: (context) => SubMenuPage(
                         title: cat['title'] as String,
-                        operations: cat['operations'] as List<Map<String, dynamic>>,
+                        operations:
+                            cat['operations'] as List<Map<String, dynamic>>,
                       ),
                     ),
                   );
@@ -1105,94 +1231,81 @@ class _AdminDashboardState extends State<AdminDashboard> {
       onTap: onTap,
       child: Card(
         elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         shadowColor: color.withOpacity(0.3),
         child: Container(
           padding: EdgeInsets.symmetric(
-            vertical: isMobile ? 16 : 20, 
-            horizontal: isMobile ? 16 : 8
+            vertical: isMobile ? 16 : 20,
+            horizontal: isMobile ? 16 : 8,
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             color: Colors.white,
-            border: Border.all(
-              color: color.withOpacity(0.2),
-              width: 1,
-            ),
+            border: Border.all(color: color.withOpacity(0.2), width: 1),
           ),
-          child: isMobile 
-            ? Row(
-                children: [
-                  Container(
-                    width: 52,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      color: color.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      icon,
-                      color: color,
-                      size: 28,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Text(
-                      title,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.darkColor,
+          child: isMobile
+              ? Row(
+                  children: [
+                    Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: color.withOpacity(0.1),
+                        shape: BoxShape.circle,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                      child: Icon(icon, color: color, size: 28),
                     ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: AppColors.darkColor.withOpacity(0.3),
-                    size: 16,
-                  ),
-                ],
-              )
-            : Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: color.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      icon,
-                      color: color,
-                      size: 32,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text(
-                      title,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.darkColor,
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        title,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.darkColor,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
-              ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppColors.darkColor.withOpacity(0.3),
+                      size: 16,
+                    ),
+                  ],
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: color.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(icon, color: color, size: 32),
+                    ),
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.darkColor,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
         ),
       ),
     );
@@ -1213,11 +1326,8 @@ class SubMenuPage extends StatelessWidget {
   final String title;
   final List<Map<String, dynamic>> operations;
 
-  const SubMenuPage({
-    Key? key,
-    required this.title,
-    required this.operations,
-  }) : super(key: key);
+  const SubMenuPage({Key? key, required this.title, required this.operations})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -1226,14 +1336,21 @@ class SubMenuPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
         toolbarHeight: Responsive.isDesktop(context) ? 100 : 70,
-        title: Text(title, style: TextStyle(
-          fontWeight: FontWeight.bold, 
-          color: Colors.white,
-          fontSize: Responsive.isDesktop(context) ? 26 : 20,
-        )),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            fontSize: Responsive.isDesktop(context) ? 26 : 20,
+          ),
+        ),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: Colors.white, size: Responsive.isDesktop(context) ? 28 : 20),
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white,
+            size: Responsive.isDesktop(context) ? 28 : 20,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         elevation: 0,
@@ -1253,7 +1370,13 @@ class SubMenuPage extends StatelessWidget {
                   final w = MediaQuery.of(context).size.width;
                   final isMobile = w < 600;
                   final available = w > 1200 ? 1200.0 : w;
-                  final cardW = w >= 1100 ? (available - 80) / 3 : w >= 850 ? (available - 60) / 2 : isMobile ? available - 40 : (w - 56) / 2 - 8;
+                  final cardW = w >= 1100
+                      ? (available - 80) / 3
+                      : w >= 850
+                      ? (available - 60) / 2
+                      : isMobile
+                      ? available - 40
+                      : (w - 56) / 2 - 8;
                   return SizedBox(
                     width: cardW,
                     child: _SubMenuCard(
@@ -1267,7 +1390,9 @@ class SubMenuPage extends StatelessWidget {
                             final pageBuilder = op['page'] as Widget Function();
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => pageBuilder()),
+                              MaterialPageRoute(
+                                builder: (context) => pageBuilder(),
+                              ),
                             );
                           } else if (op['page'] is Function) {
                             (op['page'] as Function)();
@@ -1311,71 +1436,81 @@ class _SubMenuCard extends StatelessWidget {
         shadowColor: color.withOpacity(0.3),
         child: Container(
           padding: EdgeInsets.symmetric(
-            vertical: isMobile ? 16 : (Responsive.isDesktop(context) ? 24 : 16), 
-            horizontal: isMobile ? 16 : 8
+            vertical: isMobile ? 16 : (Responsive.isDesktop(context) ? 24 : 16),
+            horizontal: isMobile ? 16 : 8,
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             color: Colors.white,
             border: Border.all(color: color.withOpacity(0.2), width: 1),
           ),
-          child: isMobile 
-            ? Row(
-                children: [
-                  Container(
-                    width: 52,
-                    height: 52,
-                    decoration: BoxDecoration(color: color.withOpacity(0.1), shape: BoxShape.circle),
-                    child: Icon(icon, color: color, size: 28),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Text(
-                      title,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: 16, 
-                        fontWeight: FontWeight.bold, 
-                        color: AppColors.darkColor,
+          child: isMobile
+              ? Row(
+                  children: [
+                    Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: color.withOpacity(0.1),
+                        shape: BoxShape.circle,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                      child: Icon(icon, color: color, size: 28),
                     ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: AppColors.darkColor.withOpacity(0.3),
-                    size: 16,
-                  ),
-                ],
-              )
-            : Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: Responsive.isDesktop(context) ? 72 : 56,
-                    height: Responsive.isDesktop(context) ? 72 : 56,
-                    decoration: BoxDecoration(color: color.withOpacity(0.1), shape: BoxShape.circle),
-                    child: Icon(icon, color: color, size: Responsive.isDesktop(context) ? 36 : 32),
-                  ),
-                  SizedBox(height: Responsive.isDesktop(context) ? 16 : 12),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text(
-                      title,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: Responsive.isDesktop(context) ? 18 : 15, 
-                        fontWeight: FontWeight.bold, 
-                        color: AppColors.darkColor,
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        title,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.darkColor,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
-              ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppColors.darkColor.withOpacity(0.3),
+                      size: 16,
+                    ),
+                  ],
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: Responsive.isDesktop(context) ? 72 : 56,
+                      height: Responsive.isDesktop(context) ? 72 : 56,
+                      decoration: BoxDecoration(
+                        color: color.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        icon,
+                        color: color,
+                        size: Responsive.isDesktop(context) ? 36 : 32,
+                      ),
+                    ),
+                    SizedBox(height: Responsive.isDesktop(context) ? 16 : 12),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: Responsive.isDesktop(context) ? 18 : 15,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.darkColor,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
         ),
       ),
     );

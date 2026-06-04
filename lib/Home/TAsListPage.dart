@@ -28,8 +28,8 @@ class _TAsListPageState extends State<TAsListPage> {
   String? _authToken;
   Timer? _refreshTimer;
 
-  static const String _tasUrl = 'http://msngroup-001-site1.ktempurl.com/api/Admin/list-TAs';
-  static const String _tasCountUrl = 'http://msngroup-001-site1.ktempurl.com/api/Admin/number-of-tas';
+  static const String _tasUrl = 'http://77.83.242.94:5000/api/Admin/list-TAs';
+  static const String _tasCountUrl = 'http://77.83.242.94:5000/api/Admin/number-of-tas';
 
   @override
   void initState() {
@@ -149,7 +149,7 @@ class _TAsListPageState extends State<TAsListPage> {
 
     try {
       final response = await http.delete(
-        Uri.parse('http://msngroup-001-site1.ktempurl.com/api/Admin/delete-user/$universityCode'),
+        Uri.parse('http://77.83.242.94:5000/api/Admin/delete-user/$universityCode'),
         headers: {
           'accept': '*/*',
           'Authorization': 'Bearer $_authToken',

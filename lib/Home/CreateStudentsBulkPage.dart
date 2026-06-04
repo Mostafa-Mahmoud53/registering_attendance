@@ -32,7 +32,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
   List<String> _importErrors = [];
 
   static const String _apiUrl =
-      'http://msngroup-001-site1.ktempurl.com/api/Admin/create-students-bulk';
+      'http://77.83.242.94:5000/api/Admin/create-students-bulk';
 
   // قائمة للطلاب الذين سيتم إضافتهم
   List<Map<String, String>> _studentsList = [];

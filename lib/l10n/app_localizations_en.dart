@@ -15,6 +15,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appDescription => 'A new Flutter project.';
 
   @override
+  String get createSingle => 'Single Student';
+
+  @override
+  String get deleteSingle => 'Delete Single';
+
+  @override
+  String get deleteMultiple => 'Delete Multiple';
+
+  @override
+  String get createStudentsScreen => 'Create Students';
+
+  @override
+  String get deleteStudentsScreen => 'Delete Students';
+
+  @override
+  String get createStudentSingleBtn => 'Create Student';
+
+  @override
+  String get deleteStudentSingleBtn => 'Delete Student';
+
+  @override
   String get studentAttendanceApplication => 'Student Attendance Application';
 
   @override
@@ -1124,6 +1145,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get viewDashboardSubtitle => 'Analytics and session management';
 
   @override
+  String get courseCreationSteps => 'Course Creation Steps';
+
+  @override
+  String get courseCreationStep1 =>
+      'Enter a clear, descriptive name for the course.';
+
+  @override
+  String get courseCreationStep2 =>
+      'Provide a unique Course Code (e.g., CS4710).';
+
+  @override
+  String get courseCreationStep3 =>
+      'Enter the exact University Code of the Doctor assigned to this course.';
+
+  @override
+  String get courseCreationStep4 =>
+      'Provide a brief description of the course contents.';
+
+  @override
+  String get courseCreationStep5 => 'Click \"Create Course\" to finalize.';
+
+  @override
+  String get doctorUniversityCode => 'Doctor University Code';
+
+  @override
+  String get enterDoctorUniversityCode =>
+      'Enter doctor university code (e.g., DR-1234)';
+
+  @override
+  String get courseNameIsRequired => 'Course name is required';
+
+  @override
+  String get courseNameMustBeAtLeast2Chars =>
+      'Course name must be at least 2 characters';
+
+  @override
+  String get courseCodeIsRequired => 'Course code is required';
+
+  @override
+  String get courseCodeMustBeAtLeast2Chars =>
+      'Course code must be at least 2 characters';
+
+  @override
+  String get courseDescriptionIsRequired => 'Description is required';
+
+  @override
+  String get courseDescriptionMustBeAtLeast5Chars =>
+      'Description must be at least 5 characters';
+
+  @override
+  String get doctorUniversityCodeIsRequired =>
+      'Doctor University Code is required';
+
+  @override
+  String get doctorUniversityCodeMustBeValid =>
+      'Please enter a valid University Code (e.g., DR-1234)';
+
+  @override
   String get deleteSession => 'Delete Session';
 
   @override
@@ -1170,4 +1249,157 @@ class AppLocalizationsEn extends AppLocalizations {
   String resetSystemError(String error) {
     return 'Failed to reset system: $error';
   }
+
+  @override
+  String get dataPreserved => 'Users & Courses → Preserved';
+
+  @override
+  String get dataDeleted => 'Sessions, Attendance, Enrollments → Deleted';
+
+  @override
+  String get singleAccount => 'Single Account';
+
+  @override
+  String get newYearReset => 'New Year Reset';
+
+  @override
+  String get resetStudentAccount => 'Reset Student Account';
+
+  @override
+  String get enterStudentUniversityCodeReset =>
+      'Enter the student University Code to reset their account. This will allow them to use the \"Activate\" screen again.';
+
+  @override
+  String get howToResetAccount => 'How to Reset an Account';
+
+  @override
+  String get obtainStudentUniversityCode =>
+      'Obtain the student\'s University Code.';
+
+  @override
+  String get enterExactUniversityCode =>
+      'Enter the exact University Code in the field below.';
+
+  @override
+  String get clickResetAccountButton => 'Click \"Reset Account\".';
+
+  @override
+  String get studentWillActivateAgain =>
+      'Once successful, the student will be able to activate their account again from their own device.';
+
+  @override
+  String get studentUniversityCodeReset => 'Student University Code';
+
+  @override
+  String get enterUniversityCodeExample =>
+      'Enter university code (e.g., ST-20205522)';
+
+  @override
+  String get resetAccount => 'Reset Account';
+
+  @override
+  String get accountResetSuccessfully => 'Account reset successfully';
+
+  @override
+  String failedToResetAccount(String error) {
+    return 'Failed to reset account: $error';
+  }
+
+  @override
+  String get studentUniversityCodeRequired =>
+      'Student University Code is required';
+
+  @override
+  String get invalidUniversityCode =>
+      'Please enter a valid University Code (e.g., ST-20205522)';
+
+  @override
+  String get whatHappensResetStudent =>
+      'What happens when you reset a student account?';
+
+  @override
+  String get studentCanUseActivateScreen =>
+      'The student can use the \"Activate\" screen again';
+
+  @override
+  String get accountStatusReset => 'Their account status is reset';
+
+  @override
+  String get completeActivationAgain =>
+      'They need to complete the activation process again';
+
+  @override
+  String get previousAccountDataAffected =>
+      'Previous account data may be affected';
+
+  @override
+  String get enrollStudentsScreen => 'Enroll Students';
+
+  @override
+  String get enrollSingle => 'Enroll Single';
+
+  @override
+  String get enrollMultiple => 'Enroll Multiple';
+
+  @override
+  String get excelSheet => 'Excel Sheet';
+
+  @override
+  String get enrollAll => 'Enroll All';
+
+  @override
+  String get universityCodeHint => 'Enter University Code';
+
+  @override
+  String get multipleCodesHint =>
+      'Enter University Codes separated by commas or new lines';
+
+  @override
+  String get excelColumnNote =>
+      'The Excel file must contain a University Code column';
+
+  @override
+  String get noStaffAssigned => 'No staff assigned to this course';
+
+  @override
+  String get assignRemoveStaff => 'Assign / Remove Staff';
+
+  @override
+  String get assignRemoveStaffSubtitle =>
+      'Manage staff assigned to this course';
+
+  @override
+  String get removeAssignedStaff => 'Remove Assigned Staff';
+
+  @override
+  String confirmRemoveStaff(String name) {
+    return 'Are you sure you want to remove $name from this course?';
+  }
+
+  @override
+  String get staffRemovedSuccess => 'Staff member removed successfully';
+
+  @override
+  String get courseCodeLabel => 'Code';
+
+  @override
+  String get courseIdLabel => 'ID';
+
+  @override
+  String get remove => 'Remove';
+
+  @override
+  String get loadingStaff => 'Loading staff...';
+
+  @override
+  String get errorLoadingStaff => 'Failed to load staff list';
+
+  @override
+  String get enroll => 'Enroll';
+
+  @override
+  String get createMultiple => 'Multiple Students';
+
+  @override
+  String get deleteStudentMultipleBtn => 'Delete Students';
 }
