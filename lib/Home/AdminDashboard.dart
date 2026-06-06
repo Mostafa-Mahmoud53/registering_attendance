@@ -1,20 +1,14 @@
+// ignore_for_file: avoid_print
 // admin_dashboard.dart مع إصلاح خطأ نوع البيانات وتحسين الأداء
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../core/responsive.dart';
-import 'package:registering_attendance/core/http_interceptor.dart' as http;
-import 'package:registering_attendance/Home/BulkCourseEnrollmentPage.dart';
-import 'package:registering_attendance/Home/CourseEnrollmentPage.dart';
 import 'package:registering_attendance/Home/CoursesListPage.dart';
 import 'package:registering_attendance/Home/CreateStudentsTabsPage.dart';
-import 'package:registering_attendance/Home/DeleteCoursePage.dart';
 import 'package:registering_attendance/Home/DeleteStudentsTabsPage.dart';
-import 'package:registering_attendance/Home/DeleteUserPage.dart';
 import 'package:registering_attendance/Home/DoctorsListPage.dart';
-import 'package:registering_attendance/Home/ResetStudentAccountPage.dart';
-import 'package:registering_attendance/Home/ResetStudentsForNewYearPage.dart';
 import 'package:registering_attendance/Home/ResetStudentsAccountsPage.dart';
 import 'package:registering_attendance/Home/TAsListPage.dart';
 import 'package:registering_attendance/Home/creatCourse.dart';
@@ -33,12 +27,12 @@ class AdminDashboard extends StatefulWidget {
   final String token;
 
   const AdminDashboard({
-    Key? key,
+    super.key,
     required this.userName,
     required this.email,
     required this.role,
     required this.token,
-  }) : super(key: key);
+  });
 
   @override
   _AdminDashboardState createState() => _AdminDashboardState();
@@ -153,7 +147,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.logout, color: Colors.white, size: 32),
@@ -270,7 +264,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       };
       bool hasError = false;
       final List<String> errors = [];
-      
+
       // إرسال حالة التحميل الأولية
       _statsStreamController.add(Map.from(stats));
 
@@ -292,7 +286,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
           stats[key] = -1;
           print('⚠️ No count for $key');
         }
-        
+
         // تحديث الواجهة فوراً بعد كل طلب بدلاً من الانتظار
         _statsStreamController.add(Map.from(stats));
       }
@@ -301,9 +295,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
         bool hasUnauthorized = errors.any(
           (err) => err == 'unauthorized' || err == 'api_401',
         );
-        bool has403 = errors.any(
-          (err) => err == 'api_403' || err == 'api_404',
-        );
+        bool has403 = errors.any((err) => err == 'api_403' || err == 'api_404');
 
         if (hasUnauthorized) {
           stats['error'] = 'unauthorized';
@@ -401,12 +393,15 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 ),
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: false,
-                  titlePadding: const EdgeInsetsDirectional.only(start: 20, bottom: 16),
+                  titlePadding: const EdgeInsetsDirectional.only(
+                    start: 20,
+                    bottom: 16,
+                  ),
                   title: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       CircleAvatar(
-                        backgroundColor: Colors.white.withOpacity(0.2),
+                        backgroundColor: Colors.white.withValues(alpha: 0.2),
                         child: Icon(
                           Icons.admin_panel_settings,
                           color: Colors.white,
@@ -438,7 +433,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                             Text(
                               widget.userName,
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                                 fontSize: 11,
                               ),
                               overflow: TextOverflow.visible,
@@ -465,7 +460,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     icon: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -486,15 +481,25 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 1200),
                     child: Padding(
-                      padding: EdgeInsets.fromLTRB(20, Responsive.isDesktop(context) ? 12 : 24, 20, Responsive.isDesktop(context) ? 0 : 24),
+                      padding: EdgeInsets.fromLTRB(
+                        20,
+                        Responsive.isDesktop(context) ? 12 : 24,
+                        20,
+                        Responsive.isDesktop(context) ? 0 : 24,
+                      ),
                       child: Container(
-                        padding: Responsive.isDesktop(context) ? const EdgeInsets.symmetric(vertical: 16, horizontal: 24) : const EdgeInsets.all(24),
+                        padding: Responsive.isDesktop(context)
+                            ? const EdgeInsets.symmetric(
+                                vertical: 16,
+                                horizontal: 24,
+                              )
+                            : const EdgeInsets.all(24),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
+                              color: Colors.grey.withValues(alpha: 0.1),
                               blurRadius: 20,
                               spreadRadius: 2,
                               offset: const Offset(0, 4),
@@ -591,7 +596,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 color: AppColors.darkColor
-                                                    .withOpacity(0.6),
+                                                    .withValues(alpha: 0.6),
                                               ),
                                             ),
                                           ],
@@ -612,7 +617,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   color: AppColors.darkColor
-                                                      .withOpacity(0.5),
+                                                      .withValues(alpha: 0.5),
                                                   fontStyle: FontStyle.italic,
                                                 ),
                                               );
@@ -720,7 +725,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                             AppLocalizations.of(context)!.updatesAutomatically,
                             style: TextStyle(
                               fontSize: 11,
-                              color: AppColors.darkColor.withOpacity(0.4),
+                              color: AppColors.darkColor.withValues(alpha: 0.4),
                             ),
                           ),
                         ],
@@ -771,10 +776,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
   double _statCardWidth(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
     final available = w > 1400 ? 1400.0 : w;
-    if (w >= 1100)
+    if (w >= 1100) {
       return (available - 80) / 4; // Desktop Layout: 4 cards per row
-    if (w >= 850)
+    }
+    if (w >= 850) {
       return (available - 60) / 3; // Tablet Layout:  3 cards per row
+    }
     if (w >= 600) return (w - 56) / 2 - 6; // Mobile Layout:  2 cards per row
     return (w - 52) / 2; // Mobile Layout (small): 2 compact cards per row
   }
@@ -805,7 +812,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
           AppLocalizations.of(context)!.loadingStatistics,
           style: TextStyle(
             fontSize: 12,
-            color: AppColors.darkColor.withOpacity(0.5),
+            color: AppColors.darkColor.withValues(alpha: 0.5),
           ),
         ),
       ],
@@ -959,8 +966,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
           child: _buildCompactStatCard(
             icon: doctors == -1 ? Icons.error_outline : Icons.groups,
             title: AppLocalizations.of(context)!.doctors,
-            count: doctors == -1 ? '!' : (doctors == -2 ? '...' : doctors.toString()),
-            color: doctors == -1 ? AppColors.errorColor : AppColors.primaryColor,
+            count: doctors == -1
+                ? '!'
+                : (doctors == -2 ? '...' : doctors.toString()),
+            color: doctors == -1
+                ? AppColors.errorColor
+                : AppColors.primaryColor,
             isLoading: doctors == -2,
           ),
         ),
@@ -979,8 +990,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
           child: _buildCompactStatCard(
             icon: students == -1 ? Icons.error_outline : Icons.people,
             title: AppLocalizations.of(context)!.students,
-            count: students == -1 ? '!' : (students == -2 ? '...' : students.toString()),
-            color: students == -1 ? AppColors.errorColor : AppColors.successColor,
+            count: students == -1
+                ? '!'
+                : (students == -2 ? '...' : students.toString()),
+            color: students == -1
+                ? AppColors.errorColor
+                : AppColors.successColor,
             isLoading: students == -2,
           ),
         ),
@@ -989,7 +1004,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
           child: _buildCompactStatCard(
             icon: courses == -1 ? Icons.error_outline : Icons.book_online,
             title: AppLocalizations.of(context)!.courses,
-            count: courses == -1 ? '!' : (courses == -2 ? '...' : courses.toString()),
+            count: courses == -1
+                ? '!'
+                : (courses == -2 ? '...' : courses.toString()),
             color: courses == -1 ? AppColors.errorColor : AppColors.accentColor,
             isLoading: courses == -2,
           ),
@@ -1011,13 +1028,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.08),
+            color: color.withValues(alpha: 0.08),
             blurRadius: 10,
             spreadRadius: 2,
             offset: const Offset(0, 4),
           ),
         ],
-        border: Border.all(color: color.withOpacity(0.1), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.1), width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -1028,7 +1045,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.12),
+                color: color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
@@ -1066,7 +1083,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     title,
                     style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.darkColor.withOpacity(0.6),
+                      color: AppColors.darkColor.withValues(alpha: 0.6),
                       fontWeight: FontWeight.w600,
                     ),
                     maxLines: 1,
@@ -1100,7 +1117,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
           {
             'title': AppLocalizations.of(context)!.listDoctors,
             'icon': Icons.list,
-            'color': AppColors.primaryColor.withOpacity(0.8),
+            'color': AppColors.primaryColor.withValues(alpha: 0.8),
             'page': () => DoctorsListPage(),
           },
           {
@@ -1154,7 +1171,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
         {
           'title': AppLocalizations.of(context)!.coursesList,
           'icon': Icons.list_alt,
-          'color': AppColors.successColor.withOpacity(0.8),
+          'color': AppColors.successColor.withValues(alpha: 0.8),
           'page': () => CoursesListPage(),
         },
         if (widget.role == 'Admin')
@@ -1223,7 +1240,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        shadowColor: color.withOpacity(0.3),
+        shadowColor: color.withValues(alpha: 0.3),
         child: Container(
           padding: EdgeInsets.symmetric(
             vertical: isMobile ? 16 : 20,
@@ -1232,7 +1249,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             color: Colors.white,
-            border: Border.all(color: color.withOpacity(0.2), width: 1),
+            border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
           ),
           child: isMobile
               ? Row(
@@ -1241,7 +1258,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       width: 52,
                       height: 52,
                       decoration: BoxDecoration(
-                        color: color.withOpacity(0.1),
+                        color: color.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(icon, color: color, size: 28),
@@ -1262,7 +1279,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     ),
                     Icon(
                       Icons.arrow_forward_ios,
-                      color: AppColors.darkColor.withOpacity(0.3),
+                      color: AppColors.darkColor.withValues(alpha: 0.3),
                       size: 16,
                     ),
                   ],
@@ -1275,7 +1292,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       width: 60,
                       height: 60,
                       decoration: BoxDecoration(
-                        color: color.withOpacity(0.1),
+                        color: color.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(icon, color: color, size: 32),
@@ -1317,8 +1334,7 @@ class SubMenuPage extends StatelessWidget {
   final String title;
   final List<Map<String, dynamic>> operations;
 
-  const SubMenuPage({Key? key, required this.title, required this.operations})
-    : super(key: key);
+  const SubMenuPage({super.key, required this.title, required this.operations});
 
   @override
   Widget build(BuildContext context) {
@@ -1424,7 +1440,7 @@ class _SubMenuCard extends StatelessWidget {
       child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        shadowColor: color.withOpacity(0.3),
+        shadowColor: color.withValues(alpha: 0.3),
         child: Container(
           padding: EdgeInsets.symmetric(
             vertical: isMobile ? 16 : (Responsive.isDesktop(context) ? 24 : 16),
@@ -1433,7 +1449,7 @@ class _SubMenuCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             color: Colors.white,
-            border: Border.all(color: color.withOpacity(0.2), width: 1),
+            border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
           ),
           child: isMobile
               ? Row(
@@ -1442,7 +1458,7 @@ class _SubMenuCard extends StatelessWidget {
                       width: 52,
                       height: 52,
                       decoration: BoxDecoration(
-                        color: color.withOpacity(0.1),
+                        color: color.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(icon, color: color, size: 28),
@@ -1463,7 +1479,7 @@ class _SubMenuCard extends StatelessWidget {
                     ),
                     Icon(
                       Icons.arrow_forward_ios,
-                      color: AppColors.darkColor.withOpacity(0.3),
+                      color: AppColors.darkColor.withValues(alpha: 0.3),
                       size: 16,
                     ),
                   ],
@@ -1476,7 +1492,7 @@ class _SubMenuCard extends StatelessWidget {
                       width: Responsive.isDesktop(context) ? 72 : 56,
                       height: Responsive.isDesktop(context) ? 72 : 56,
                       decoration: BoxDecoration(
-                        color: color.withOpacity(0.1),
+                        color: color.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(

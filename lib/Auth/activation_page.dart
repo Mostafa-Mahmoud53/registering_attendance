@@ -1,4 +1,6 @@
 // activation_page.dart
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -14,11 +16,11 @@ class ActivationPage extends StatefulWidget {
   final Function(String) onDeviceIdRefresh;
 
   const ActivationPage({
-    Key? key,
+    super.key,
     required this.onSwitchToLogin,
     required this.deviceId,
     required this.onDeviceIdRefresh,
-  }) : super(key: key);
+  });
 
   @override
   _ActivationPageState createState() => _ActivationPageState();
@@ -36,7 +38,7 @@ class _ActivationPageState extends State<ActivationPage> {
   bool _isLoading = false;
   bool _obscurePassword = true;
   String _message = '';
-  bool _isError = false;
+  final bool _isError = false;
 
   // التحقق من صحة البريد الإلكتروني
   String? _validateEmail(String? value) {
@@ -83,6 +85,24 @@ class _ActivationPageState extends State<ActivationPage> {
       _isLoading = true;
       _message = '';
     });
+
+    bool isDesktopPlatform = false;
+    if (kIsWeb) {
+      isDesktopPlatform = true;
+    } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      isDesktopPlatform = true;
+    }
+
+    if (isDesktopPlatform) {
+      AuthWidgets.showErrorSnackBar(
+        context,
+        AppException(message: 'Students cannot activate their account on the desktop version. Please use the mobile app.'),
+      );
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
 
     try {
       final response = await ApiService.activateAccount(
@@ -133,10 +153,10 @@ class _ActivationPageState extends State<ActivationPage> {
       margin: const EdgeInsets.only(top: 20),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: _isError ? AppColors.errorColor.withOpacity(0.1) : AppColors.successColor.withOpacity(0.1),
+        color: _isError ? AppColors.errorColor.withValues(alpha: 0.1) : AppColors.successColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: _isError ? AppColors.errorColor.withOpacity(0.3) : AppColors.successColor.withOpacity(0.3),
+          color: _isError ? AppColors.errorColor.withValues(alpha: 0.3) : AppColors.successColor.withValues(alpha: 0.3),
         ),
       ),
       child: Row(
@@ -167,24 +187,28 @@ class _ActivationPageState extends State<ActivationPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20),
-          Text(
-            AppLocalizations.of(context)!.activateAccount,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: AppColors.darkColor,
+          const SizedBox(height: 5),
+          Center(
+            child: Text(
+              AppLocalizations.of(context)!.activateAccount,
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: AppColors.darkColor,
+              ),
             ),
           ),
           const SizedBox(height: 10),
-          Text(
-            AppLocalizations.of(context)!.enterDetailsToActivate,
-            style: TextStyle(
-              fontSize: 16,
-              color: AppColors.darkColor.withOpacity(0.7),
+          Center(
+            child: Text(
+              AppLocalizations.of(context)!.enterDetailsToActivate,
+              style: TextStyle(
+                fontSize: 16,
+                color: AppColors.darkColor.withValues(alpha: 0.7),
+              ),
             ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 15),
 
           // University Email field
           AuthWidgets.buildTextField(
@@ -199,7 +223,7 @@ class _ActivationPageState extends State<ActivationPage> {
               FocusScope.of(context).requestFocus(_codeFocus);
             },
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
 
           // University Code field
           AuthWidgets.buildTextField(
@@ -213,7 +237,7 @@ class _ActivationPageState extends State<ActivationPage> {
               FocusScope.of(context).requestFocus(_passwordFocus);
             },
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
 
           // New Password field
           AuthWidgets.buildPasswordField(
@@ -229,7 +253,7 @@ class _ActivationPageState extends State<ActivationPage> {
               });
             },
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 10),
 
           // Device ID display hidden from UI
           // AuthWidgets.buildDeviceIdDisplay(
@@ -245,30 +269,32 @@ class _ActivationPageState extends State<ActivationPage> {
             onPressed: _activateAccount,
             isLoading: _isLoading,
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
 
           // Switch to login link
           Center(
             child: TextButton(
               onPressed: widget.onSwitchToLogin,
-              child: RichText(
-                text: TextSpan(
-                  text: AppLocalizations.of(context)!.alreadyHaveAccount,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: AppColors.darkColor,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: AppLocalizations.of(context)!.login,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.accentColor,
-                      ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.alreadyHaveAccount,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: AppColors.darkColor,
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    AppLocalizations.of(context)!.login,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.accentColor,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

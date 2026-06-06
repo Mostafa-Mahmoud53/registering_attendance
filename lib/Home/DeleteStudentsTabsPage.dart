@@ -6,7 +6,7 @@ import 'DeleteMultipleStudentsPage.dart';
 import 'DeleteExcelStudentsPage.dart';
 
 class DeleteStudentsTabsPage extends StatelessWidget {
-  const DeleteStudentsTabsPage({Key? key}) : super(key: key);
+  const DeleteStudentsTabsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

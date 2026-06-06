@@ -107,41 +107,48 @@ class AuthWidgets {
           ),
         ),
         const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primaryColor.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: TextFormField(
-            controller: controller,
-            keyboardType: keyboardType,
-            focusNode: focusNode,
-            validator: validator,
-            onFieldSubmitted: onFieldSubmitted,
-            textInputAction: keyboardType == TextInputType.emailAddress || keyboardType == TextInputType.text
-                ? TextInputAction.next
-                : TextInputAction.done,
-            decoration: InputDecoration(
-              hintText: hint,
-              prefixIcon: Icon(prefixIcon, color: AppColors.primaryColor),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 18,
-              ),
-              filled: true,
-              fillColor: Colors.white,
-              errorStyle: const TextStyle(
-                color: AppColors.errorColor,
-                fontSize: 12,
-              ),
+        TextFormField(
+          controller: controller,
+          keyboardType: keyboardType,
+          focusNode: focusNode,
+          validator: validator,
+          onFieldSubmitted: onFieldSubmitted,
+          textInputAction: keyboardType == TextInputType.emailAddress || keyboardType == TextInputType.text
+              ? TextInputAction.next
+              : TextInputAction.done,
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+            prefixIcon: Icon(prefixIcon, color: AppColors.primaryColor.withValues(alpha: 0.8)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Colors.grey.shade200, width: 1.5),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: AppColors.primaryColor, width: 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: AppColors.errorColor, width: 1.5),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: AppColors.errorColor, width: 2),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 18,
+            ),
+            filled: true,
+            fillColor: AppColors.primaryColor.withValues(alpha: 0.04),
+            errorStyle: const TextStyle(
+              color: AppColors.errorColor,
+              fontSize: 12,
             ),
           ),
         ),
@@ -171,46 +178,53 @@ class AuthWidgets {
           ),
         ),
         const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primaryColor.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
+        TextFormField(
+          controller: controller,
+          obscureText: obscureText,
+          focusNode: focusNode,
+          validator: validator,
+          onFieldSubmitted: onFieldSubmitted,
+          textInputAction: TextInputAction.done,
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+            prefixIcon: Icon(Icons.lock, color: AppColors.primaryColor.withValues(alpha: 0.8)),
+            suffixIcon: IconButton(
+              icon: Icon(
+                obscureText ? Icons.visibility_off : Icons.visibility,
+                color: AppColors.primaryColor.withValues(alpha: 0.8),
               ),
-            ],
-          ),
-          child: TextFormField(
-            controller: controller,
-            obscureText: obscureText,
-            focusNode: focusNode,
-            validator: validator,
-            onFieldSubmitted: onFieldSubmitted,
-            textInputAction: TextInputAction.done,
-            decoration: InputDecoration(
-              hintText: hint,
-              prefixIcon: const Icon(Icons.lock, color: AppColors.primaryColor),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  obscureText ? Icons.visibility_off : Icons.visibility,
-                  color: AppColors.primaryColor,
-                ),
-                onPressed: onToggle,
-              ),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 18,
-              ),
-              filled: true,
-              fillColor: Colors.white,
-              errorStyle: const TextStyle(
-                color: AppColors.errorColor,
-                fontSize: 12,
-              ),
+              onPressed: onToggle,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Colors.grey.shade200, width: 1.5),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: AppColors.primaryColor, width: 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: AppColors.errorColor, width: 1.5),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: AppColors.errorColor, width: 2),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 18,
+            ),
+            filled: true,
+            fillColor: AppColors.primaryColor.withValues(alpha: 0.04),
+            errorStyle: const TextStyle(
+              color: AppColors.errorColor,
+              fontSize: 12,
             ),
           ),
         ),
@@ -236,10 +250,10 @@ class AuthWidgets {
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: AppColors.primaryColor.withOpacity(0.1),
+            color: AppColors.primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: AppColors.primaryColor.withOpacity(0.3),
+              color: AppColors.primaryColor.withValues(alpha: 0.3),
               width: 1,
             ),
           ),
@@ -283,7 +297,7 @@ class AuthWidgets {
               'Device ID will be sent automatically',
               style: TextStyle(
                 fontSize: 12,
-                color: AppColors.darkColor.withOpacity(0.6),
+                color: AppColors.darkColor.withValues(alpha: 0.6),
               ),
             ),
           ),
@@ -300,17 +314,17 @@ class AuthWidgets {
       width: double.infinity,
       height: 56,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
-          colors: [AppColors.primaryColor, AppColors.primaryColor.withOpacity(0.8)],
+          colors: [AppColors.primaryColor, AppColors.primaryColor.withValues(alpha: 0.8)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryColor.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: AppColors.primaryColor.withValues(alpha: 0.4),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -320,7 +334,7 @@ class AuthWidgets {
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
           ),
           padding: EdgeInsets.zero,
         ),

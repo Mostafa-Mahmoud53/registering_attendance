@@ -11,9 +11,9 @@ class CourseSessionsHistoryPage extends StatefulWidget {
   final String courseId;
 
   const CourseSessionsHistoryPage({
-    Key? key,
+    super.key,
     required this.courseId,
-  }) : super(key: key);
+  });
 
   @override
   State<CourseSessionsHistoryPage> createState() => _CourseSessionsHistoryPageState();
@@ -156,11 +156,11 @@ class _CourseSessionsHistoryPageState extends State<CourseSessionsHistoryPage> w
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.history_toggle_off, size: 60, color: Colors.indigo.withOpacity(0.3)),
+            Icon(Icons.history_toggle_off, size: 60, color: Colors.indigo.withValues(alpha: 0.3)),
             const SizedBox(height: 16),
             Text(
               AppLocalizations.of(context)!.noSessionsFound,
-              style: TextStyle(fontSize: 18, color: Colors.indigo.withOpacity(0.5)),
+              style: TextStyle(fontSize: 18, color: Colors.indigo.withValues(alpha: 0.5)),
             ),
           ],
         ),
@@ -224,7 +224,7 @@ class _CourseSessionsHistoryPageState extends State<CourseSessionsHistoryPage> w
               Container(
                 padding: EdgeInsets.all(isMobile ? 10 : 12),
                 decoration: BoxDecoration(
-                  color: Colors.indigo.withOpacity(0.1),
+                  color: Colors.indigo.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -252,7 +252,7 @@ class _CourseSessionsHistoryPageState extends State<CourseSessionsHistoryPage> w
                     Text(
                       'ID: #$sessionId',
                       style: TextStyle(
-                        color: AppColors.darkColor.withOpacity(0.5),
+                        color: AppColors.darkColor.withValues(alpha: 0.5),
                         fontSize: isMobile ? 11 : 13,
                       ),
                     ),
@@ -311,7 +311,7 @@ class _CourseSessionsHistoryPageState extends State<CourseSessionsHistoryPage> w
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(Icons.delete_forever, color: Colors.white, size: 32),
@@ -326,7 +326,7 @@ class _CourseSessionsHistoryPageState extends State<CourseSessionsHistoryPage> w
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         sessionTitle,
-                        style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 14),
+                        style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 14),
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,

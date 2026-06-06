@@ -7,7 +7,7 @@ import '../l10n/app_localizations.dart';
 
 class ResetStudentsForNewYearPage extends StatefulWidget {
   final bool isTab;
-  const ResetStudentsForNewYearPage({Key? key, this.isTab = false}) : super(key: key);
+  const ResetStudentsForNewYearPage({super.key, this.isTab = false});
   @override
   _ResetStudentsForNewYearPageState createState() =>
       _ResetStudentsForNewYearPageState();
@@ -102,7 +102,7 @@ class _ResetStudentsForNewYearPageState extends State<ResetStudentsForNewYearPag
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(Icons.warning_amber_rounded, color: Colors.white, size: 36),
@@ -123,9 +123,9 @@ class _ResetStudentsForNewYearPageState extends State<ResetStudentsForNewYearPag
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppColors.errorColor.withOpacity(0.08),
+                      color: AppColors.errorColor.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.errorColor.withOpacity(0.3)),
+                      border: Border.all(color: AppColors.errorColor.withValues(alpha: 0.3)),
                     ),
                     child: Text(
                       AppLocalizations.of(context)!.resetSystemWarning,
@@ -212,7 +212,7 @@ class _ResetStudentsForNewYearPageState extends State<ResetStudentsForNewYearPag
     duration: const Duration(milliseconds: 300),
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      color: _isSuccess ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+      color: _isSuccess ? Colors.green.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1),
       borderRadius: BorderRadius.circular(12),
       border: Border.all(color: _isSuccess ? Colors.green : Colors.red),
     ),
@@ -272,7 +272,7 @@ class _ResetStudentsForNewYearPageState extends State<ResetStudentsForNewYearPag
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.08),
+                      color: Colors.grey.withValues(alpha: 0.08),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     )
@@ -294,7 +294,7 @@ class _ResetStudentsForNewYearPageState extends State<ResetStudentsForNewYearPag
                       AppLocalizations.of(context)!.resetSystemDescription,
                       style: TextStyle(
                         fontSize: 16,
-                        color: AppColors.darkColor.withOpacity(0.6),
+                        color: AppColors.darkColor.withValues(alpha: 0.6),
                         height: 1.4,
                       ),
                     ),

@@ -5,12 +5,12 @@ import 'package:registering_attendance/core/http_interceptor.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Auth/colors.dart';
 import '../Auth/api_service.dart';
-import '../widgets/AppInstructionsCard.dart';
+import '../widgets/app_instructions_card.dart';
 
 class CourseEnrollmentPage extends StatefulWidget {
   final String? initialCourseId;
   final bool isTab;
-  const CourseEnrollmentPage({Key? key, this.initialCourseId, this.isTab = false}) : super(key: key);
+  const CourseEnrollmentPage({super.key, this.initialCourseId, this.isTab = false});
 
   @override
   _CourseEnrollmentPageState createState() => _CourseEnrollmentPageState();
@@ -320,8 +320,8 @@ class _CourseEnrollmentPageState extends State<CourseEnrollmentPage> {
                             margin: const EdgeInsets.only(bottom: 8),
                             decoration: BoxDecoration(
                               color: _isSuccess
-                                  ? Colors.green.withOpacity(0.1)
-                                  : Colors.red.withOpacity(0.1),
+                                  ? Colors.green.withValues(alpha: 0.1)
+                                  : Colors.red.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: _isSuccess ? Colors.green : Colors.red,
@@ -407,7 +407,7 @@ class _CourseEnrollmentPageState extends State<CourseEnrollmentPage> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.08),
+                color: Colors.grey.withValues(alpha: 0.08),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -419,7 +419,7 @@ class _CourseEnrollmentPageState extends State<CourseEnrollmentPage> {
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(
-                color: AppColors.darkColor.withOpacity(0.4),
+                color: AppColors.darkColor.withValues(alpha: 0.4),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -450,7 +450,7 @@ class _CourseEnrollmentPageState extends State<CourseEnrollmentPage> {
               fillColor: Colors.white,
               prefixIcon: Icon(
                 prefixIcon,
-                color: AppColors.darkColor.withOpacity(0.5),
+                color: AppColors.darkColor.withValues(alpha: 0.5),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,

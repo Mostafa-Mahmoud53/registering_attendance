@@ -611,6 +611,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get startNewSession => 'بدء جلسة جديدة';
 
   @override
+  String get resumeActiveSession => 'استكمال المحاضرة الحالية';
+
+  @override
+  String get resumeActiveSessionSubtitle =>
+      'فتح شاشة عرض الحضور للمحاضرة النشطة';
+
+  @override
   String get createSession => 'إنشاء جلسة';
 
   @override

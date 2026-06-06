@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:registering_attendance/l10n/app_localizations.dart';
 import 'package:registering_attendance/core/http_interceptor.dart' as http;
@@ -8,7 +7,7 @@ import '../Auth/api_service.dart';
 
 class AssignStaffPage extends StatefulWidget {
   final String? initialCourseCode;
-  const AssignStaffPage({Key? key, this.initialCourseCode}) : super(key: key);
+  const AssignStaffPage({super.key, this.initialCourseCode});
 
   @override
   _AssignStaffPageState createState() => _AssignStaffPageState();
@@ -98,7 +97,7 @@ class _AssignStaffPageState extends State<AssignStaffPage> {
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
+                  color: Colors.grey.withValues(alpha: 0.1),
                   blurRadius: 20,
                   spreadRadius: 2,
                   offset: const Offset(0, 4),
@@ -110,7 +109,7 @@ class _AssignStaffPageState extends State<AssignStaffPage> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(color: AppColors.primaryColor.withOpacity(0.1), shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: AppColors.primaryColor.withValues(alpha: 0.1), shape: BoxShape.circle),
                   child: const Icon(Icons.assignment_ind, size: 48, color: AppColors.primaryColor),
                 ),
                 const SizedBox(height: 24),
@@ -122,7 +121,7 @@ class _AssignStaffPageState extends State<AssignStaffPage> {
                 Text(
                   'Enter the course code and the staff university code to link them together.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, color: AppColors.darkColor.withOpacity(0.5)),
+                  style: TextStyle(fontSize: 14, color: AppColors.darkColor.withValues(alpha: 0.5)),
                 ),
                 const SizedBox(height: 32),
                 _buildTextField(

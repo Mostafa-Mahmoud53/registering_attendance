@@ -10,7 +10,7 @@ import '../../Auth/colors.dart';
 /// مع Debounce 300ms على حقل البحث
 class EnrolledStudentsPage extends StatefulWidget {
   final String courseId;
-  const EnrolledStudentsPage({Key? key, required this.courseId}) : super(key: key);
+  const EnrolledStudentsPage({super.key, required this.courseId});
 
   @override
   State<EnrolledStudentsPage> createState() => _EnrolledStudentsPageState();
@@ -66,8 +66,9 @@ class _EnrolledStudentsPageState extends State<EnrolledStudentsPage> {
       if (res['statusCode'] == 200) {
         final data = jsonDecode(res['body']);
         List<dynamic> list = [];
-        if (data is List) list = data;
-        else if (data is Map && data.containsKey(r'$values')) list = data[r'$values'] ?? [];
+        if (data is List) {
+          list = data;
+        } else if (data is Map && data.containsKey(r'$values')) list = data[r'$values'] ?? [];
 
         if (mounted) setState(() => _students = list);
       } else {
@@ -106,7 +107,7 @@ class _EnrolledStudentsPageState extends State<EnrolledStudentsPage> {
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(children: [
@@ -208,7 +209,7 @@ class _EnrolledStudentsPageState extends State<EnrolledStudentsPage> {
         leading: CircleAvatar(
           // Mobile Layout: smaller avatar / Desktop Layout: standard avatar
           radius: isMobile ? 18 : 20, // Mobile: 18 / Desktop: 20
-          backgroundColor: const Color(0xFF0277BD).withOpacity(0.1),
+          backgroundColor: const Color(0xFF0277BD).withValues(alpha: 0.1),
           child: Text(
             name.isNotEmpty ? name[0].toUpperCase() : '?',
             style: TextStyle(
@@ -232,7 +233,7 @@ class _EnrolledStudentsPageState extends State<EnrolledStudentsPage> {
           Text(
             'Code: $code',
             style: TextStyle(
-              color: AppColors.darkColor.withOpacity(0.5),
+              color: AppColors.darkColor.withValues(alpha: 0.5),
               fontSize: isMobile ? 11 : 12, // Mobile: 11 / Desktop: 12
             ),
           ),
@@ -240,7 +241,7 @@ class _EnrolledStudentsPageState extends State<EnrolledStudentsPage> {
             Text(
               email,
               style: TextStyle(
-                color: AppColors.darkColor.withOpacity(0.4),
+                color: AppColors.darkColor.withValues(alpha: 0.4),
                 fontSize: isMobile ? 10 : 11, // Mobile: 10 / Desktop: 11
               ),
             ),
@@ -248,7 +249,7 @@ class _EnrolledStudentsPageState extends State<EnrolledStudentsPage> {
         trailing: Text(
           '#$rank',
           style: TextStyle(
-            color: AppColors.darkColor.withOpacity(0.4),
+            color: AppColors.darkColor.withValues(alpha: 0.4),
             fontWeight: FontWeight.bold,
             fontSize: isMobile ? 12 : 13, // Mobile: 12 / Desktop: 13
           ),
@@ -266,11 +267,11 @@ class _EnrolledStudentsPageState extends State<EnrolledStudentsPage> {
   ])));
 
   Widget _buildEmpty() => Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-    Icon(Icons.people_outline, size: 72, color: AppColors.darkColor.withOpacity(0.2)),
+    Icon(Icons.people_outline, size: 72, color: AppColors.darkColor.withValues(alpha: 0.2)),
     const SizedBox(height: 16),
     Text(
       _searchCtrl.text.isEmpty ? 'No students enrolled yet' : 'No students match your search',
-      style: TextStyle(fontSize: 16, color: AppColors.darkColor.withOpacity(0.5)),
+      style: TextStyle(fontSize: 16, color: AppColors.darkColor.withValues(alpha: 0.5)),
       textAlign: TextAlign.center,
     ),
   ]));

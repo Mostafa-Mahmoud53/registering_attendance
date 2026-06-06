@@ -228,6 +228,8 @@
   "@section_session_management": "إدارة الجلسات",
   "sessionManagement": "إدارة الجلسات",
   "startNewSession": "بدء جلسة جديدة",
+  "resumeActiveSession": "استكمال المحاضرة الحالية",
+  "resumeActiveSessionSubtitle": "فتح شاشة عرض الحضور للمحاضرة النشطة",
   "createSession": "إنشاء جلسة",
   "createSessionSubtitle": "إنشاء جلسة محاضرة أو قسم مع GPS",
   "stopActiveSession": "إيقاف الجلسة النشطة",

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../core/providers/locale_provider.dart';
 import '../l10n/app_localizations.dart';
 import '../main.dart' as app_main;
 
@@ -10,10 +9,10 @@ class LanguageToggleButton extends StatefulWidget {
   final Color textColor;
   
   const LanguageToggleButton({
-    Key? key,
+    super.key,
     this.onLocaleChanged,
     this.textColor = Colors.white,
-  }) : super(key: key);
+  });
 
   @override
   State<LanguageToggleButton> createState() => _LanguageToggleButtonState();
@@ -44,10 +43,10 @@ class _LanguageToggleButtonState extends State<LanguageToggleButton> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: widget.textColor.withOpacity(0.1),
+              color: widget.textColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: widget.textColor.withOpacity(0.3),
+                color: widget.textColor.withValues(alpha: 0.3),
                 width: 1,
               ),
             ),

@@ -8,12 +8,12 @@ import 'package:registering_attendance/core/http_interceptor.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Auth/colors.dart';
 import '../Auth/api_service.dart';
-import '../widgets/AppInstructionsCard.dart';
+import '../widgets/app_instructions_card.dart';
 
 class BulkCourseEnrollmentPage extends StatefulWidget {
   final String? initialCourseId;
   final bool isTab;
-  const BulkCourseEnrollmentPage({Key? key, this.initialCourseId, this.isTab = false}) : super(key: key);
+  const BulkCourseEnrollmentPage({super.key, this.initialCourseId, this.isTab = false});
 
   @override
   _BulkCourseEnrollmentPageState createState() => _BulkCourseEnrollmentPageState();
@@ -27,7 +27,7 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
   bool _isImporting = false;
   String? _importMessage;
   List<String> _importErrors = [];
-  List<String> _codesList = [];
+  final List<String> _codesList = [];
   
   String? _authToken;
 
@@ -267,12 +267,12 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
                 const SizedBox(height: 16),
                 if (added.isNotEmpty) ...[
                   const Text('Added successfully:', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
-                  Wrap(spacing: 8, children: added.map((e) => Chip(label: Text(e, style: const TextStyle(fontSize: 12)), backgroundColor: Colors.green.withOpacity(0.2))).toList()),
+                  Wrap(spacing: 8, children: added.map((e) => Chip(label: Text(e, style: const TextStyle(fontSize: 12)), backgroundColor: Colors.green.withValues(alpha: 0.2))).toList()),
                   const SizedBox(height: 10),
                 ],
                 if (skipped.isNotEmpty) ...[
                   const Text('Skipped (Already Enrolled):', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
-                  Wrap(spacing: 8, children: skipped.map((e) => Chip(label: Text(e, style: const TextStyle(fontSize: 12)), backgroundColor: Colors.orange.withOpacity(0.2))).toList()),
+                  Wrap(spacing: 8, children: skipped.map((e) => Chip(label: Text(e, style: const TextStyle(fontSize: 12)), backgroundColor: Colors.orange.withValues(alpha: 0.2))).toList()),
                   const SizedBox(height: 10),
                 ],
                 if (notFound.isNotEmpty) ...[
@@ -468,7 +468,7 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.08),
+                color: Colors.grey.withValues(alpha: 0.08),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -480,7 +480,7 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(
-                color: AppColors.darkColor.withOpacity(0.4),
+                color: AppColors.darkColor.withValues(alpha: 0.4),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -511,7 +511,7 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
               fillColor: Colors.white,
               prefixIcon: Icon(
                 prefixIcon,
-                color: AppColors.darkColor.withOpacity(0.5),
+                color: AppColors.darkColor.withValues(alpha: 0.5),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -533,14 +533,14 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       color: Colors.white, borderRadius: BorderRadius.circular(16),
-      boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+      boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
     ),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('Import From Excel',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.darkColor)),
       const SizedBox(height: 8),
       Text('Upload an Excel file with a column named "university code" or "code"',
-          style: TextStyle(fontSize: 13, color: AppColors.darkColor.withOpacity(0.6))),
+          style: TextStyle(fontSize: 13, color: AppColors.darkColor.withValues(alpha: 0.6))),
       const SizedBox(height: 16),
       Row(children: [
         Expanded(
@@ -587,9 +587,9 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppColors.errorColor.withOpacity(0.08),
+            color: AppColors.errorColor.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: AppColors.errorColor.withOpacity(0.3)),
+            border: Border.all(color: AppColors.errorColor.withValues(alpha: 0.3)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -609,7 +609,7 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       color: Colors.white, borderRadius: BorderRadius.circular(16),
-      boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+      boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
     ),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -618,7 +618,7 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           decoration: BoxDecoration(
-            color: AppColors.primaryColor.withOpacity(0.1),
+            color: AppColors.primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: AppColors.primaryColor),
           ),
@@ -640,7 +640,7 @@ class _BulkCourseEnrollmentPageState extends State<BulkCourseEnrollmentPage> {
           ),
           child: Row(children: [
             Container(width: 32, height: 32,
-              decoration: BoxDecoration(color: AppColors.primaryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: AppColors.primaryColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
               child: Center(child: Text('${i+1}',
                   style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryColor, fontSize: 12)))),
             const SizedBox(width: 12),

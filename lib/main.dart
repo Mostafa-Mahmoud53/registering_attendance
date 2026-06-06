@@ -7,21 +7,20 @@ import 'Auth/main_file.dart';
 import 'core/app_router.dart';
 import 'core/providers/locale_provider.dart';
 
-
 // Global instance of LocaleProvider (simple state management)
 final localeProvider = LocaleProvider();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize the locale from saved preferences
   await localeProvider.initialize();
-  
+
   runApp(const CollegeAttendanceApp());
 }
 
 class CollegeAttendanceApp extends StatefulWidget {
-  const CollegeAttendanceApp({Key? key}) : super(key: key);
+  const CollegeAttendanceApp({super.key});
 
   @override
   State<CollegeAttendanceApp> createState() => _CollegeAttendanceAppState();
@@ -48,18 +47,17 @@ class _CollegeAttendanceAppState extends State<CollegeAttendanceApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      key: ValueKey(localeProvider.locale.languageCode), // Force rebuild on locale change
+      key: ValueKey(
+        localeProvider.locale.languageCode,
+      ), // Force rebuild on locale change
       title: 'College Attendance System',
       debugShowCheckedModeBanner: false,
       navigatorKey: AppRouter.navigatorKey,
       scaffoldMessengerKey: AppRouter.messengerKey,
-      
+
       // Localization setup
       locale: localeProvider.locale,
-      supportedLocales: const [
-        Locale('en'),
-        Locale('ar'),
-      ],
+      supportedLocales: const [Locale('en'), Locale('ar')],
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -78,7 +76,7 @@ class _CollegeAttendanceAppState extends State<CollegeAttendanceApp> {
         // Default to English if locale is not supported
         return const Locale('en');
       },
-      
+
       theme: ThemeData(
         primaryColor: const Color(0xFF2A9D8F),
         colorScheme: ColorScheme.fromSwatch().copyWith(

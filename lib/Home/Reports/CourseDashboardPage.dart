@@ -1,20 +1,24 @@
+import 'dart:convert';
 import '../../l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/responsive.dart';
 import '../../Auth/colors.dart';
+import '../../Auth/api_service.dart';
+import '../../Auth/auth_storage.dart';
 import 'LectureReportPage.dart';
 import 'SectionReportPage.dart';
 import 'AbsenceWarningsPage.dart';
 import 'CourseSessionsHistoryPage.dart';
 import 'EnrolledStudentsPage.dart';
 import 'CreateSessionPage.dart';
+import 'LiveDashboardPage.dart';
 import '../../features/session/session_service.dart';
 
 class CourseDashboardPage extends StatefulWidget {
   final Map<String, dynamic> course;
 
-  const CourseDashboardPage({Key? key, required this.course}) : super(key: key);
+  const CourseDashboardPage({super.key, required this.course});
 
   @override
   State<CourseDashboardPage> createState() => _CourseDashboardPageState();
@@ -23,10 +27,55 @@ class CourseDashboardPage extends StatefulWidget {
 class _CourseDashboardPageState extends State<CourseDashboardPage> {
   String? _userRole;
 
+  // Active Session State
+  bool _hasActiveSession = false;
+  int? _activeSessionId;
+
   @override
   void initState() {
     super.initState();
     _loadRole();
+    _checkActiveSession();
+  }
+
+  Future<void> _checkActiveSession() async {
+    try {
+      final token = await AuthStorage.getToken() ?? '';
+      final lRes = await ApiService.getCourseSessions(courseId: widget.course['id'].toString(), token: token, type: 'Lecture');
+      final sRes = await ApiService.getCourseSessions(courseId: widget.course['id'].toString(), token: token, type: 'Section');
+      
+      List<dynamic> allSessions = [];
+      if (lRes['statusCode'] == 200) {
+        final parsed = jsonDecode(lRes['body']);
+        allSessions.addAll((parsed is List) ? parsed : (parsed[r'$values'] ?? []));
+      }
+      if (sRes['statusCode'] == 200) {
+        final parsed = jsonDecode(sRes['body']);
+        allSessions.addAll((parsed is List) ? parsed : (parsed[r'$values'] ?? []));
+      }
+
+      if (allSessions.isNotEmpty) {
+        bool found = false;
+        int? activeId;
+        for (var session in allSessions) {
+          final status = session['status']?.toString().toLowerCase() ?? '';
+          if (status == 'active' || status == 'running' || status == 'open' || session['isActive'] == true || session['isClosed'] == false) {
+            found = true;
+            activeId = session['id'] ?? session['sessionId'];
+            break;
+          }
+        }
+        
+        if (found && mounted) {
+           setState(() {
+             _hasActiveSession = true;
+             _activeSessionId = activeId;
+           });
+        }
+      }
+    } catch (e) {
+      // Ignore gracefully
+    }
   }
 
   Future<void> _loadRole() async {
@@ -129,7 +178,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                                             Text(
                                               '${loc.doctor} $doctorName',
                                               style: TextStyle(
-                                                color: Colors.white.withOpacity(0.9),
+                                                color: Colors.white.withValues(alpha: 0.9),
                                                 fontSize: Responsive.isDesktop(context) ? 14 : 12,
                                               ),
                                             ),
@@ -244,18 +293,35 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    _actionCard(
-                      title: loc.startNewSession,
-                      subtitle: loc.createSessionSubtitle,
-                      icon: Icons.play_circle_fill,
-                      color: AppColors.darkColor,
-                      onTap: () => _goto(
-                        CreateSessionPage(
-                          courseId: courseId,
-                          courseName: courseName,
+                    if (_hasActiveSession && _activeSessionId != null)
+                      _actionCard(
+                        title: loc.resumeActiveSession,
+                        subtitle: loc.resumeActiveSessionSubtitle,
+                        icon: Icons.restore_rounded,
+                        color: Colors.green,
+                        onTap: () => _goto(
+                          LiveDashboardPage(
+                            sessionId: _activeSessionId!,
+                            courseName: courseName,
+                            initialQr: '',
+                            initialPin: '',
+                            isResumed: true,
+                          ),
+                        ),
+                      )
+                    else
+                      _actionCard(
+                        title: loc.startNewSession,
+                        subtitle: loc.createSessionSubtitle,
+                        icon: Icons.play_circle_fill,
+                        color: AppColors.darkColor,
+                        onTap: () => _goto(
+                          CreateSessionPage(
+                            courseId: courseId,
+                            courseName: courseName,
+                          ),
                         ),
                       ),
-                    ),
                     const SizedBox(height: 12),
                     _actionCard(
                       title: loc.stopActiveSession,
@@ -300,8 +366,12 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
     );
   }
 
-  void _goto(Widget page) =>
-      Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+  void _goto(Widget page) {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => page))
+        .then((_) {
+      if (mounted) _checkActiveSession();
+    });
+  }
 
   Widget _infoPill(IconData icon, String label) => Container(
     padding: EdgeInsets.symmetric(
@@ -309,9 +379,9 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
       vertical: Responsive.isDesktop(context) ? 8 : 6
     ),
     decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.15),
+      color: Colors.white.withValues(alpha: 0.15),
       borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+      border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 1),
     ),
     child: Row(
       mainAxisSize: MainAxisSize.min,
@@ -344,7 +414,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -369,7 +439,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                     Responsive.isDesktop(context) ? 16 : (isMobile ? 12 : 12),
                   ),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Icon(
@@ -399,7 +469,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                   style: TextStyle(
                     // Desktop Layout: 12px / Mobile Layout: larger subtitle text
                     fontSize: Responsive.isDesktop(context) ? 12 : (isMobile ? 13 : 10),
-                    color: AppColors.darkColor.withOpacity(0.5),
+                    color: AppColors.darkColor.withValues(alpha: 0.5),
                     height: 1.2,
                   ),
                 ),
@@ -423,7 +493,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
       borderRadius: BorderRadius.circular(24),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.03),
+          color: Colors.black.withValues(alpha: 0.03),
           blurRadius: 15,
           offset: const Offset(0, 8),
         ),
@@ -441,7 +511,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
               Container(
                 padding: EdgeInsets.all(Responsive.isDesktop(context) ? 16 : 14),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(18),
                 ),
                 child: Icon(icon, size: Responsive.isDesktop(context) ? 28 : 24, color: color),
@@ -464,7 +534,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
                       subtitle,
                       style: TextStyle(
                         fontSize: Responsive.isDesktop(context) ? 13 : 12,
-                        color: AppColors.darkColor.withOpacity(0.5),
+                        color: AppColors.darkColor.withValues(alpha: 0.5),
                       ),
                     ),
                   ],
@@ -473,7 +543,7 @@ class _CourseDashboardPageState extends State<CourseDashboardPage> {
               Icon(
                 Icons.arrow_forward_ios_rounded,
                 size: Responsive.isDesktop(context) ? 16 : 14,
-                color: AppColors.darkColor.withOpacity(0.2),
+                color: AppColors.darkColor.withValues(alpha: 0.2),
               ),
             ],
           ),

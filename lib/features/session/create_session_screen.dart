@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import 'package:geolocator/geolocator.dart';
@@ -10,7 +11,7 @@ import '../../Auth/colors.dart';
 class CreateSessionScreen extends StatefulWidget {
   final int courseId;
 
-  const CreateSessionScreen({Key? key, required this.courseId}) : super(key: key);
+  const CreateSessionScreen({super.key, required this.courseId});
 
   @override
   State<CreateSessionScreen> createState() => _CreateSessionScreenState();
@@ -255,7 +256,7 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.08),
+                color: Colors.grey.withValues(alpha: 0.08),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -267,7 +268,7 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(
-                color: AppColors.darkColor.withOpacity(0.4),
+                color: AppColors.darkColor.withValues(alpha: 0.4),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -298,7 +299,7 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
               fillColor: Colors.white,
               prefixIcon: Icon(
                 prefixIcon,
-                color: AppColors.darkColor.withOpacity(0.5),
+                color: AppColors.darkColor.withValues(alpha: 0.5),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -335,14 +336,14 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.08),
+                color: Colors.grey.withValues(alpha: 0.08),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
           child: DropdownButtonFormField<String>(
-            value: _sessionType,
+            initialValue: _sessionType,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -352,14 +353,14 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
               fillColor: Colors.white,
               prefixIcon: Icon(
                 Icons.class_,
-                color: AppColors.darkColor.withOpacity(0.5),
+                color: AppColors.darkColor.withValues(alpha: 0.5),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 16,
               ),
             ),
-            icon: Icon(Icons.arrow_drop_down, color: AppColors.darkColor.withOpacity(0.7)),
+            icon: Icon(Icons.arrow_drop_down, color: AppColors.darkColor.withValues(alpha: 0.7)),
             style: const TextStyle(
               color: AppColors.darkColor,
               fontSize: 16,
@@ -443,7 +444,7 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
                       color: AppColors.lightColor,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: AppColors.primaryColor.withOpacity(0.2),
+                        color: AppColors.primaryColor.withValues(alpha: 0.2),
                       ),
                     ),
                     child: Row(
@@ -471,7 +472,7 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
                                 'Fill details to start capturing attendance with GPS and QR Code.',
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: AppColors.darkColor.withOpacity(0.6),
+                                  color: AppColors.darkColor.withValues(alpha: 0.6),
                                 ),
                               ),
                             ],
@@ -515,10 +516,10 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: _isGpsReady
-                                ? Colors.green.withOpacity(0.1)
+                                ? Colors.green.withValues(alpha: 0.1)
                                 : _isGpsFailed
-                                    ? Colors.red.withOpacity(0.1)
-                                    : Colors.orange.withOpacity(0.1),
+                                    ? Colors.red.withValues(alpha: 0.1)
+                                    : Colors.orange.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: _isGpsReady

@@ -5,11 +5,11 @@ import '../Auth/colors.dart';
 import '../Auth/auth_storage.dart';
 import '../Auth/api_service.dart';
 import '../l10n/app_localizations.dart';
-import '../widgets/AppInstructionsCard.dart';
+import '../widgets/app_instructions_card.dart';
 
 class ResetStudentAccountPage extends StatefulWidget {
   final bool isTab;
-  const ResetStudentAccountPage({Key? key, this.isTab = false}) : super(key: key);
+  const ResetStudentAccountPage({super.key, this.isTab = false});
 
   @override
   _ResetStudentAccountPageState createState() => _ResetStudentAccountPageState();
@@ -223,7 +223,7 @@ class _ResetStudentAccountPageState extends State<ResetStudentAccountPage> {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.1),
+                                color: Colors.grey.withValues(alpha: 0.1),
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),
                               ),
@@ -236,7 +236,7 @@ class _ResetStudentAccountPageState extends State<ResetStudentAccountPage> {
                               hintText: AppLocalizations.of(context)!.enterUniversityCodeExample,
                               prefixIcon: Icon(
                                 Icons.badge,
-                                color: AppColors.darkColor.withOpacity(0.5),
+                                color: AppColors.darkColor.withValues(alpha: 0.5),
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -322,8 +322,8 @@ class _ResetStudentAccountPageState extends State<ResetStudentAccountPage> {
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
                               color: _isSuccess
-                                  ? Colors.green.withOpacity(0.1)
-                                  : Colors.red.withOpacity(0.1),
+                                  ? Colors.green.withValues(alpha: 0.1)
+                                  : Colors.red.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: _isSuccess ? Colors.green : Colors.red,
@@ -361,7 +361,7 @@ class _ResetStudentAccountPageState extends State<ResetStudentAccountPage> {
                       color: AppColors.lightColor,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: AppColors.primaryColor.withOpacity(0.2),
+                        color: AppColors.primaryColor.withValues(alpha: 0.2),
                       ),
                     ),
                     child: Column(
@@ -423,7 +423,7 @@ class _ResetStudentAccountPageState extends State<ResetStudentAccountPage> {
             child: Text(
               text,
               style: TextStyle(
-                color: AppColors.darkColor.withOpacity(0.7),
+                color: AppColors.darkColor.withValues(alpha: 0.7),
                 fontSize: 14,
               ),
             ),

@@ -6,7 +6,6 @@ import '../widgets/language_toggle_button.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:registering_attendance/core/http_interceptor.dart' as http;
 import 'package:registering_attendance/Home/creatCourse.dart';
-import 'package:registering_attendance/Home/QRScannerPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Auth/auth_storage.dart';
 import '../Auth/colors.dart';
@@ -19,7 +18,7 @@ import 'package:registering_attendance/Home/AssignStaffPage.dart';
 import '../core/responsive.dart';
 
 class CoursesListPage extends StatefulWidget {
-  const CoursesListPage({Key? key}) : super(key: key);
+  const CoursesListPage({super.key});
 
   @override
   _CoursesListPageState createState() => _CoursesListPageState();
@@ -199,28 +198,36 @@ class _CoursesListPageState extends State<CoursesListPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
             const Icon(Icons.warning, color: Colors.red),
             const SizedBox(width: 8),
-            Text(AppLocalizations.of(context)!.confirmDeletion, style: const TextStyle(color: Colors.red)),
+            Text(
+              AppLocalizations.of(context)!.confirmDeletion,
+              style: const TextStyle(color: Colors.red),
+            ),
           ],
         ),
-        content: Text('${AppLocalizations.of(context)!.confirmDeletion} "$courseName"?\n\n${AppLocalizations.of(context)!.thisActionCannotBeUndone}'),
+        content: Text(
+          '${AppLocalizations.of(context)!.confirmDeletion} "$courseName"?\n\n${AppLocalizations.of(context)!.thisActionCannotBeUndone}',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.grey)),
+            child: Text(
+              AppLocalizations.of(context)!.cancel,
+              style: const TextStyle(color: Colors.grey),
+            ),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
             child: Text(AppLocalizations.of(context)!.delete),
           ),
@@ -235,13 +242,11 @@ class _CoursesListPageState extends State<CoursesListPage> {
     });
 
     try {
-      final deleteUrl = 'http://77.83.242.94:5000/api/Admin/delete-course/$courseId';
+      final deleteUrl =
+          'http://77.83.242.94:5000/api/Admin/delete-course/$courseId';
       final response = await http.delete(
         Uri.parse(deleteUrl),
-        headers: {
-          'accept': '*/*',
-          'Authorization': 'Bearer $_authToken',
-        },
+        headers: {'accept': '*/*', 'Authorization': 'Bearer $_authToken'},
       );
 
       if (response.statusCode == 200) {
@@ -347,7 +352,7 @@ class _CoursesListPageState extends State<CoursesListPage> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.logout, color: Colors.white, size: 32),
@@ -355,7 +360,11 @@ class _CoursesListPageState extends State<CoursesListPage> {
               const SizedBox(height: 12),
               Text(
                 AppLocalizations.of(context)!.logout,
-                style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -376,10 +385,15 @@ class _CoursesListPageState extends State<CoursesListPage> {
                     onPressed: () => Navigator.pop(context, false),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       side: BorderSide(color: Colors.grey.shade300),
                     ),
-                    child: Text(AppLocalizations.of(context)!.cancel, style: TextStyle(color: Colors.grey.shade600)),
+                    child: Text(
+                      AppLocalizations.of(context)!.cancel,
+                      style: TextStyle(color: Colors.grey.shade600),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -390,10 +404,15 @@ class _CoursesListPageState extends State<CoursesListPage> {
                       backgroundColor: AppColors.errorColor,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       elevation: 0,
                     ),
-                    child: Text(AppLocalizations.of(context)!.logout, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    child: Text(
+                      AppLocalizations.of(context)!.logout,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ],
@@ -410,17 +429,17 @@ class _CoursesListPageState extends State<CoursesListPage> {
     }
   }
 
-
   @override
   Widget? buildFloatingActionButton() {
     if (_userRole == 'Admin' || _userRole == 'Doctor') {
       return FloatingActionButton(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const CreateCoursePage()),
-        ).then((value) {
-          if (value == true) _fetchCourses();
-        }),
+        onPressed: () =>
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const CreateCoursePage()),
+            ).then((value) {
+              if (value == true) _fetchCourses();
+            }),
         backgroundColor: AppColors.primaryColor,
         child: const Icon(Icons.add, color: Colors.white),
       );
@@ -440,7 +459,8 @@ class _CoursesListPageState extends State<CoursesListPage> {
             collapsedHeight: _userRole == 'Student' ? 80 : null,
             pinned: true,
             floating: true,
-            snap: false, // snap doesn't work well with pinned: true and expandedHeight
+            snap:
+                false, // snap doesn't work well with pinned: true and expandedHeight
             backgroundColor: AppColors.primaryColor,
             elevation: 8,
             shape: const ContinuousRectangleBorder(
@@ -450,76 +470,103 @@ class _CoursesListPageState extends State<CoursesListPage> {
               ),
             ),
             automaticallyImplyLeading: false,
-            leading: _userRole == 'Student' ? null : IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
-              onPressed: () => Navigator.pop(context),
-            ),
-            flexibleSpace: _userRole == 'Student' ? FlexibleSpaceBar(
-              centerTitle: Responsive.isDesktop(context),
-              titlePadding: Responsive.isDesktop(context) 
-                  ? const EdgeInsets.only(bottom: 20) 
-                  : const EdgeInsetsDirectional.only(start: 20, bottom: 16),
-              title: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.white.withOpacity(0.2),
-                    radius: Responsive.isDesktop(context) ? 20 : 16,
-                    child: Icon(Icons.school, color: Colors.white, size: Responsive.isDesktop(context) ? 24 : 20),
+            leading: _userRole == 'Student'
+                ? null
+                : IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.white,
+                    ),
+                    onPressed: () => Navigator.pop(context),
                   ),
-                  const SizedBox(width: 12),
-                  Flexible(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
+            flexibleSpace: _userRole == 'Student'
+                ? FlexibleSpaceBar(
+                    centerTitle: Responsive.isDesktop(context),
+                    titlePadding: Responsive.isDesktop(context)
+                        ? const EdgeInsets.only(bottom: 20)
+                        : const EdgeInsetsDirectional.only(
+                            start: 20,
+                            bottom: 16,
+                          ),
+                    title: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          AppLocalizations.of(context)!.studentDashboard,
-                          style: TextStyle(color: Colors.white, fontSize: Responsive.isDesktop(context) ? 20 : 16, fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
+                        CircleAvatar(
+                          backgroundColor: Colors.white.withValues(alpha: 0.2),
+                          radius: Responsive.isDesktop(context) ? 20 : 16,
+                          child: Icon(
+                            Icons.school,
+                            color: Colors.white,
+                            size: Responsive.isDesktop(context) ? 24 : 20,
+                          ),
                         ),
-                        Text(
-                          _userName,
-                          style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: Responsive.isDesktop(context) ? 14 : 11),
-                          overflow: TextOverflow.ellipsis,
+                        const SizedBox(width: 12),
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!.studentDashboard,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: Responsive.isDesktop(context)
+                                      ? 20
+                                      : 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                _userName,
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.9),
+                                  fontSize: Responsive.isDesktop(context)
+                                      ? 14
+                                      : 11,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
+                    background: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [AppColors.primaryColor, AppColors.darkColor],
+                        ),
+                      ),
+                    ),
+                  )
+                : FlexibleSpaceBar(
+                    background: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [AppColors.primaryColor, AppColors.darkColor],
+                        ),
+                      ),
+                    ),
                   ),
-                ],
-              ),
-              background: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [AppColors.primaryColor, AppColors.darkColor],
+            title: _userRole == 'Student'
+                ? null
+                : Text(
+                    _userRole == 'Doctor' || _userRole == 'TA'
+                        ? AppLocalizations.of(context)!.myCourses
+                        : AppLocalizations.of(context)!.coursesList,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: Responsive.isDesktop(context) ? 24 : 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ),
-            ) : FlexibleSpaceBar(
-              background: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [AppColors.primaryColor, AppColors.darkColor],
-                  ),
-                ),
-              ),
-            ),
-            title: _userRole == 'Student' ? null : Text(
-              _userRole == 'Doctor' || _userRole == 'TA'
-                  ? AppLocalizations.of(context)!.myCourses
-                  : AppLocalizations.of(context)!.coursesList,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: Responsive.isDesktop(context) ? 24 : 20,
-                fontWeight: FontWeight.bold,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
             actions: [
               LanguageToggleButton(),
               if (_userRole == 'Student')
@@ -527,244 +574,335 @@ class _CoursesListPageState extends State<CoursesListPage> {
                   icon: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.logout, size: 22, color: Colors.white),
+                    child: const Icon(
+                      Icons.logout,
+                      size: 22,
+                      color: Colors.white,
+                    ),
                   ),
                   onPressed: _logout,
                 ),
               const SizedBox(width: 10),
             ],
             // Removed bottom search bar
-            ),
+          ),
         ],
         body: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 1400),
             child: Column(
-          children: [
-            // New Search Bar in body
-            if (_userRole != 'Student')
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        blurRadius: 15,
-                        spreadRadius: 2,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.search, color: AppColors.darkColor.withOpacity(0.5)),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: TextField(
-                          controller: _searchController,
-                          decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context)!.searchByNameCode,
-                            hintStyle: TextStyle(
-                              color: AppColors.darkColor.withOpacity(0.4),
-                            ),
-                            border: InputBorder.none,
-                          ),
-                          style: TextStyle(
-                            color: AppColors.darkColor,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      if (_searchQuery.isNotEmpty)
-                        GestureDetector(
-                          onTap: () {
-                            _searchController.clear();
-                          },
-                          child: Container(
-                            width: 36,
-                            height: 36,
-                            decoration: BoxDecoration(
-                              color: AppColors.lightColor,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.clear,
-                              size: 20,
-                              color: AppColors.accentColor,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            if (_userRole == 'Student')
-              Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1200),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              children: [
+                // New Search Bar in body
+                if (_userRole != 'Student')
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 16,
+                    ),
                     child: Container(
-                      padding: const EdgeInsets.all(24),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 20, spreadRadius: 2, offset: const Offset(0, 4))],
-                        gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [AppColors.lightColor, Colors.white],
-                        ),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withValues(alpha: 0.1),
+                            blurRadius: 15,
+                            spreadRadius: 2,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
                       child: Row(
-                        mainAxisAlignment: Responsive.isDesktop(context) ? MainAxisAlignment.center : MainAxisAlignment.start,
                         children: [
-                          Container(
-                            width: Responsive.isDesktop(context) ? 80 : 60,
-                            height: Responsive.isDesktop(context) ? 80 : 60,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: const LinearGradient(colors: [AppColors.secondaryColor, AppColors.accentColor]),
-                              boxShadow: [BoxShadow(color: AppColors.secondaryColor.withOpacity(0.4), blurRadius: 10, offset: const Offset(0, 4))],
-                            ),
-                            child: Icon(Icons.verified_user, color: Colors.white, size: Responsive.isDesktop(context) ? 40 : 30),
+                          Icon(
+                            Icons.search,
+                            color: AppColors.darkColor.withValues(alpha: 0.5),
                           ),
-                          const SizedBox(width: 24),
+                          const SizedBox(width: 12),
                           Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('${AppLocalizations.of(context)!.welcome} Student,',
-                                    style: TextStyle(fontSize: Responsive.isDesktop(context) ? 18 : 16, color: AppColors.darkColor.withOpacity(0.7))),
-                                Text(_userName,
-                                    style: TextStyle(fontSize: Responsive.isDesktop(context) ? 28 : 22, fontWeight: FontWeight.bold, color: AppColors.darkColor)),
-                                Text(_email,
-                                    style: TextStyle(fontSize: Responsive.isDesktop(context) ? 16 : 13, color: AppColors.darkColor.withOpacity(0.5))),
-                              ],
+                            child: TextField(
+                              controller: _searchController,
+                              decoration: InputDecoration(
+                                hintText: AppLocalizations.of(
+                                  context,
+                                )!.searchByNameCode,
+                                hintStyle: TextStyle(
+                                  color: AppColors.darkColor.withValues(
+                                    alpha: 0.4,
+                                  ),
+                                ),
+                                border: InputBorder.none,
+                              ),
+                              style: TextStyle(
+                                color: AppColors.darkColor,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
+                          if (_searchQuery.isNotEmpty)
+                            GestureDetector(
+                              onTap: () {
+                                _searchController.clear();
+                              },
+                              child: Container(
+                                width: 36,
+                                height: 36,
+                                decoration: BoxDecoration(
+                                  color: AppColors.lightColor,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.clear,
+                                  size: 20,
+                                  color: AppColors.accentColor,
+                                ),
+                              ),
+                            ),
                         ],
                       ),
                     ),
                   ),
-                ),
-              ),
-            if (_userRole != 'Student')
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Builder(builder: (context) {
-                  final w = MediaQuery.of(context).size.width;
-                  if (w >= 850) {
-                    final available = w > 1400 ? 1400.0 : w;
-                    final cardW = (available - 80) / 2;
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: cardW,
-                          child: _buildStatCard(
-                            icon: Icons.book,
-                            title: AppLocalizations.of(context)!.totalCourses,
-                            value: _isLoading ? '...' : _totalCourses.toString(),
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        SizedBox(
-                          width: cardW,
-                          child: _buildStatCard(
-                            icon: Icons.people,
-                            title: AppLocalizations.of(context)!.totalStudents,
-                            value: _isLoading ? '...' : _totalStudents.toString(),
-                            color: AppColors.successColor,
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  // mobile: full-width side by side
-                  return Row(
-                    children: [
-                      _buildStatCard(
-                        icon: Icons.book,
-                        title: AppLocalizations.of(context)!.totalCourses,
-                        value: _isLoading ? '...' : _totalCourses.toString(),
-                        color: AppColors.primaryColor,
-                      ),
-                      const SizedBox(width: 12),
-                      _buildStatCard(
-                        icon: Icons.people,
-                        title: AppLocalizations.of(context)!.totalStudents,
-                        value: _isLoading ? '...' : _totalStudents.toString(),
-                        color: AppColors.successColor,
-                      ),
-                    ],
-                  );
-                }),
-              ),
-
-            // Content
-            Expanded(
-              child: _isLoading
-                  ? ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: 4,
-                      itemBuilder: (_, __) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          child: Container(
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
+                if (_userRole == 'Student')
+                  Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1200),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                        child: Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withValues(alpha: 0.1),
+                                blurRadius: 20,
+                                spreadRadius: 2,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [AppColors.lightColor, Colors.white],
                             ),
                           ),
+                          child: Row(
+                            mainAxisAlignment: Responsive.isDesktop(context)
+                                ? MainAxisAlignment.center
+                                : MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: Responsive.isDesktop(context) ? 80 : 60,
+                                height: Responsive.isDesktop(context) ? 80 : 60,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      AppColors.secondaryColor,
+                                      AppColors.accentColor,
+                                    ],
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppColors.secondaryColor
+                                          .withValues(alpha: 0.4),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(
+                                  Icons.verified_user,
+                                  color: Colors.white,
+                                  size: Responsive.isDesktop(context) ? 40 : 30,
+                                ),
+                              ),
+                              const SizedBox(width: 24),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${AppLocalizations.of(context)!.welcome} Student,',
+                                      style: TextStyle(
+                                        fontSize: Responsive.isDesktop(context)
+                                            ? 18
+                                            : 16,
+                                        color: AppColors.darkColor.withValues(
+                                          alpha: 0.7,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      _userName,
+                                      style: TextStyle(
+                                        fontSize: Responsive.isDesktop(context)
+                                            ? 28
+                                            : 22,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.darkColor,
+                                      ),
+                                    ),
+                                    Text(
+                                      _email,
+                                      style: TextStyle(
+                                        fontSize: Responsive.isDesktop(context)
+                                            ? 16
+                                            : 13,
+                                        color: AppColors.darkColor.withValues(
+                                          alpha: 0.5,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    )
-                  : _errorMessage.isNotEmpty
-                  ? _buildErrorState()
-                  : _filteredCourses.isEmpty
-                  ? _buildEmptyState()
-                  : RefreshIndicator(
-                      onRefresh: _fetchCourses,
-                      color: AppColors.primaryColor,
-                      child: Builder(builder: (context) {
+                    ),
+                  ),
+                if (_userRole != 'Student')
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Builder(
+                      builder: (context) {
                         final w = MediaQuery.of(context).size.width;
-                        final cols = w >= 1100 ? 3 : w >= 850 ? 2 : 1;
-                        if (cols > 1) {
-                          return GridView.builder(
-                            padding: const EdgeInsets.all(16),
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: cols,
-                              mainAxisSpacing: 16,
-                              crossAxisSpacing: 16,
-                              childAspectRatio: cols == 3 ? 2.6 : 1.9,
-                            ),
-                            itemCount: _filteredCourses.length,
-                            itemBuilder: (_, i) => _buildCourseCard(_filteredCourses[i]),
+                        if (w >= 850) {
+                          final available = w > 1400 ? 1400.0 : w;
+                          final cardW = (available - 80) / 2;
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: cardW,
+                                child: _buildStatCard(
+                                  icon: Icons.book,
+                                  title: AppLocalizations.of(
+                                    context,
+                                  )!.totalCourses,
+                                  value: _isLoading
+                                      ? '...'
+                                      : _totalCourses.toString(),
+                                  color: AppColors.primaryColor,
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                              SizedBox(
+                                width: cardW,
+                                child: _buildStatCard(
+                                  icon: Icons.people,
+                                  title: AppLocalizations.of(
+                                    context,
+                                  )!.totalStudents,
+                                  value: _isLoading
+                                      ? '...'
+                                      : _totalStudents.toString(),
+                                  color: AppColors.successColor,
+                                ),
+                              ),
+                            ],
                           );
                         }
-                        return ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount: _filteredCourses.length,
-                          itemBuilder: (_, i) =>
-                              _buildCourseCard(_filteredCourses[i]),
+                        // mobile: full-width side by side
+                        return Row(
+                          children: [
+                            _buildStatCard(
+                              icon: Icons.book,
+                              title: AppLocalizations.of(context)!.totalCourses,
+                              value: _isLoading
+                                  ? '...'
+                                  : _totalCourses.toString(),
+                              color: AppColors.primaryColor,
+                            ),
+                            const SizedBox(width: 12),
+                            _buildStatCard(
+                              icon: Icons.people,
+                              title: AppLocalizations.of(
+                                context,
+                              )!.totalStudents,
+                              value: _isLoading
+                                  ? '...'
+                                  : _totalStudents.toString(),
+                              color: AppColors.successColor,
+                            ),
+                          ],
                         );
-                      }),
+                      },
                     ),
+                  ),
+
+                // Content
+                Expanded(
+                  child: _isLoading
+                      ? ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: 4,
+                          itemBuilder: (_, __) => Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.grey.shade300,
+                              highlightColor: Colors.grey.shade100,
+                              child: Container(
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      : _errorMessage.isNotEmpty
+                      ? _buildErrorState()
+                      : _filteredCourses.isEmpty
+                      ? _buildEmptyState()
+                      : RefreshIndicator(
+                          onRefresh: _fetchCourses,
+                          color: AppColors.primaryColor,
+                          child: Builder(
+                            builder: (context) {
+                              final w = MediaQuery.of(context).size.width;
+                              final cols = w >= 1100
+                                  ? 3
+                                  : w >= 850
+                                  ? 2
+                                  : 1;
+                              if (cols > 1) {
+                                return GridView.builder(
+                                  padding: const EdgeInsets.all(16),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: cols,
+                                        mainAxisSpacing: 16,
+                                        crossAxisSpacing: 16,
+                                        childAspectRatio: cols == 3 ? 2.6 : 1.9,
+                                      ),
+                                  itemCount: _filteredCourses.length,
+                                  itemBuilder: (_, i) =>
+                                      _buildCourseCard(_filteredCourses[i]),
+                                );
+                              }
+                              return ListView.builder(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                itemCount: _filteredCourses.length,
+                                itemBuilder: (_, i) =>
+                                    _buildCourseCard(_filteredCourses[i]),
+                              );
+                            },
+                          ),
+                        ),
+                ),
+              ],
             ),
-          ],
-        ),
           ),
         ),
       ),
@@ -785,7 +923,7 @@ class _CoursesListPageState extends State<CoursesListPage> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -797,10 +935,14 @@ class _CoursesListPageState extends State<CoursesListPage> {
               width: Responsive.isDesktop(context) ? 52 : 48,
               height: Responsive.isDesktop(context) ? 52 : 48,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: color, size: Responsive.isDesktop(context) ? 28 : 24),
+              child: Icon(
+                icon,
+                color: color,
+                size: Responsive.isDesktop(context) ? 28 : 24,
+              ),
             ),
             SizedBox(width: Responsive.isDesktop(context) ? 16 : 12),
             Expanded(
@@ -819,7 +961,7 @@ class _CoursesListPageState extends State<CoursesListPage> {
                     title,
                     style: TextStyle(
                       fontSize: Responsive.isDesktop(context) ? 13 : 12,
-                      color: AppColors.darkColor.withOpacity(0.6),
+                      color: AppColors.darkColor.withValues(alpha: 0.6),
                     ),
                   ),
                 ],
@@ -893,22 +1035,25 @@ class _CoursesListPageState extends State<CoursesListPage> {
                                   vertical: 3,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: color.withOpacity(0.1),
+                                  color: color.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
-                                child: Builder(builder: (context) {
-                                  final loc = AppLocalizations.of(context)!;
-                                  return Text(
-                                    '${loc.courseIdLabel}: ${course['id']}',
-                                    style: TextStyle(
-                                      color: color,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  );
-                                }),
+                                child: Builder(
+                                  builder: (context) {
+                                    final loc = AppLocalizations.of(context)!;
+                                    return Text(
+                                      '${loc.courseIdLabel}: ${course['id']}',
+                                      style: TextStyle(
+                                        color: color,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
-                              if (course['code']?.toString().isNotEmpty == true) ...[
+                              if (course['code']?.toString().isNotEmpty ==
+                                  true) ...[
                                 const SizedBox(width: 8),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
@@ -916,20 +1061,22 @@ class _CoursesListPageState extends State<CoursesListPage> {
                                     vertical: 3,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.1),
+                                    color: Colors.grey.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(6),
                                   ),
-                                  child: Builder(builder: (context) {
-                                    final loc = AppLocalizations.of(context)!;
-                                    return Text(
-                                      '${loc.courseCodeLabel}: ${course['code']}',
-                                      style: TextStyle(
-                                        color: Colors.grey.shade800,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    );
-                                  }),
+                                  child: Builder(
+                                    builder: (context) {
+                                      final loc = AppLocalizations.of(context)!;
+                                      return Text(
+                                        '${loc.courseCodeLabel}: ${course['code']}',
+                                        style: TextStyle(
+                                          color: Colors.grey.shade800,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ],
                             ],
@@ -952,35 +1099,42 @@ class _CoursesListPageState extends State<CoursesListPage> {
                       if (course['doctorName']?.toString().isNotEmpty ==
                           true) ...[
                         const SizedBox(height: 4),
-                        Builder(builder: (context) {
-                          final loc = AppLocalizations.of(context)!;
-                          return Text(
-                            '${loc.doctor} ${course['doctorName']}',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: AppColors.darkColor.withOpacity(0.65),
-                            ),
-                          );
-                        }),
+                        Builder(
+                          builder: (context) {
+                            final loc = AppLocalizations.of(context)!;
+                            return Text(
+                              '${loc.doctor} ${course['doctorName']}',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: AppColors.darkColor.withValues(
+                                  alpha: 0.65,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ],
 
                       // Role Chip (للدكتور/TA فقط — Main Doctor = أزرق / Assistant = رمادي)
                       if (role != null) ...[
                         const SizedBox(height: 8),
                         Chip(
-                          label: Builder(builder: (context) {
-                            final loc = AppLocalizations.of(context)!;
-                            final roleLabel = role.toLowerCase().contains('main')
-                                ? loc.doctor
-                                : loc.teachingAssistant;
-                            return Text(
-                              roleLabel,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                            );
-                          }),
+                          label: Builder(
+                            builder: (context) {
+                              final loc = AppLocalizations.of(context)!;
+                              final roleLabel =
+                                  role.toLowerCase().contains('main')
+                                  ? loc.doctor
+                                  : loc.teachingAssistant;
+                              return Text(
+                                roleLabel,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                              );
+                            },
+                          ),
                           backgroundColor: role.toLowerCase().contains('main')
                               ? Colors.blue
                               : Colors.grey,
@@ -995,19 +1149,32 @@ class _CoursesListPageState extends State<CoursesListPage> {
                         const SizedBox(height: 8),
                         Row(
                           children: (staffList).take(4).map<Widget>((s) {
-                            final name = s['name']?.toString() ?? '?';
+                            String name = '?';
+                            if (s is Map) {
+                              name = s['name']?.toString() ?? '?';
+                            } else if (s is String) {
+                              name = s;
+                            } else {
+                              name = s?.toString() ?? '?';
+                            }
+
                             return Padding(
                               padding: const EdgeInsets.only(right: 4),
-                              child: CircleAvatar(
-                                radius: 12,
-                                backgroundColor: AppColors.primaryColor
-                                    .withOpacity(0.15),
-                                child: Text(
-                                  name.isNotEmpty ? name[0].toUpperCase() : '?',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: AppColors.primaryColor,
-                                    fontWeight: FontWeight.bold,
+                              child: Tooltip(
+                                message: name,
+                                child: CircleAvatar(
+                                  radius: 12,
+                                  backgroundColor: AppColors.primaryColor
+                                      .withValues(alpha: 0.15),
+                                  child: Text(
+                                    name.isNotEmpty
+                                        ? name[0].toUpperCase()
+                                        : '?',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: AppColors.primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -1020,19 +1187,27 @@ class _CoursesListPageState extends State<CoursesListPage> {
                 ),
                 const SizedBox(width: 8),
                 if (_userRole == 'Admin')
-                  Builder(builder: (context) {
-                    final loc = AppLocalizations.of(context)!;
-                    return IconButton(
-                      icon: const Icon(Icons.delete_outline, color: Colors.red),
-                      onPressed: () => _deleteCourseDirectly(course['id'].toString(), course['name'].toString()),
-                      tooltip: loc.delete,
-                    );
-                  })
+                  Builder(
+                    builder: (context) {
+                      final loc = AppLocalizations.of(context)!;
+                      return IconButton(
+                        icon: const Icon(
+                          Icons.delete_outline,
+                          color: Colors.red,
+                        ),
+                        onPressed: () => _deleteCourseDirectly(
+                          course['id'].toString(),
+                          course['name'].toString(),
+                        ),
+                        tooltip: loc.delete,
+                      );
+                    },
+                  )
                 else
                   Icon(
                     Icons.arrow_forward_ios,
                     size: 16,
-                    color: AppColors.darkColor.withOpacity(0.3),
+                    color: AppColors.darkColor.withValues(alpha: 0.3),
                   ),
               ],
             ),
@@ -1056,121 +1231,131 @@ class _CoursesListPageState extends State<CoursesListPage> {
       builder: (context) {
         return SingleChildScrollView(
           child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                course['name'],
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: AppColors.darkColor,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${AppLocalizations.of(context)!.courseIdLabel}: ${course['id']}',
-                    style: TextStyle(
-                      color: AppColors.darkColor.withOpacity(0.5),
-                      fontSize: 14,
-                    ),
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
                   ),
-                  if (course['code']?.toString().isNotEmpty == true) ...[
-                    const SizedBox(width: 12),
-                    Container(
-                      width: 4,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: AppColors.darkColor.withOpacity(0.5),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  course['name'],
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: AppColors.darkColor,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Text(
-                      '${AppLocalizations.of(context)!.courseCodeLabel}: ${course['code']}',
+                      '${AppLocalizations.of(context)!.courseIdLabel}: ${course['id']}',
                       style: TextStyle(
-                        color: AppColors.darkColor.withOpacity(0.5),
+                        color: AppColors.darkColor.withValues(alpha: 0.5),
                         fontSize: 14,
                       ),
                     ),
+                    if (course['code']?.toString().isNotEmpty == true) ...[
+                      const SizedBox(width: 12),
+                      Container(
+                        width: 4,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: AppColors.darkColor.withValues(alpha: 0.5),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        '${AppLocalizations.of(context)!.courseCodeLabel}: ${course['code']}',
+                        style: TextStyle(
+                          color: AppColors.darkColor.withValues(alpha: 0.5),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ],
+                ),
+                const SizedBox(height: 24),
+                _buildOptionTile(
+                  icon: Icons.group,
+                  title: AppLocalizations.of(context)!.enrolledStudents,
+                  subtitle: '',
+                  color: AppColors.primaryColor,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => EnrolledStudentsPage(
+                          courseId: course['id'].toString(),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+                _buildOptionTile(
+                  icon: Icons.group_add_outlined,
+                  title: AppLocalizations.of(context)!.enrollStudentsScreen,
+                  subtitle: AppLocalizations.of(context)!.bulkEnrollStudents,
+                  color: Colors.blue,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => EnrollStudentsTabsPage(
+                          courseId: course['id'].toString(),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                if (_userRole == 'Admin') ...[
+                  const SizedBox(height: 12),
+                  _buildOptionTile(
+                    icon: Icons.manage_accounts_outlined,
+                    title: AppLocalizations.of(context)!.assignRemoveStaff,
+                    subtitle: AppLocalizations.of(
+                      context,
+                    )!.assignRemoveStaffSubtitle,
+                    color: Colors.purple,
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showAssignRemoveStaffBottomSheet(course);
+                    },
+                  ),
                 ],
-              ),
-              const SizedBox(height: 24),
-              _buildOptionTile(
-                icon: Icons.group,
-                title: AppLocalizations.of(context)!.enrolledStudents,
-                subtitle: '',
-                color: AppColors.primaryColor,
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => EnrolledStudentsPage(courseId: course['id'].toString())),
-                  );
-                },
-              ),
-              const SizedBox(height: 12),
-              _buildOptionTile(
-                icon: Icons.group_add_outlined,
-                title: AppLocalizations.of(context)!.enrollStudentsScreen,
-                subtitle: AppLocalizations.of(context)!.bulkEnrollStudents,
-                color: Colors.blue,
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => EnrollStudentsTabsPage(courseId: course['id'].toString()),
-                    ),
-                  );
-                },
-              ),
-              if (_userRole == 'Admin') ...[
-                const SizedBox(height: 12),
-                _buildOptionTile(
-                  icon: Icons.manage_accounts_outlined,
-                  title: AppLocalizations.of(context)!.assignRemoveStaff,
-                  subtitle: AppLocalizations.of(context)!.assignRemoveStaffSubtitle,
-                  color: Colors.purple,
-                  onTap: () {
-                    Navigator.pop(context);
-                    _showAssignRemoveStaffBottomSheet(course);
-                  },
-                ),
+                // Reassign Doctor option — Admin only
+                if (_userRole == 'Admin') ...[
+                  const SizedBox(height: 12),
+                  _buildOptionTile(
+                    icon: Icons.swap_horiz_rounded,
+                    title: AppLocalizations.of(context)!.reassignDoctor,
+                    subtitle: AppLocalizations.of(
+                      context,
+                    )!.reassignDoctorSubtitle,
+                    color: Colors.deepOrange,
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showReassignDoctorDialog(course);
+                    },
+                  ),
+                ],
+                const SizedBox(height: 16),
               ],
-              // Reassign Doctor option — Admin only
-              if (_userRole == 'Admin') ...[
-                const SizedBox(height: 12),
-                _buildOptionTile(
-                  icon: Icons.swap_horiz_rounded,
-                  title: AppLocalizations.of(context)!.reassignDoctor,
-                  subtitle: AppLocalizations.of(context)!.reassignDoctorSubtitle,
-                  color: Colors.deepOrange,
-                  onTap: () {
-                    Navigator.pop(context);
-                    _showReassignDoctorDialog(course);
-                  },
-                ),
-              ],
-              const SizedBox(height: 16),
-            ],
+            ),
           ),
-        ),
         );
       },
     );
@@ -1217,7 +1402,9 @@ class _CoursesListPageState extends State<CoursesListPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => AssignStaffPage(initialCourseCode: course['code']?.toString() ?? ''),
+                      builder: (_) => AssignStaffPage(
+                        initialCourseCode: course['code']?.toString() ?? '',
+                      ),
                     ),
                   );
                 },
@@ -1226,7 +1413,9 @@ class _CoursesListPageState extends State<CoursesListPage> {
               _buildOptionTile(
                 icon: Icons.person_remove_alt_1,
                 title: AppLocalizations.of(context)!.removeAssignedStaff,
-                subtitle: AppLocalizations.of(context)!.assignRemoveStaffSubtitle,
+                subtitle: AppLocalizations.of(
+                  context,
+                )!.assignRemoveStaffSubtitle,
                 color: Colors.red,
                 onTap: () {
                   Navigator.pop(context);
@@ -1261,7 +1450,9 @@ class _CoursesListPageState extends State<CoursesListPage> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
               titlePadding: EdgeInsets.zero,
               title: Container(
                 padding: const EdgeInsets.symmetric(vertical: 20),
@@ -1277,20 +1468,31 @@ class _CoursesListPageState extends State<CoursesListPage> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.swap_horiz_rounded, color: Colors.white, size: 32),
+                      child: const Icon(
+                        Icons.swap_horiz_rounded,
+                        color: Colors.white,
+                        size: 32,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     Text(
                       AppLocalizations.of(context)!.reassignDoctor,
-                      style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       course['name'],
-                      style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 14),
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.85),
+                        fontSize: 14,
+                      ),
                     ),
                   ],
                 ),
@@ -1302,16 +1504,27 @@ class _CoursesListPageState extends State<CoursesListPage> {
                 children: [
                   Text(
                     AppLocalizations.of(context)!.newDoctorCode,
-                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.darkColor),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: AppColors.darkColor,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   TextField(
                     controller: codeController,
                     enabled: !isLoading,
                     decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)!.enterNewDoctorCode,
-                      hintStyle: TextStyle(color: AppColors.darkColor.withOpacity(0.4)),
-                      prefixIcon: Icon(Icons.person_search, color: Colors.deepOrange.withOpacity(0.6)),
+                      hintText: AppLocalizations.of(
+                        context,
+                      )!.enterNewDoctorCode,
+                      hintStyle: TextStyle(
+                        color: AppColors.darkColor.withValues(alpha: 0.4),
+                      ),
+                      prefixIcon: Icon(
+                        Icons.person_search,
+                        color: Colors.deepOrange.withValues(alpha: 0.6),
+                      ),
                       filled: true,
                       fillColor: AppColors.lightColor2,
                       border: OutlineInputBorder(
@@ -1320,7 +1533,10 @@ class _CoursesListPageState extends State<CoursesListPage> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colors.deepOrange, width: 1.5),
+                        borderSide: const BorderSide(
+                          color: Colors.deepOrange,
+                          width: 1.5,
+                        ),
                       ),
                     ),
                   ),
@@ -1332,10 +1548,14 @@ class _CoursesListPageState extends State<CoursesListPage> {
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: isLoading ? null : () => Navigator.pop(dialogContext),
+                        onPressed: isLoading
+                            ? null
+                            : () => Navigator.pop(dialogContext),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                           side: BorderSide(color: Colors.grey.shade300),
                         ),
                         child: Text(
@@ -1354,7 +1574,11 @@ class _CoursesListPageState extends State<CoursesListPage> {
                                 if (code.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text(AppLocalizations.of(context)!.pleaseEnterDoctorCode),
+                                      content: Text(
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.pleaseEnterDoctorCode,
+                                      ),
                                       backgroundColor: AppColors.errorColor,
                                       behavior: SnackBarBehavior.floating,
                                     ),
@@ -1365,11 +1589,12 @@ class _CoursesListPageState extends State<CoursesListPage> {
                                 setDialogState(() => isLoading = true);
 
                                 try {
-                                  final result = await ApiService.reassignDoctor(
-                                    courseCode: course['code'].toString(),
-                                    newDoctorUniversityCode: code,
-                                    token: _authToken!,
-                                  );
+                                  final result =
+                                      await ApiService.reassignDoctor(
+                                        courseCode: course['code'].toString(),
+                                        newDoctorUniversityCode: code,
+                                        token: _authToken!,
+                                      );
 
                                   if (!mounted) return;
 
@@ -1379,16 +1604,23 @@ class _CoursesListPageState extends State<CoursesListPage> {
                                     // Update the local state to show it's refreshing
                                     setState(() {
                                       final index = _allCourses.indexWhere(
-                                        (c) => c['id'].toString() == course['id'].toString(),
+                                        (c) =>
+                                            c['id'].toString() ==
+                                            course['id'].toString(),
                                       );
                                       if (index != -1) {
-                                        _allCourses[index]['doctorName'] = 'Updating...';
+                                        _allCourses[index]['doctorName'] =
+                                            'Updating...';
                                       }
                                     });
 
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text(AppLocalizations.of(context)!.reassignSuccess),
+                                        content: Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.reassignSuccess,
+                                        ),
                                         backgroundColor: AppColors.successColor,
                                         behavior: SnackBarBehavior.floating,
                                       ),
@@ -1398,10 +1630,13 @@ class _CoursesListPageState extends State<CoursesListPage> {
                                     _fetchCourses();
                                   } else {
                                     setDialogState(() => isLoading = false);
-                                    var errorMsg = result['body']?.toString() ?? 'Unknown error';
+                                    var errorMsg =
+                                        result['body']?.toString() ??
+                                        'Unknown error';
                                     try {
                                       final data = jsonDecode(result['body']);
-                                      if (data is Map && data['message'] != null) {
+                                      if (data is Map &&
+                                          data['message'] != null) {
                                         errorMsg = data['message'];
                                       }
                                     } catch (_) {}
@@ -1409,7 +1644,11 @@ class _CoursesListPageState extends State<CoursesListPage> {
                                     if (!mounted) return;
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text(AppLocalizations.of(context)!.reassignError(errorMsg)),
+                                        content: Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.reassignError(errorMsg),
+                                        ),
                                         backgroundColor: AppColors.errorColor,
                                         behavior: SnackBarBehavior.floating,
                                       ),
@@ -1420,7 +1659,11 @@ class _CoursesListPageState extends State<CoursesListPage> {
                                   if (!mounted) return;
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text(AppLocalizations.of(context)!.reassignError(e.toString())),
+                                      content: Text(
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.reassignError(e.toString()),
+                                      ),
                                       backgroundColor: AppColors.errorColor,
                                       behavior: SnackBarBehavior.floating,
                                     ),
@@ -1431,7 +1674,9 @@ class _CoursesListPageState extends State<CoursesListPage> {
                           backgroundColor: Colors.deepOrange,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                           elevation: 0,
                         ),
                         child: isLoading
@@ -1440,12 +1685,16 @@ class _CoursesListPageState extends State<CoursesListPage> {
                                 height: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
                                 ),
                               )
                             : Text(
                                 AppLocalizations.of(context)!.confirm,
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                       ),
                     ),
@@ -1471,19 +1720,27 @@ class _CoursesListPageState extends State<CoursesListPage> {
       leading: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           shape: BoxShape.circle,
         ),
         child: Icon(icon, color: color),
       ),
       title: Text(
         title,
-        style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.darkColor),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: AppColors.darkColor,
+        ),
       ),
-      subtitle: subtitle.isEmpty ? null : Text(
-        subtitle,
-        style: TextStyle(fontSize: 12, color: AppColors.darkColor.withOpacity(0.5)),
-      ),
+      subtitle: subtitle.isEmpty
+          ? null
+          : Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 12,
+                color: AppColors.darkColor.withValues(alpha: 0.5),
+              ),
+            ),
       trailing: const Icon(Icons.arrow_forward_ios, size: 14),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -1533,14 +1790,14 @@ class _CoursesListPageState extends State<CoursesListPage> {
           Icon(
             Icons.book_outlined,
             size: 80,
-            color: AppColors.darkColor.withOpacity(0.2),
+            color: AppColors.darkColor.withValues(alpha: 0.2),
           ),
           const SizedBox(height: 16),
           Text(
             'No courses available',
             style: TextStyle(
               fontSize: 18,
-              color: AppColors.darkColor.withOpacity(0.5),
+              color: AppColors.darkColor.withValues(alpha: 0.5),
             ),
           ),
           if (_searchQuery.isNotEmpty) ...[
@@ -1549,7 +1806,7 @@ class _CoursesListPageState extends State<CoursesListPage> {
               'Try a different search term',
               style: TextStyle(
                 fontSize: 13,
-                color: AppColors.darkColor.withOpacity(0.4),
+                color: AppColors.darkColor.withValues(alpha: 0.4),
               ),
             ),
           ],

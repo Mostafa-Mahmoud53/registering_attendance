@@ -1,4 +1,6 @@
 // login_page.dart
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -15,12 +17,12 @@ class LoginPage extends StatefulWidget {
   final Function(Map<String, dynamic>) onLoginSuccess;
 
   const LoginPage({
-    Key? key,
+    super.key,
     required this.onSwitchToActivation,
     required this.deviceId,
     required this.onDeviceIdRefresh,
     required this.onLoginSuccess,
-  }) : super(key: key);
+  });
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -82,13 +84,27 @@ class _LoginPageState extends State<LoginPage> {
         final data = jsonDecode(response['body']);
 
         if (data['isSuccess'] == true) {
+          final role = data['role'] ?? '';
+          
+          bool isDesktopPlatform = false;
+          if (kIsWeb) {
+            isDesktopPlatform = true;
+          } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+            isDesktopPlatform = true;
+          }
+
+          if (role == 'Student' && isDesktopPlatform) {
+            _showInfoDialog('Access Denied', 'Student cannot login on the desktop version, and there is a mobile version he can use to login. Download it here: [APK_LINK]');
+            return;
+          }
+
           AuthWidgets.showSuccessSnackBar(context, AppLocalizations.of(context)!.loginSuccessful);
 
           // Pass user data to parent
           widget.onLoginSuccess({
             'token': data['token'] ?? '',
             'refreshToken': data['refreshToken'] ?? '',
-            'role': data['role'] ?? '',
+            'role': role,
             'userName': data['userName'] ?? '',
             'email': _emailController.text,
             'deviceId': widget.deviceId,
@@ -153,24 +169,28 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20),
-          Text(
-            AppLocalizations.of(context)!.login,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: AppColors.darkColor,
+          const SizedBox(height: 5),
+          Center(
+            child: Text(
+              AppLocalizations.of(context)!.login,
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: AppColors.darkColor,
+              ),
             ),
           ),
           const SizedBox(height: 10),
-          Text(
-            AppLocalizations.of(context)!.enterYourDetails,
-            style: TextStyle(
-              fontSize: 16,
-              color: AppColors.darkColor.withOpacity(0.7),
+          Center(
+            child: Text(
+              AppLocalizations.of(context)!.enterYourDetails,
+              style: TextStyle(
+                fontSize: 16,
+                color: AppColors.darkColor.withValues(alpha: 0.7),
+              ),
             ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 15),
 
           // Login email field
           AuthWidgets.buildTextField(
@@ -185,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
               FocusScope.of(context).requestFocus(_passwordFocus);
             },
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
 
           // Login password field
           AuthWidgets.buildPasswordField(
@@ -217,30 +237,32 @@ class _LoginPageState extends State<LoginPage> {
             onPressed: _login,
             isLoading: _isLoading,
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 15),
 
           // Switch to activation link
           Center(
             child: TextButton(
               onPressed: widget.onSwitchToActivation,
-              child: RichText(
-                text: TextSpan(
-                  text: AppLocalizations.of(context)!.dontHaveAccount,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: AppColors.darkColor,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: AppLocalizations.of(context)!.activateAccount,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.accentColor,
-                      ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.dontHaveAccount,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: AppColors.darkColor,
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    AppLocalizations.of(context)!.activateAccount,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.accentColor,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

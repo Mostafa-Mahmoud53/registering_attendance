@@ -14,10 +14,10 @@ class CreateSessionPage extends StatefulWidget {
   final String courseName;
 
   const CreateSessionPage({
-    Key? key,
+    super.key,
     required this.courseId,
     required this.courseName,
-  }) : super(key: key);
+  });
 
   @override
   State<CreateSessionPage> createState() => _CreateSessionPageState();
@@ -153,9 +153,9 @@ class _CreateSessionPageState extends State<CreateSessionPage> {
                             ? const EdgeInsets.all(12)  // Mobile Layout
                             : const EdgeInsets.all(16), // Desktop Layout
                         decoration: BoxDecoration(
-                          color: Colors.indigo.withOpacity(0.1),
+                          color: Colors.indigo.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.indigo.withOpacity(0.3)),
+                          border: Border.all(color: Colors.indigo.withValues(alpha: 0.3)),
                         ),
                         child: Row(
                           children: [
@@ -278,9 +278,9 @@ class _CreateSessionPageState extends State<CreateSessionPage> {
                       SliderTheme(
                         data: SliderTheme.of(context).copyWith(
                           activeTrackColor: Colors.indigo,
-                          inactiveTrackColor: Colors.indigo.withOpacity(0.2),
+                          inactiveTrackColor: Colors.indigo.withValues(alpha: 0.2),
                           thumbColor: Colors.indigo,
-                          overlayColor: Colors.indigo.withOpacity(0.1),
+                          overlayColor: Colors.indigo.withValues(alpha: 0.1),
                         ),
                         child: Slider(
                           value: _radius,
@@ -299,7 +299,7 @@ class _CreateSessionPageState extends State<CreateSessionPage> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
-                            BoxShadow(color: Colors.indigo.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4)),
+                            BoxShadow(color: Colors.indigo.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4)),
                           ],
                         ),
                         child: ElevatedButton(

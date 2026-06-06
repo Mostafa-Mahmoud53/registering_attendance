@@ -6,7 +6,7 @@ import 'CreateMultipleStudentsPage.dart';
 import 'CreateExcelStudentsPage.dart';
 
 class CreateStudentsTabsPage extends StatelessWidget {
-  const CreateStudentsTabsPage({Key? key}) : super(key: key);
+  const CreateStudentsTabsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

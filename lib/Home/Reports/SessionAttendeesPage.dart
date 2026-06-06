@@ -10,10 +10,10 @@ class SessionAttendeesPage extends StatefulWidget {
   final String sessionTitle;
 
   const SessionAttendeesPage({
-    Key? key,
+    super.key,
     required this.sessionId,
     required this.sessionTitle,
-  }) : super(key: key);
+  });
 
   @override
   State<SessionAttendeesPage> createState() => _SessionAttendeesPageState();
@@ -259,7 +259,7 @@ class _SessionAttendeesPageState extends State<SessionAttendeesPage> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: TextField(
@@ -308,7 +308,7 @@ class _SessionAttendeesPageState extends State<SessionAttendeesPage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.people_outline, size: 80, color: Colors.grey.withOpacity(0.5)),
+                                Icon(Icons.people_outline, size: 80, color: Colors.grey.withValues(alpha: 0.5)),
                                 const SizedBox(height: 16),
                                 const Text('No students attended yet', style: TextStyle(fontSize: 18, color: Colors.grey)),
                               ],
@@ -333,7 +333,7 @@ class _SessionAttendeesPageState extends State<SessionAttendeesPage> {
                                     child: ListTile(
                                       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                                       leading: CircleAvatar(
-                                        backgroundColor: Colors.indigo.withOpacity(0.1),
+                                        backgroundColor: Colors.indigo.withValues(alpha: 0.1),
                                         child: const Icon(Icons.person, color: Colors.indigo),
                                       ),
                                       title: Text(student['studentName'] ?? student['name'] ?? 'Unknown', style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -377,7 +377,7 @@ class _SessionAttendeesPageState extends State<SessionAttendeesPage> {
                                   child: ListTile(
                                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                     leading: CircleAvatar(
-                                      backgroundColor: Colors.indigo.withOpacity(0.1),
+                                      backgroundColor: Colors.indigo.withValues(alpha: 0.1),
                                       child: const Icon(Icons.person, color: Colors.indigo),
                                     ),
                                     title: Text(student['studentName'] ?? student['name'] ?? 'Unknown', style: const TextStyle(fontWeight: FontWeight.bold)),

@@ -7,7 +7,7 @@ import '../../l10n/app_localizations.dart';
 
 class AbsenceWarningsPage extends StatefulWidget {
   final String courseId;
-  const AbsenceWarningsPage({Key? key, required this.courseId}) : super(key: key);
+  const AbsenceWarningsPage({super.key, required this.courseId});
 
   @override
   State<AbsenceWarningsPage> createState() => _AbsenceWarningsPageState();
@@ -43,8 +43,9 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
         if (data is Map) {
           total = data['courseTotalLectures'] ?? data['totalLectures'] ?? 0;
           final raw = data['students'] ?? data[r'$values'] ?? data;
-          if (raw is List) list = raw;
-          else if (raw is Map && raw.containsKey(r'$values')) list = raw[r'$values'] ?? [];
+          if (raw is List) {
+            list = raw;
+          } else if (raw is Map && raw.containsKey(r'$values')) list = raw[r'$values'] ?? [];
         } else if (data is List) {
           list = data;
         }
@@ -131,7 +132,7 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
       children: [
         Container(
           width: double.infinity,
-          color: AppColors.errorColor.withOpacity(0.08),
+          color: AppColors.errorColor.withValues(alpha: 0.08),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           child: Text('${_warnings.length} ${AppLocalizations.of(context)!.students}',
               style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.errorColor)),
@@ -191,7 +192,7 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
             CircleAvatar(
               // Mobile Layout: smaller avatar / Desktop Layout: standard avatar
               radius: isMobile ? 18 : 20, // Mobile: 18 / Desktop: 20
-              backgroundColor: AppColors.errorColor.withOpacity(0.1),
+              backgroundColor: AppColors.errorColor.withValues(alpha: 0.1),
               child: Text(
                 name.isNotEmpty ? name[0].toUpperCase() : '?',
                 style: TextStyle(
@@ -216,7 +217,7 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
               Text(
                 '${AppLocalizations.of(context)!.code}: $code',
                 style: TextStyle(
-                  color: AppColors.darkColor.withOpacity(0.5),
+                  color: AppColors.darkColor.withValues(alpha: 0.5),
                   fontSize: isMobile ? 11 : 12, // Mobile: 11 / Desktop: 12
                 ),
               ),
@@ -227,7 +228,7 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
                 vertical: isMobile ? 4 : 5,    // Mobile: 4 / Desktop: 5
               ),
               decoration: BoxDecoration(
-                color: AppColors.errorColor.withOpacity(0.1),
+                color: AppColors.errorColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -245,7 +246,7 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
             borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
               value: absenceRatio,
-              backgroundColor: AppColors.errorColor.withOpacity(0.15),
+              backgroundColor: AppColors.errorColor.withValues(alpha: 0.15),
               color: absencePct >= 60 ? AppColors.errorColor : (absencePct >= 40 ? Colors.orange : Colors.green),
               // Mobile Layout: slimmer bar / Desktop Layout: standard bar
               minHeight: isMobile ? 6 : 8, // Mobile: 6 / Desktop: 8

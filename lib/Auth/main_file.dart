@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 // main_file.dart
 import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -18,8 +19,7 @@ import '../l10n/app_localizations.dart';
 import '../widgets/language_toggle_button.dart';
 class ActivationLoginPage extends StatefulWidget {
   final bool showLogin;
-  const ActivationLoginPage({Key? key, this.showLogin = false})
-    : super(key: key);
+  const ActivationLoginPage({super.key, this.showLogin = false});
 
   @override
   _ActivationLoginPageState createState() => _ActivationLoginPageState();
@@ -254,8 +254,8 @@ class _ActivationLoginPageState extends State<ActivationLoginPage>
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                AppColors.primaryColor.withOpacity(0.3),
-                AppColors.secondaryColor.withOpacity(0.2),
+                AppColors.primaryColor.withValues(alpha: 0.3),
+                AppColors.secondaryColor.withValues(alpha: 0.2),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -290,8 +290,8 @@ class _ActivationLoginPageState extends State<ActivationLoginPage>
             SafeArea(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 20,
+                  horizontal: 16,
+                  vertical: 10,
                 ),
                 child: Column(
                   children: [
@@ -307,19 +307,16 @@ class _ActivationLoginPageState extends State<ActivationLoginPage>
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
-
                     // App logo and title
-                    const SizedBox(height: 20),
                     Container(
-                      width: 120,
-                      height: 120,
+                      width: 80,
+                      height: 80,
                       decoration: BoxDecoration(
                         color: AppColors.primaryColor,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.primaryColor.withOpacity(0.3),
+                            color: AppColors.primaryColor.withValues(alpha: 0.3),
                             blurRadius: 15,
                             offset: const Offset(0, 5),
                           ),
@@ -327,7 +324,7 @@ class _ActivationLoginPageState extends State<ActivationLoginPage>
                       ),
                       child: const Icon(
                         Icons.school,
-                        size: 60,
+                        size: 40,
                         color: Colors.white,
                       ),
                     ),
@@ -344,7 +341,7 @@ class _ActivationLoginPageState extends State<ActivationLoginPage>
                       AppLocalizations.of(context)!.studentAttendanceApplication,
                       style: TextStyle(
                         fontSize: 16,
-                        color: AppColors.darkColor.withOpacity(0.7),
+                        color: AppColors.darkColor.withValues(alpha: 0.7),
                       ),
                     ),
 
@@ -354,14 +351,14 @@ class _ActivationLoginPageState extends State<ActivationLoginPage>
                       child: FadeTransition(
                         opacity: _fadeAnimation,
                         child: Container(
-                          margin: const EdgeInsets.only(top: 30),
-                          padding: const EdgeInsets.all(24),
+                          margin: const EdgeInsets.only(top: 15),
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.darkColor.withOpacity(0.1),
+                                color: AppColors.darkColor.withValues(alpha: 0.1),
                                 blurRadius: 20,
                                 offset: const Offset(0, 10),
                               ),
@@ -390,7 +387,7 @@ class _ActivationLoginPageState extends State<ActivationLoginPage>
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
-                        color: AppColors.darkColor.withOpacity(0.5),
+                        color: AppColors.darkColor.withValues(alpha: 0.5),
                       ),
                     ),
                   ],

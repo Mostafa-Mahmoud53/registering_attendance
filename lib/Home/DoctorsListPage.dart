@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:registering_attendance/core/http_interceptor.dart' as http;
@@ -5,12 +6,11 @@ import 'package:registering_attendance/Home/creatDoctorOrTA.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import '../Auth/colors.dart';
-import '../Auth/api_service.dart';
 import '../core/responsive.dart';
 import '../l10n/app_localizations.dart';
 
 class DoctorsListPage extends StatefulWidget {
-  DoctorsListPage({Key? key}) : super(key: key);
+  const DoctorsListPage({super.key});
 
   @override
   _DoctorsListPageState createState() => _DoctorsListPageState();
@@ -19,14 +19,16 @@ class DoctorsListPage extends StatefulWidget {
 class _DoctorsListPageState extends State<DoctorsListPage> {
   final TextEditingController _searchController = TextEditingController();
   final StreamController<List<Map<String, dynamic>>> _doctorsStreamController =
-  StreamController<List<Map<String, dynamic>>>.broadcast();
-  final StreamController<int> _statsStreamController = StreamController<int>.broadcast();
+      StreamController<List<Map<String, dynamic>>>.broadcast();
+  final StreamController<int> _statsStreamController =
+      StreamController<int>.broadcast();
 
   String _searchQuery = '';
   String? _authToken;
   Timer? _refreshTimer;
 
-  static const String _doctorsUrl = 'http://77.83.242.94:5000/api/Admin/list-doctors';
+  static const String _doctorsUrl =
+      'http://77.83.242.94:5000/api/Admin/list-doctors';
 
   @override
   void initState() {
@@ -75,9 +77,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
 
     try {
       // جلب البيانات بالتوازي
-      await Future.wait([
-        _fetchDoctors(),
-      ]);
+      await Future.wait([_fetchDoctors()]);
     } catch (e) {
       print('Error fetching all data: $e');
     }
@@ -87,10 +87,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
     try {
       final response = await http.get(
         Uri.parse(_doctorsUrl),
-        headers: {
-          'accept': '*/*',
-          'Authorization': 'Bearer $_authToken',
-        },
+        headers: {'accept': '*/*', 'Authorization': 'Bearer $_authToken'},
       );
 
       if (response.statusCode == 200) {
@@ -124,7 +121,9 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
             Text('Confirm Deletion', style: TextStyle(color: Colors.red)),
           ],
         ),
-        content: Text('Are you sure you want to delete Dr. $name?\n\nThis will permanently remove their account and access.'),
+        content: Text(
+          'Are you sure you want to delete Dr. $name?\n\nThis will permanently remove their account and access.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -135,7 +134,9 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
             child: const Text('Delete'),
           ),
@@ -147,11 +148,10 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
 
     try {
       final response = await http.delete(
-        Uri.parse('http://77.83.242.94:5000/api/Admin/delete-user/$universityCode'),
-        headers: {
-          'accept': '*/*',
-          'Authorization': 'Bearer $_authToken',
-        },
+        Uri.parse(
+          'http://77.83.242.94:5000/api/Admin/delete-user/$universityCode',
+        ),
+        headers: {'accept': '*/*', 'Authorization': 'Bearer $_authToken'},
       );
 
       if (response.statusCode == 200) {
@@ -168,14 +168,17 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Cannot delete this doctor because they are currently assigned to one or more courses. Please unassign them first.'),
+            content: Text(
+              'Cannot delete this doctor because they are currently assigned to one or more courses. Please unassign them first.',
+            ),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             duration: Duration(seconds: 4),
           ),
         );
       } else {
-        var errorMsg = 'Failed to delete doctor (Status: ${response.statusCode})';
+        var errorMsg =
+            'Failed to delete doctor (Status: ${response.statusCode})';
         try {
           final data = jsonDecode(response.body);
           if (data['message'] != null) {
@@ -248,7 +251,9 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
     return '?';
   }
 
-  List<Map<String, dynamic>> _filterDoctors(List<Map<String, dynamic>> doctors) {
+  List<Map<String, dynamic>> _filterDoctors(
+    List<Map<String, dynamic>> doctors,
+  ) {
     if (_searchQuery.isEmpty) return doctors;
 
     return doctors.where((doctor) {
@@ -286,13 +291,13 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                 ),
               ),
               title: Text(
-                    AppLocalizations.of(context)!.doctorsList,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                AppLocalizations.of(context)!.doctorsList,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               centerTitle: false,
               expandedHeight: 120,
               flexibleSpace: FlexibleSpaceBar(
@@ -301,14 +306,14 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [
-                        AppColors.primaryColor,
-                        AppColors.darkColor,
-                      ],
+                      colors: [AppColors.primaryColor, AppColors.darkColor],
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsetsDirectional.only(start: 20, bottom: 16),
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 20,
+                      bottom: 16,
+                    ),
                     child: Align(
                       alignment: Alignment.bottomLeft,
                       child: StreamBuilder<List<Map<String, dynamic>>>(
@@ -324,7 +329,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                               Text(
                                 '${filteredDoctors.length} doctor${filteredDoctors.length != 1 ? 's' : ''}',
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.9),
+                                  color: Colors.white.withValues(alpha: 0.9),
                                   fontSize: 14,
                                 ),
                               ),
@@ -332,7 +337,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                               Text(
                                 AppLocalizations.of(context)!.autoRefresh30,
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: Colors.white.withValues(alpha: 0.7),
                                   fontSize: 10,
                                   fontStyle: FontStyle.italic,
                                 ),
@@ -352,157 +357,183 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 1400),
             child: Column(
-          children: [
-            // Search Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      blurRadius: 15,
-                      spreadRadius: 2,
-                      offset: const Offset(0, 4),
+              children: [
+                // Search Bar
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withValues(alpha: 0.1),
+                          blurRadius: 15,
+                          spreadRadius: 2,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.search, color: AppColors.darkColor.withOpacity(0.5)),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)!.searchDoctors,
-                          hintStyle: TextStyle(
-                            color: AppColors.darkColor.withOpacity(0.4),
-                          ),
-                          border: InputBorder.none,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.search,
+                          color: AppColors.darkColor.withValues(alpha: 0.5),
                         ),
-                        style: TextStyle(
-                          color: AppColors.darkColor,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    if (_searchQuery.isNotEmpty)
-                      GestureDetector(
-                        onTap: () {
-                          _searchController.clear();
-                        },
-                        child: Container(
-                          width: 36,
-                          height: 36,
-                          decoration: BoxDecoration(
-                            color: AppColors.lightColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.clear,
-                            size: 20,
-                            color: AppColors.accentColor,
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText: AppLocalizations.of(
+                                context,
+                              )!.searchDoctors,
+                              hintStyle: TextStyle(
+                                color: AppColors.darkColor.withValues(
+                                  alpha: 0.4,
+                                ),
+                              ),
+                              border: InputBorder.none,
+                            ),
+                            style: TextStyle(
+                              color: AppColors.darkColor,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-
-            // Statistics
-            StreamBuilder<int>(
-              stream: _statsStreamController.stream,
-              builder: (context, statsSnapshot) {
-                final doctorsCount = statsSnapshot.data ?? 0;
-                final w = MediaQuery.of(context).size.width;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  child: w >= 850
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 280,
-                              child: _buildStatCard(
-                                icon: Icons.person,
-                                title: 'Doctors',
-                                value: doctorsCount.toString(),
-                                color: AppColors.primaryColor,
-                                isLoading: !statsSnapshot.hasData,
+                        if (_searchQuery.isNotEmpty)
+                          GestureDetector(
+                            onTap: () {
+                              _searchController.clear();
+                            },
+                            child: Container(
+                              width: 36,
+                              height: 36,
+                              decoration: BoxDecoration(
+                                color: AppColors.lightColor,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.clear,
+                                size: 20,
+                                color: AppColors.accentColor,
                               ),
                             ),
-                          ],
-                        )
-                      : Row(
-                          children: [
-                            Expanded(
-                              child: _buildStatCard(
-                                icon: Icons.person,
-                                title: 'Doctors',
-                                value: doctorsCount.toString(),
-                                color: AppColors.primaryColor,
-                                isLoading: !statsSnapshot.hasData,
-                              ),
-                            ),
-                          ],
-                        ),
-                );
-              },
-            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
 
-            // Doctors List
-            Expanded(
-              child: StreamBuilder<List<Map<String, dynamic>>>(
-                stream: _doctorsStreamController.stream,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return _buildLoadingState();
-                  }
-
-                  final doctors = snapshot.data!;
-                  final filteredDoctors = _filterDoctors(doctors);
-
-                  if (doctors.isEmpty) {
-                    return _buildEmptyState();
-                  }
-
-                  if (filteredDoctors.isEmpty) return _buildNoResultsState();
-
-                  final w = MediaQuery.of(context).size.width;
-                  final cols = w >= 1100 ? 3 : w >= 850 ? 2 : 1;
-
-                  if (cols > 1) {
-                    return GridView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: cols,
-                        mainAxisSpacing: 12,
-                        crossAxisSpacing: 12,
-                        childAspectRatio: cols == 3 ? 2.0 : 2.2,
+                // Statistics
+                StreamBuilder<int>(
+                  stream: _statsStreamController.stream,
+                  builder: (context, statsSnapshot) {
+                    final doctorsCount = statsSnapshot.data ?? 0;
+                    final w = MediaQuery.of(context).size.width;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 8,
                       ),
-                      itemCount: filteredDoctors.length,
-                      itemBuilder: (context, index) => _buildDoctorCard(filteredDoctors[index]),
+                      child: w >= 850
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 280,
+                                  child: _buildStatCard(
+                                    icon: Icons.person,
+                                    title: 'Doctors',
+                                    value: doctorsCount.toString(),
+                                    color: AppColors.primaryColor,
+                                    isLoading: !statsSnapshot.hasData,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Row(
+                              children: [
+                                Expanded(
+                                  child: _buildStatCard(
+                                    icon: Icons.person,
+                                    title: 'Doctors',
+                                    value: doctorsCount.toString(),
+                                    color: AppColors.primaryColor,
+                                    isLoading: !statsSnapshot.hasData,
+                                  ),
+                                ),
+                              ],
+                            ),
                     );
-                  }
+                  },
+                ),
 
-                  return ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    itemCount: filteredDoctors.length,
-                    itemBuilder: (context, index) {
-                      final doctor = filteredDoctors[index];
-                      return _buildDoctorCard(doctor);
+                // Doctors List
+                Expanded(
+                  child: StreamBuilder<List<Map<String, dynamic>>>(
+                    stream: _doctorsStreamController.stream,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return _buildLoadingState();
+                      }
+
+                      final doctors = snapshot.data!;
+                      final filteredDoctors = _filterDoctors(doctors);
+
+                      if (doctors.isEmpty) {
+                        return _buildEmptyState();
+                      }
+
+                      if (filteredDoctors.isEmpty)
+                        return _buildNoResultsState();
+
+                      final w = MediaQuery.of(context).size.width;
+                      final cols = w >= 1100
+                          ? 3
+                          : w >= 850
+                          ? 2
+                          : 1;
+
+                      if (cols > 1) {
+                        return GridView.builder(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 16,
+                          ),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: cols,
+                                mainAxisSpacing: 12,
+                                crossAxisSpacing: 12,
+                                childAspectRatio: cols == 3 ? 2.0 : 2.2,
+                              ),
+                          itemCount: filteredDoctors.length,
+                          itemBuilder: (context, index) =>
+                              _buildDoctorCard(filteredDoctors[index]),
+                        );
+                      }
+
+                      return ListView.builder(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 16,
+                        ),
+                        itemCount: filteredDoctors.length,
+                        itemBuilder: (context, index) {
+                          final doctor = filteredDoctors[index];
+                          return _buildDoctorCard(doctor);
+                        },
+                      );
                     },
-                  );
-                },
-              ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
           ),
         ),
       ),
@@ -510,9 +541,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => const CreateAccountPage(),
-            ),
+            MaterialPageRoute(builder: (context) => const CreateAccountPage()),
           ).then((value) {
             // تحديث جميع البيانات بعد إضافة دكتور جديد
             if (value == true) {
@@ -528,9 +557,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
 
   Widget _buildLoadingState() {
     return const Center(
-      child: CircularProgressIndicator(
-        color: AppColors.primaryColor,
-      ),
+      child: CircularProgressIndicator(color: AppColors.primaryColor),
     );
   }
 
@@ -542,14 +569,14 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
           Icon(
             Icons.people_outline,
             size: 80,
-            color: AppColors.darkColor.withOpacity(0.3),
+            color: AppColors.darkColor.withValues(alpha: 0.3),
           ),
           const SizedBox(height: 20),
           Text(
             'No doctors available',
             style: TextStyle(
               fontSize: 18,
-              color: AppColors.darkColor.withOpacity(0.5),
+              color: AppColors.darkColor.withValues(alpha: 0.5),
             ),
           ),
           const SizedBox(height: 10),
@@ -574,14 +601,14 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
           Icon(
             Icons.search_off,
             size: 60,
-            color: AppColors.darkColor.withOpacity(0.3),
+            color: AppColors.darkColor.withValues(alpha: 0.3),
           ),
           const SizedBox(height: 16),
           Text(
             'No doctors found',
             style: TextStyle(
               fontSize: 16,
-              color: AppColors.darkColor.withOpacity(0.5),
+              color: AppColors.darkColor.withValues(alpha: 0.5),
             ),
           ),
           const SizedBox(height: 8),
@@ -589,7 +616,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
             'Try a different search term',
             style: TextStyle(
               fontSize: 14,
-              color: AppColors.darkColor.withOpacity(0.4),
+              color: AppColors.darkColor.withValues(alpha: 0.4),
             ),
           ),
         ],
@@ -611,7 +638,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -623,20 +650,20 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: isLoading
                 ? Center(
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: color,
-                ),
-              ),
-            )
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: color,
+                      ),
+                    ),
+                  )
                 : Icon(icon, color: color, size: 24),
           ),
           const SizedBox(width: 12),
@@ -656,7 +683,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                   title,
                   style: TextStyle(
                     fontSize: 12,
-                    color: AppColors.darkColor.withOpacity(0.6),
+                    color: AppColors.darkColor.withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -672,9 +699,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
       margin: const EdgeInsets.only(bottom: 12),
       child: Card(
         elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: InkWell(
           onTap: () => _showDoctorDetails(doctor),
           borderRadius: BorderRadius.circular(16),
@@ -684,7 +709,9 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
               children: [
                 // Avatar
                 CircleAvatar(
-                  backgroundColor: (doctor['color'] as Color).withOpacity(0.1),
+                  backgroundColor: (doctor['color'] as Color).withValues(
+                    alpha: 0.1,
+                  ),
                   radius: 24,
                   child: Text(
                     doctor['avatar'],
@@ -706,9 +733,14 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
-                              color: (doctor['color'] as Color).withOpacity(0.1),
+                              color: (doctor['color'] as Color).withValues(
+                                alpha: 0.1,
+                              ),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
@@ -737,7 +769,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                           Icon(
                             Icons.email,
                             size: 14,
-                            color: AppColors.darkColor.withOpacity(0.5),
+                            color: AppColors.darkColor.withValues(alpha: 0.5),
                           ),
                           const SizedBox(width: 4),
                           Expanded(
@@ -745,7 +777,9 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                               doctor['email'],
                               style: TextStyle(
                                 fontSize: 12,
-                                color: AppColors.darkColor.withOpacity(0.7),
+                                color: AppColors.darkColor.withValues(
+                                  alpha: 0.7,
+                                ),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -758,21 +792,26 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                           Icon(
                             Icons.code,
                             size: 14,
-                            color: AppColors.darkColor.withOpacity(0.5),
+                            color: AppColors.darkColor.withValues(alpha: 0.5),
                           ),
                           const SizedBox(width: 4),
                           Text(
                             doctor['universityCode'],
                             style: TextStyle(
                               fontSize: 12,
-                              color: AppColors.darkColor.withOpacity(0.7),
+                              color: AppColors.darkColor.withValues(alpha: 0.7),
                             ),
                           ),
                           const Spacer(),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
-                              color: (doctor['color'] as Color).withOpacity(0.1),
+                              color: (doctor['color'] as Color).withValues(
+                                alpha: 0.1,
+                              ),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
@@ -806,7 +845,9 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
         child: Container(
           constraints: BoxConstraints(
             maxWidth: Responsive.isDesktop(context) ? 700 : double.infinity,
-            maxHeight: MediaQuery.of(context).size.height * (Responsive.isMobile(context) ? 0.6 : 0.85),
+            maxHeight:
+                MediaQuery.of(context).size.height *
+                (Responsive.isMobile(context) ? 0.6 : 0.85),
           ),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -816,7 +857,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.15),
+                color: Colors.black.withValues(alpha: 0.15),
                 blurRadius: 10,
                 spreadRadius: 2,
               ),
@@ -849,13 +890,16 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                         child: Column(
                           children: [
                             CircleAvatar(
-                              backgroundColor: (doctor['color'] as Color).withOpacity(0.1),
+                              backgroundColor: (doctor['color'] as Color)
+                                  .withValues(alpha: 0.1),
                               radius: Responsive.isMobile(context) ? 32 : 45,
                               child: Text(
                                 doctor['avatar'],
                                 style: TextStyle(
                                   color: doctor['color'] as Color,
-                                  fontSize: Responsive.isMobile(context) ? 24 : 32,
+                                  fontSize: Responsive.isMobile(context)
+                                      ? 24
+                                      : 32,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -864,7 +908,9 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                             Text(
                               doctor['name'],
                               style: TextStyle(
-                                fontSize: Responsive.isMobile(context) ? 20 : 24,
+                                fontSize: Responsive.isMobile(context)
+                                    ? 20
+                                    : 24,
                                 fontWeight: FontWeight.bold,
                                 color: const Color(0xFF1D3557),
                               ),
@@ -880,9 +926,14 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                             ),
                             const SizedBox(height: 12),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
-                                color: (doctor['color'] as Color).withOpacity(0.1),
+                                color: (doctor['color'] as Color).withValues(
+                                  alpha: 0.1,
+                                ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
@@ -906,10 +957,16 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: AppColors.primaryColor.withOpacity(0.1),
+                              color: AppColors.primaryColor.withValues(
+                                alpha: 0.1,
+                              ),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Icon(Icons.info_outline, color: AppColors.primaryColor, size: 20),
+                            child: Icon(
+                              Icons.info_outline,
+                              color: AppColors.primaryColor,
+                              size: 20,
+                            ),
                           ),
                           const SizedBox(width: 12),
                           const Text(
@@ -946,7 +1003,9 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                             child: OutlinedButton(
                               onPressed: () => Navigator.pop(context),
                               style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),
@@ -966,12 +1025,17 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                             child: ElevatedButton(
                               onPressed: () {
                                 Navigator.pop(context);
-                                _deleteDoctorDirectly(doctor['universityCode'], doctor['name']);
+                                _deleteDoctorDirectly(
+                                  doctor['universityCode'],
+                                  doctor['name'],
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFE63946),
                                 foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),
@@ -984,7 +1048,9 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                                   SizedBox(width: 8),
                                   Text(
                                     'Delete',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -992,7 +1058,9 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                           ),
                         ],
                       ),
-                      SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
+                      SizedBox(
+                        height: MediaQuery.of(context).padding.bottom + 16,
+                      ),
                     ],
                   ),
                 ),
@@ -1018,14 +1086,10 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 18,
-            ),
+            child: Icon(icon, color: color, size: 18),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -1036,7 +1100,7 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
                   label,
                   style: TextStyle(
                     fontSize: 13,
-                    color: AppColors.darkColor.withOpacity(0.6),
+                    color: AppColors.darkColor.withValues(alpha: 0.6),
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -1055,4 +1119,3 @@ class _DoctorsListPageState extends State<DoctorsListPage> {
     );
   }
 }
-

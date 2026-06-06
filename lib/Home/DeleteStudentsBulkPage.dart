@@ -7,11 +7,11 @@ import '../l10n/app_localizations.dart';
 import '../Auth/colors.dart';
 import '../Auth/auth_storage.dart';
 import '../Auth/api_service.dart';
-import '../widgets/AppInstructionsCard.dart';
+import '../widgets/app_instructions_card.dart';
 
 class DeleteStudentsBulkPage extends StatefulWidget {
   final bool isTab;
-  const DeleteStudentsBulkPage({Key? key, this.isTab = false}) : super(key: key);
+  const DeleteStudentsBulkPage({super.key, this.isTab = false});
   @override
   _DeleteStudentsBulkPageState createState() => _DeleteStudentsBulkPageState();
 }
@@ -25,7 +25,7 @@ class _DeleteStudentsBulkPageState extends State<DeleteStudentsBulkPage> {
   bool _isSuccess = false;
   String? _importMessage;
   List<String> _importErrors = [];
-  List<String> _codesList = [];
+  final List<String> _codesList = [];
 
   @override
   void initState() {
@@ -301,7 +301,7 @@ class _DeleteStudentsBulkPageState extends State<DeleteStudentsBulkPage> {
     duration: const Duration(milliseconds: 300),
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      color: _isSuccess ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+      color: _isSuccess ? Colors.green.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1),
       borderRadius: BorderRadius.circular(12),
       border: Border.all(color: _isSuccess ? Colors.green : Colors.red),
     ),
@@ -319,14 +319,14 @@ class _DeleteStudentsBulkPageState extends State<DeleteStudentsBulkPage> {
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       color: Colors.white, borderRadius: BorderRadius.circular(16),
-      boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+      boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
     ),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(AppLocalizations.of(context)!.importFromExcel,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.darkColor)),
       const SizedBox(height: 8),
       Text(AppLocalizations.of(context)!.uploadExcelHint,
-          style: TextStyle(fontSize: 13, color: AppColors.darkColor.withOpacity(0.6))),
+          style: TextStyle(fontSize: 13, color: AppColors.darkColor.withValues(alpha: 0.6))),
       const SizedBox(height: 16),
       Row(children: [
         Expanded(
@@ -373,9 +373,9 @@ class _DeleteStudentsBulkPageState extends State<DeleteStudentsBulkPage> {
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppColors.errorColor.withOpacity(0.08),
+            color: AppColors.errorColor.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: AppColors.errorColor.withOpacity(0.3)),
+            border: Border.all(color: AppColors.errorColor.withValues(alpha: 0.3)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -395,14 +395,14 @@ class _DeleteStudentsBulkPageState extends State<DeleteStudentsBulkPage> {
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       color: Colors.white, borderRadius: BorderRadius.circular(16),
-      boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+      boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
     ),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(AppLocalizations.of(context)!.addManually,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.darkColor)),
       const SizedBox(height: 8),
       Text(AppLocalizations.of(context)!.enterCodeAndPressAdd,
-          style: TextStyle(fontSize: 13, color: AppColors.darkColor.withOpacity(0.6))),
+          style: TextStyle(fontSize: 13, color: AppColors.darkColor.withValues(alpha: 0.6))),
       const SizedBox(height: 16),
       Row(children: [
         Expanded(
@@ -411,12 +411,12 @@ class _DeleteStudentsBulkPageState extends State<DeleteStudentsBulkPage> {
             onFieldSubmitted: (_) => _addManualCode(),
             decoration: InputDecoration(
               hintText: 'e.g. ST-20205522',
-              hintStyle: TextStyle(color: AppColors.darkColor.withOpacity(0.35)),
+              hintStyle: TextStyle(color: AppColors.darkColor.withValues(alpha: 0.35)),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
               focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12),
                   borderSide: const BorderSide(color: Colors.red, width: 1.5)),
               filled: true, fillColor: AppColors.lightColor2,
-              prefixIcon: Icon(Icons.badge_outlined, color: AppColors.darkColor.withOpacity(0.4)),
+              prefixIcon: Icon(Icons.badge_outlined, color: AppColors.darkColor.withValues(alpha: 0.4)),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             ),
             style: TextStyle(color: AppColors.darkColor, fontSize: 15),
@@ -440,7 +440,7 @@ class _DeleteStudentsBulkPageState extends State<DeleteStudentsBulkPage> {
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       color: Colors.white, borderRadius: BorderRadius.circular(16),
-      boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+      boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
     ),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -449,7 +449,7 @@ class _DeleteStudentsBulkPageState extends State<DeleteStudentsBulkPage> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           decoration: BoxDecoration(
-            color: Colors.red.withOpacity(0.1),
+            color: Colors.red.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.red),
           ),
@@ -471,7 +471,7 @@ class _DeleteStudentsBulkPageState extends State<DeleteStudentsBulkPage> {
           ),
           child: Row(children: [
             Container(width: 32, height: 32,
-              decoration: BoxDecoration(color: Colors.red.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: Colors.red.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
               child: Center(child: Text('${i+1}',
                   style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red, fontSize: 12)))),
             const SizedBox(width: 12),

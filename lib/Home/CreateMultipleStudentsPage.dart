@@ -4,12 +4,12 @@ import '../l10n/app_localizations.dart';
 import 'package:registering_attendance/core/http_interceptor.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Auth/colors.dart';
-import '../widgets/AppInstructionsCard.dart';
+import '../widgets/app_instructions_card.dart';
 import '../core/responsive.dart';
 
 class CreateMultipleStudentsPage extends StatefulWidget {
   final bool isTab;
-  const CreateMultipleStudentsPage({Key? key, this.isTab = false}) : super(key: key);
+  const CreateMultipleStudentsPage({super.key, this.isTab = false});
 
   @override
   _CreateMultipleStudentsPageState createState() => _CreateMultipleStudentsPageState();
@@ -21,7 +21,7 @@ class _CreateMultipleStudentsPageState extends State<CreateMultipleStudentsPage>
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _codeController = TextEditingController();
 
-  List<Map<String, String>> _studentsList = [];
+  final List<Map<String, String>> _studentsList = [];
 
   bool _isLoading = false;
   String? _apiResponse;
@@ -274,7 +274,7 @@ class _CreateMultipleStudentsPageState extends State<CreateMultipleStudentsPage>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -329,20 +329,20 @@ class _CreateMultipleStudentsPageState extends State<CreateMultipleStudentsPage>
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.08), blurRadius: 8, offset: const Offset(0, 4))],
+            boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.08), blurRadius: 8, offset: const Offset(0, 4))],
           ),
           child: TextFormField(
             controller: controller,
             keyboardType: keyboardType,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(color: AppColors.darkColor.withOpacity(0.4)),
+              hintStyle: TextStyle(color: AppColors.darkColor.withValues(alpha: 0.4)),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
               focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5)),
               errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AppColors.errorColor, width: 1.5)),
               filled: true,
               fillColor: Colors.white,
-              prefixIcon: Icon(prefixIcon, color: AppColors.darkColor.withOpacity(0.5)),
+              prefixIcon: Icon(prefixIcon, color: AppColors.darkColor.withValues(alpha: 0.5)),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             ),
             style: TextStyle(color: AppColors.darkColor, fontSize: 16),
@@ -359,7 +359,7 @@ class _CreateMultipleStudentsPageState extends State<CreateMultipleStudentsPage>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,7 +371,7 @@ class _CreateMultipleStudentsPageState extends State<CreateMultipleStudentsPage>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.successColor.withOpacity(0.1),
+                  color: AppColors.successColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: AppColors.successColor),
                 ),
@@ -399,7 +399,7 @@ class _CreateMultipleStudentsPageState extends State<CreateMultipleStudentsPage>
                     Container(
                       width: 40,
                       height: 40,
-                      decoration: BoxDecoration(color: AppColors.primaryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+                      decoration: BoxDecoration(color: AppColors.primaryColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
                       child: Center(child: Text('${index + 1}', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryColor))),
                     ),
                     const SizedBox(width: 12),
@@ -408,7 +408,7 @@ class _CreateMultipleStudentsPageState extends State<CreateMultipleStudentsPage>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(student['name']!, style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.darkColor)),
-                          Text('${student['universityCode']} | ${student['universityEmail']}', style: TextStyle(fontSize: 12, color: AppColors.darkColor.withOpacity(0.6))),
+                          Text('${student['universityCode']} | ${student['universityEmail']}', style: TextStyle(fontSize: 12, color: AppColors.darkColor.withValues(alpha: 0.6))),
                         ],
                       ),
                     ),
@@ -431,7 +431,7 @@ class _CreateMultipleStudentsPageState extends State<CreateMultipleStudentsPage>
       duration: const Duration(milliseconds: 300),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: _isSuccess ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+        color: _isSuccess ? Colors.green.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: _isSuccess ? Colors.green : Colors.red),
       ),

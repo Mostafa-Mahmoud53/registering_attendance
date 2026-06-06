@@ -5,7 +5,7 @@ import 'ResetStudentAccountPage.dart';
 import 'ResetStudentsForNewYearPage.dart';
 
 class ResetStudentsAccountsPage extends StatelessWidget {
-  const ResetStudentsAccountsPage({Key? key}) : super(key: key);
+  const ResetStudentsAccountsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

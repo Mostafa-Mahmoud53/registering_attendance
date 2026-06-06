@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import 'dart:convert';
@@ -7,12 +8,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:registering_attendance/core/http_interceptor.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Auth/colors.dart';
-import '../widgets/AppInstructionsCard.dart';
+import '../widgets/app_instructions_card.dart';
 import '../core/responsive.dart';
-import '../l10n/app_localizations.dart';
 
 class CreateStudentsBulkPage extends StatefulWidget {
-  const CreateStudentsBulkPage({Key? key}) : super(key: key);
+  const CreateStudentsBulkPage({super.key});
 
   @override
   _CreateStudentsBulkPageState createState() => _CreateStudentsBulkPageState();
@@ -35,7 +35,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
       'http://77.83.242.94:5000/api/Admin/create-students-bulk';
 
   // قائمة للطلاب الذين سيتم إضافتهم
-  List<Map<String, String>> _studentsList = [];
+  final List<Map<String, String>> _studentsList = [];
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _codeController = TextEditingController();
@@ -198,7 +198,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
       }
 
       final sheet = workbook.tables.values.first;
-      if (sheet == null || sheet.rows.isEmpty) {
+      if (sheet.rows.isEmpty) {
         throw Exception('The Excel sheet is empty.');
       }
 
@@ -466,7 +466,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
                       color: AppColors.lightColor,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: AppColors.primaryColor.withOpacity(0.2),
+                        color: AppColors.primaryColor.withValues(alpha: 0.2),
                       ),
                     ),
                     child: Row(
@@ -494,7 +494,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
                                 AppLocalizations.of(context)!.addStudentsBulkSubtitle,
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: AppColors.darkColor.withOpacity(0.6),
+                                  color: AppColors.darkColor.withValues(alpha: 0.6),
                                 ),
                               ),
                             ],
@@ -583,7 +583,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -703,7 +703,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.08),
+                color: Colors.grey.withValues(alpha: 0.08),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -714,7 +714,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
             keyboardType: keyboardType,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(color: AppColors.darkColor.withOpacity(0.4)),
+              hintStyle: TextStyle(color: AppColors.darkColor.withValues(alpha: 0.4)),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
@@ -734,7 +734,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
               fillColor: Colors.white,
               prefixIcon: Icon(
                 prefixIcon,
-                color: AppColors.darkColor.withOpacity(0.5),
+                color: AppColors.darkColor.withValues(alpha: 0.5),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -757,7 +757,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -783,7 +783,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.successColor.withOpacity(0.1),
+                  color: AppColors.successColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: AppColors.successColor),
                 ),
@@ -823,7 +823,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -845,7 +845,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
             AppLocalizations.of(context)!.uploadExcelCreateHint,
             style: TextStyle(
               fontSize: 13,
-              color: AppColors.darkColor.withOpacity(0.6),
+              color: AppColors.darkColor.withValues(alpha: 0.6),
             ),
           ),
           const SizedBox(height: 16),
@@ -935,10 +935,10 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.errorColor.withOpacity(0.08),
+                color: AppColors.errorColor.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: AppColors.errorColor.withOpacity(0.3),
+                  color: AppColors.errorColor.withValues(alpha: 0.3),
                 ),
               ),
               child: Column(
@@ -985,7 +985,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: AppColors.primaryColor.withOpacity(0.1),
+              color: AppColors.primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
@@ -1016,7 +1016,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
                     Icon(
                       Icons.email,
                       size: 14,
-                      color: AppColors.darkColor.withOpacity(0.5),
+                      color: AppColors.darkColor.withValues(alpha: 0.5),
                     ),
                     const SizedBox(width: 4),
                     Expanded(
@@ -1024,7 +1024,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
                         student['universityEmail']!,
                         style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.darkColor.withOpacity(0.7),
+                          color: AppColors.darkColor.withValues(alpha: 0.7),
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -1037,14 +1037,14 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
                     Icon(
                       Icons.code,
                       size: 14,
-                      color: AppColors.darkColor.withOpacity(0.5),
+                      color: AppColors.darkColor.withValues(alpha: 0.5),
                     ),
                     const SizedBox(width: 4),
                     Text(
                       student['universityCode']!,
                       style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.darkColor.withOpacity(0.7),
+                        color: AppColors.darkColor.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -1068,8 +1068,8 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: _isSuccess
-            ? Colors.green.withOpacity(0.1)
-            : Colors.red.withOpacity(0.1),
+            ? Colors.green.withValues(alpha: 0.1)
+            : Colors.red.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: _isSuccess ? Colors.green : Colors.red,
@@ -1158,7 +1158,7 @@ class _CreateStudentsBulkPageState extends State<CreateStudentsBulkPage> {
               label,
               style: TextStyle(
                 fontSize: 12,
-                color: AppColors.darkColor.withOpacity(0.7),
+                color: AppColors.darkColor.withValues(alpha: 0.7),
               ),
             ),
           ),

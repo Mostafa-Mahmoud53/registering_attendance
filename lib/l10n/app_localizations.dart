@@ -1244,6 +1244,18 @@ abstract class AppLocalizations {
   /// **'Start New Session'**
   String get startNewSession;
 
+  /// No description provided for @resumeActiveSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume Active Session'**
+  String get resumeActiveSession;
+
+  /// No description provided for @resumeActiveSessionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue the currently running session'**
+  String get resumeActiveSessionSubtitle;
+
   /// No description provided for @createSession.
   ///
   /// In en, this message translates to:

@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 import 'dart:convert';
 import 'package:registering_attendance/core/http_interceptor.dart' as http;
 import '../../Auth/api_service.dart';
@@ -15,11 +16,11 @@ class QrDisplayScreen extends StatefulWidget {
   final String initialPinCode;
 
   const QrDisplayScreen({
-    Key? key,
+    super.key,
     required this.sessionId,
     required this.initialQrContent,
     required this.initialPinCode,
-  }) : super(key: key);
+  });
 
   @override
   State<QrDisplayScreen> createState() => _QrDisplayScreenState();
@@ -244,10 +245,10 @@ class _QrDisplayScreenState extends State<QrDisplayScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: isSessionActive ? AppColors.successColor.withOpacity(0.1) : AppColors.errorColor.withOpacity(0.1),
+                  color: isSessionActive ? AppColors.successColor.withValues(alpha: 0.1) : AppColors.errorColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isSessionActive ? AppColors.successColor.withOpacity(0.5) : AppColors.errorColor.withOpacity(0.5),
+                    color: isSessionActive ? AppColors.successColor.withValues(alpha: 0.5) : AppColors.errorColor.withValues(alpha: 0.5),
                   ),
                 ),
                 child: Row(
@@ -280,7 +281,7 @@ class _QrDisplayScreenState extends State<QrDisplayScreen> {
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.darkColor.withOpacity(0.05),
+                      color: AppColors.darkColor.withValues(alpha: 0.05),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -333,7 +334,7 @@ class _QrDisplayScreenState extends State<QrDisplayScreen> {
                     const SizedBox(height: 4),
                     Text(
                       'Manual Entry PIN',
-                      style: TextStyle(fontSize: 14, color: AppColors.darkColor.withOpacity(0.5)),
+                      style: TextStyle(fontSize: 14, color: AppColors.darkColor.withValues(alpha: 0.5)),
                     ),
                   ],
                 ),
@@ -400,7 +401,7 @@ class _QrDisplayScreenState extends State<QrDisplayScreen> {
                       ),
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: AppColors.primaryColor.withOpacity(0.1),
+                          backgroundColor: AppColors.primaryColor.withValues(alpha: 0.1),
                           child: const Icon(Icons.person, color: AppColors.primaryColor),
                         ),
                         title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -448,11 +449,11 @@ class _QrDisplayScreenState extends State<QrDisplayScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primaryColor.withOpacity(0.1)),
+        border: Border.all(color: AppColors.primaryColor.withValues(alpha: 0.1)),
       ),
       child: Column(
         children: [
-          Icon(icon, color: AppColors.primaryColor.withOpacity(0.7), size: 28),
+          Icon(icon, color: AppColors.primaryColor.withValues(alpha: 0.7), size: 28),
           const SizedBox(height: 8),
           Text(
             value,
@@ -467,7 +468,7 @@ class _QrDisplayScreenState extends State<QrDisplayScreen> {
             title,
             style: TextStyle(
               fontSize: 12,
-              color: AppColors.darkColor.withOpacity(0.6),
+              color: AppColors.darkColor.withValues(alpha: 0.6),
               fontWeight: FontWeight.w500,
             ),
           ),

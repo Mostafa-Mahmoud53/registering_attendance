@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 class CreateSessionDto {
   final int courseId;
   final String title;

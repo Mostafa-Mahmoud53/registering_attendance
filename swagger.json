@@ -1,0 +1,1859 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "University Attendance API",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/Admin/create-doctor": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Creates a new doctor account. Admin only.",
+        "requestBody": {
+          "description": "Doctor details (e.g., name, university code, email, password).",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDoctorDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDoctorDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDoctorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Doctor created successfully."
+          },
+          "400": {
+            "description": "Validation failed or university code/email already in use."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin role required."
+          }
+        }
+      }
+    },
+    "/api/Admin/create-TA": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Creates a new teaching assistant (TA) account. Admin only.",
+        "requestBody": {
+          "description": "TA details (e.g., name, university code, email, password).",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDoctorDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDoctorDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDoctorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "TA created successfully."
+          },
+          "400": {
+            "description": "Validation failed or university code/email already in use."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin role required."
+          }
+        }
+      }
+    },
+    "/api/Admin/list-doctors": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Returns a list of all registered doctors.",
+        "responses": {
+          "200": {
+            "description": "List of doctors returned successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin role required."
+          }
+        }
+      }
+    },
+    "/api/Admin/list-TAs": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Returns a list of all registered teaching assistants (TAs).",
+        "responses": {
+          "200": {
+            "description": "List of TAs returned successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin role required."
+          }
+        }
+      }
+    },
+    "/api/Admin/assign-staff": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Assigns a staff member (doctor or TA) to a course by course code and staff university code.",
+        "parameters": [
+          {
+            "name": "courseCode",
+            "in": "query",
+            "description": "Unique code of the course.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "staffUniversityCode",
+            "in": "query",
+            "description": "University code of the staff member to assign.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Staff assigned to course successfully."
+          },
+          "400": {
+            "description": "Invalid request (e.g., already assigned or invalid codes)."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin or Doctor role required."
+          },
+          "404": {
+            "description": "Course or staff member not found."
+          }
+        }
+      }
+    },
+    "/api/Admin/remove-staff": {
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "courseCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "staffUniversityCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Admin/{courseCode}/assigned-staff": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "courseCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Admin/create-course": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Creates a new course. Admin can create any course; Doctor can create courses they are allowed to manage.",
+        "requestBody": {
+          "description": "Course details (e.g., code, name, type).",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminCreateCourseDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminCreateCourseDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminCreateCourseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Course created successfully."
+          },
+          "400": {
+            "description": "Validation failed or course code already exists."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin or Doctor role required."
+          }
+        }
+      }
+    },
+    "/api/Admin/list-courses": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Returns a list of all courses in the system.",
+        "responses": {
+          "200": {
+            "description": "List of courses returned successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin role required."
+          }
+        }
+      }
+    },
+    "/api/Admin/delete-course/{courseId}": {
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Deletes a course by ID. Admin can delete any course; Doctor only courses they are allowed to manage.",
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "description": "Unique identifier of the course to delete.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Course deleted successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin or Doctor role required."
+          },
+          "403": {
+            "description": "Forbidden; doctor does not have permission to delete this course."
+          },
+          "404": {
+            "description": "Course not found."
+          }
+        }
+      }
+    },
+    "/api/Admin/delete-user/{universityCode}": {
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Permanently deletes a user (any role) by university code. Admin only.",
+        "parameters": [
+          {
+            "name": "universityCode",
+            "in": "path",
+            "description": "University code of the user to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin role required."
+          },
+          "404": {
+            "description": "User not found."
+          }
+        }
+      }
+    },
+    "/api/Admin/create-students-bulk": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Creates multiple student accounts in a single request.",
+        "requestBody": {
+          "description": "List of student records (e.g., name, university code, email).",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateStudentDto"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateStudentDto"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateStudentDto"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bulk creation completed; returns summary of created and failed records."
+          },
+          "400": {
+            "description": "Validation failed for one or more records."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin role required."
+          }
+        }
+      }
+    },
+    "/api/Admin/bulk-delete-students": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Deletes multiple students by their IDs in a single request.",
+        "requestBody": {
+          "description": "List of student IDs to delete.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bulk delete completed successfully."
+          },
+          "400": {
+            "description": "Invalid or empty list of IDs."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin role required."
+          }
+        }
+      }
+    },
+    "/api/Admin/reset-student-account": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Resets a student account (e.g., clear password, reactivate) by university code.",
+        "requestBody": {
+          "description": "University code of the student to reset.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Student account reset successfully."
+          },
+          "400": {
+            "description": "Invalid request."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin role required."
+          },
+          "404": {
+            "description": "Student not found."
+          }
+        }
+      }
+    },
+    "/api/Admin/reset-system-for-new-year": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Resets the system for a new academic year (e.g., clears attendance/session data while preserving users and courses).",
+        "responses": {
+          "200": {
+            "description": "System reset completed successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin role required."
+          }
+        }
+      }
+    },
+    "/api/Admin/number-of-doctors": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Returns the total count of registered doctors.",
+        "responses": {
+          "200": {
+            "description": "Count returned successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin role required."
+          }
+        }
+      }
+    },
+    "/api/Admin/number-of-TAs": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Returns the total count of registered teaching assistants (TAs).",
+        "responses": {
+          "200": {
+            "description": "Count returned successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin role required."
+          }
+        }
+      }
+    },
+    "/api/Admin/number-of-students": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Returns the total count of registered students.",
+        "responses": {
+          "200": {
+            "description": "Count returned successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin role required."
+          }
+        }
+      }
+    },
+    "/api/Admin/number-of-courses": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Returns the total count of courses in the system.",
+        "responses": {
+          "200": {
+            "description": "Count returned successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Admin role required."
+          }
+        }
+      }
+    },
+    "/api/Admin/update-course-doctor": {
+      "put": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "courseCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "newDoctorUniversityCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Attendance/submit": {
+      "post": {
+        "tags": [
+          "Attendance"
+        ],
+        "summary": "Submits attendance for the authenticated student (e.g., via QR code scan or session token).",
+        "requestBody": {
+          "description": "Attendance data including session identifier and optional verification token.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitAttendanceDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitAttendanceDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitAttendanceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Attendance recorded successfully."
+          },
+          "400": {
+            "description": "Invalid session, duplicate submission, or session not open for attendance."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Student role required."
+          },
+          "404": {
+            "description": "Session or course not found."
+          }
+        }
+      }
+    },
+    "/api/Attendance/session-attendees/{sessionId}": {
+      "get": {
+        "tags": [
+          "Attendance"
+        ],
+        "summary": "Returns the list of attendees for a given session, with optional search filter.",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "description": "Unique identifier of the session.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Optional search string to filter attendees by name or code.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of session attendees returned successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT required."
+          },
+          "404": {
+            "description": "Session not found."
+          }
+        }
+      }
+    },
+    "/api/Attendance/my-history/{courseId}": {
+      "get": {
+        "tags": [
+          "Attendance"
+        ],
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Attendance/manual-add": {
+      "post": {
+        "tags": [
+          "Attendance"
+        ],
+        "summary": "Manually adds a student's attendance for a session (e.g., late arrival or technical issue). Doctor or TA only.",
+        "requestBody": {
+          "description": "Manual attendance payload (session ID, student identifier, optional notes).",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManualAttendanceDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManualAttendanceDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManualAttendanceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Attendance added successfully."
+          },
+          "400": {
+            "description": "Invalid request or student already marked present."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor or TA role required."
+          },
+          "403": {
+            "description": "Forbidden; staff not assigned to the course."
+          },
+          "404": {
+            "description": "Session or student not found."
+          }
+        }
+      }
+    },
+    "/api/Attendance/delete/{sessionId}/{universityCode}": {
+      "delete": {
+        "tags": [
+          "Attendance"
+        ],
+        "summary": "Removes a student's attendance record for a specific session. Doctor or TA only.",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "description": "Unique identifier of the session.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "universityCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Attendance record deleted successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor or TA role required."
+          },
+          "403": {
+            "description": "Forbidden; staff not assigned to the course."
+          },
+          "404": {
+            "description": "Session, student, or attendance record not found."
+          }
+        }
+      }
+    },
+    "/api/Attendance/lecture-report/{courseId}": {
+      "get": {
+        "tags": [
+          "Attendance"
+        ],
+        "summary": "Returns the lecture attendance report for a course, with optional total marks for grading. Doctor only.",
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "description": "Unique identifier of the course.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "totalMarks",
+            "in": "query",
+            "description": "Optional total marks to compute attendance-based grades.",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lecture report returned successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor role required."
+          },
+          "403": {
+            "description": "Forbidden; doctor not assigned to this course."
+          },
+          "404": {
+            "description": "Course not found."
+          }
+        }
+      }
+    },
+    "/api/Attendance/section-report/{courseId}": {
+      "get": {
+        "tags": [
+          "Attendance"
+        ],
+        "summary": "Returns the section (e.g., lab/tutorial) attendance report for a course, with optional total marks. Doctor or TA.",
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "description": "Unique identifier of the course.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "totalMarks",
+            "in": "query",
+            "description": "Optional total marks to compute attendance-based grades.",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Section report returned successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor or TA role required."
+          },
+          "403": {
+            "description": "Forbidden; staff not assigned to this course."
+          },
+          "404": {
+            "description": "Course not found."
+          }
+        }
+      }
+    },
+    "/api/Attendance/absence-warnings/{courseId}": {
+      "get": {
+        "tags": [
+          "Attendance"
+        ],
+        "summary": "Returns absence warnings for a course (e.g., students at risk of failing attendance). Doctor only.",
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "description": "Unique identifier of the course.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of absence warnings returned successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor role required."
+          },
+          "403": {
+            "description": "Forbidden; doctor not assigned to this course."
+          },
+          "404": {
+            "description": "Course not found."
+          }
+        }
+      }
+    },
+    "/api/Auth/activate": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Activates a user account using the provided activation token and new password.",
+        "requestBody": {
+          "description": "Activation payload containing the activation token and new password.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivateAccountDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivateAccountDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivateAccountDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Account activated successfully."
+          },
+          "400": {
+            "description": "Invalid token, expired token, or password does not meet policy requirements."
+          },
+          "404": {
+            "description": "User or activation token not found."
+          },
+          "429": {
+            "description": "Too many activation attempts; rate limit exceeded."
+          }
+        }
+      }
+    },
+    "/api/Auth/Login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Authenticates a user and returns a JWT access token and refresh token.",
+        "requestBody": {
+          "description": "Login credentials (e.g., university code and password).",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful; returns access and refresh tokens."
+          },
+          "400": {
+            "description": "Invalid credentials or account not yet activated."
+          },
+          "404": {
+            "description": "User not found."
+          },
+          "429": {
+            "description": "Too many login attempts; rate limit exceeded."
+          }
+        }
+      }
+    },
+    "/api/Auth/refresh-token": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Exchanges a valid refresh token for a new access token and optionally a new refresh token.",
+        "requestBody": {
+          "description": "Contains the current refresh token.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "New tokens issued successfully."
+          },
+          "400": {
+            "description": "Invalid or expired refresh token."
+          },
+          "401": {
+            "description": "Refresh token rejected or revoked."
+          }
+        }
+      }
+    },
+    "/api/Course/my-courses": {
+      "get": {
+        "tags": [
+          "Course"
+        ],
+        "summary": "Returns the list of courses assigned to the authenticated doctor or TA.",
+        "responses": {
+          "200": {
+            "description": "List of courses returned successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor or TA role required."
+          }
+        }
+      }
+    },
+    "/api/Course/enroll": {
+      "post": {
+        "tags": [
+          "Course"
+        ],
+        "summary": "Enrolls a single student in a course. Doctor or Admin only.",
+        "requestBody": {
+          "description": "Enrollment data (course identifier and student identifier).",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnrollmentDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnrollmentDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnrollmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Student enrolled successfully."
+          },
+          "400": {
+            "description": "Invalid request or student already enrolled."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor or Admin role required."
+          },
+          "403": {
+            "description": "Forbidden; doctor not allowed to enroll in this course."
+          },
+          "404": {
+            "description": "Course or student not found."
+          }
+        }
+      }
+    },
+    "/api/Course/student-courses": {
+      "get": {
+        "tags": [
+          "Course"
+        ],
+        "summary": "Returns the list of courses the authenticated student is enrolled in.",
+        "responses": {
+          "200": {
+            "description": "List of student courses returned successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Student role required."
+          }
+        }
+      }
+    },
+    "/api/Course/enroll-bulk": {
+      "post": {
+        "tags": [
+          "Course"
+        ],
+        "summary": "Enrolls multiple students in a course in a single request. Doctor or Admin only.",
+        "requestBody": {
+          "description": "Bulk enrollment data (course identifier and list of student identifiers).",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkEnrollmentDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkEnrollmentDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkEnrollmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bulk enrollment completed; returns summary of successes and failures."
+          },
+          "400": {
+            "description": "Invalid request or validation errors for one or more students."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor or Admin role required."
+          },
+          "403": {
+            "description": "Forbidden; doctor not allowed to enroll in this course."
+          },
+          "404": {
+            "description": "Course not found."
+          }
+        }
+      }
+    },
+    "/api/Course/number-of-enrolled-students/{courseId}": {
+      "get": {
+        "tags": [
+          "Course"
+        ],
+        "summary": "Returns the number of students enrolled in the specified course.",
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "description": "Unique identifier of the course.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Enrollment count returned successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor, TA, or Admin role required."
+          },
+          "404": {
+            "description": "Course not found."
+          }
+        }
+      }
+    },
+    "/api/Course/get-enrolled-students/{courseId}": {
+      "get": {
+        "tags": [
+          "Course"
+        ],
+        "summary": "Returns the list of students enrolled in a course, with optional search filter.",
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "description": "Unique identifier of the course.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Optional search string to filter students by name or code.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of enrolled students returned successfully."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor, TA, or Admin role required."
+          },
+          "404": {
+            "description": "Course not found."
+          }
+        }
+      }
+    },
+    "/api/Session/create": {
+      "post": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Creates a new attendance session (lecture or section) for a course. Doctor or TA only.",
+        "requestBody": {
+          "description": "Session details (course ID, type, location, radius, etc.).",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreaterSessionDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreaterSessionDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreaterSessionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Session created successfully; returns session details including QR code data."
+          },
+          "400": {
+            "description": "Validation failed or conflicting session exists."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor or TA role required."
+          },
+          "403": {
+            "description": "Forbidden; staff not assigned to the course."
+          },
+          "404": {
+            "description": "Course not found."
+          }
+        }
+      }
+    },
+    "/api/Session/delete-session/{sessionId}": {
+      "delete": {
+        "tags": [
+          "Session"
+        ],
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Session/update-radius/{sessionId}": {
+      "put": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Updates the allowed attendance radius (in meters) for an active session. Doctor or TA only.",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "description": "Unique identifier of the session.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "New radius value in meters.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Radius updated successfully."
+          },
+          "400": {
+            "description": "Invalid radius value."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor or TA role required."
+          },
+          "403": {
+            "description": "Forbidden; staff not authorized to manage this session."
+          },
+          "404": {
+            "description": "Session not found."
+          }
+        }
+      }
+    },
+    "/api/Session/rotate-qr/{sessionId}": {
+      "post": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Rotates the QR code for a session (invalidates current code and generates a new one). Doctor or TA only.",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "description": "Unique identifier of the session.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "QR code rotated successfully; new code returned."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor or TA role required."
+          },
+          "404": {
+            "description": "Session not found."
+          }
+        }
+      }
+    },
+    "/api/Session/stop/{sessionId}": {
+      "put": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Stops an active session so no further attendance can be submitted. Doctor or TA only.",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "description": "Unique identifier of the session.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session stopped successfully."
+          },
+          "400": {
+            "description": "Session already stopped."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor or TA role required."
+          },
+          "403": {
+            "description": "Forbidden; staff not authorized to manage this session."
+          },
+          "404": {
+            "description": "Session not found."
+          }
+        }
+      }
+    },
+    "/api/Session/resume/{sessionId}": {
+      "put": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Resumes a previously stopped session so attendance can be submitted again. Doctor or TA only.",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "description": "Unique identifier of the session.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session resumed successfully."
+          },
+          "400": {
+            "description": "Session already active or invalid state."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor or TA role required."
+          },
+          "404": {
+            "description": "Session not found."
+          }
+        }
+      }
+    },
+    "/api/Session/course-sessions/{courseId}/{type}": {
+      "get": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Returns sessions for a course filtered by type (e.g., lecture, section).",
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "description": "Unique identifier of the course.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "description": "Session type filter (e.g., \"lecture\", \"section\").",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of matching sessions returned successfully."
+          },
+          "400": {
+            "description": "Invalid session type."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT required."
+          },
+          "404": {
+            "description": "Course not found."
+          }
+        }
+      }
+    },
+    "/api/Session/live-dashboard/{sessionId}": {
+      "get": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Opens a Server-Sent Events (SSE) stream for live attendance updates for a session. Doctor, TA, or Admin only.",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "description": "Unique identifier of the session.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SSE stream established; events contain status, attendee count, and attendee list."
+          },
+          "401": {
+            "description": "Unauthorized; valid JWT with Doctor, TA, or Admin role required."
+          },
+          "404": {
+            "description": "Session not found."
+          }
+        }
+      }
+    },
+    "/WeatherForecast": {
+      "get": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "summary": "Returns a sample weather forecast list. Used for API testing and template demonstration.",
+        "operationId": "GetWeatherForecast",
+        "responses": {
+          "200": {
+            "description": "List of weather forecasts returned successfully.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ActivateAccountDto": {
+        "required": [
+          "deviceId",
+          "newPassword",
+          "universityCode",
+          "universityEmail"
+        ],
+        "type": "object",
+        "properties": {
+          "universityEmail": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "universityCode": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "newPassword": {
+            "minLength": 6,
+            "type": "string"
+          },
+          "deviceId": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AdminCreateCourseDto": {
+        "required": [
+          "courseCode",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 500,
+            "type": "string",
+            "nullable": true
+          },
+          "courseCode": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "doctorUniversityCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BulkEnrollmentDto": {
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "studentCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateDoctorDto": {
+        "required": [
+          "email",
+          "name",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "minLength": 6,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateStudentDto": {
+        "required": [
+          "name",
+          "universityCode",
+          "universityEmail"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "universityEmail": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "universityCode": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreaterSessionDto": {
+        "required": [
+          "courseId",
+          "sessionType",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "sessionType": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "allowRadius": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EnrollmentDto": {
+        "required": [
+          "courseId",
+          "studentUniversityCode"
+        ],
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "studentUniversityCode": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LoginDto": {
+        "required": [
+          "deviceId",
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "minLength": 6,
+            "type": "string"
+          },
+          "deviceId": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ManualAttendanceDto": {
+        "required": [
+          "sessionId",
+          "studentUniversityCode"
+        ],
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "studentUniversityCode": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SubmitAttendanceDto": {
+        "required": [
+          "deviceId",
+          "sessionId",
+          "studentLatitude",
+          "studentLongitude"
+        ],
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scannedQrContent": {
+            "type": "string",
+            "nullable": true
+          },
+          "sessionPIN": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "studentLatitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "studentLongitude": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TokenDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "refreshToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WeatherForecast": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "temperatureC": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "temperatureF": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "summary": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "apiKey",
+        "description": "Write 'Bearer' then 'space' then paste the token",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
+}

@@ -17,13 +17,13 @@ class LiveDashboardPage extends StatefulWidget {
   final bool isResumed;
 
   const LiveDashboardPage({
-    Key? key,
+    super.key,
     required this.sessionId,
     required this.courseName,
     required this.initialQr,
     required this.initialPin,
     required this.isResumed,
-  }) : super(key: key);
+  });
 
   @override
   State<LiveDashboardPage> createState() => _LiveDashboardPageState();
@@ -65,50 +65,57 @@ class _LiveDashboardPageState extends State<LiveDashboardPage>
 
   void _startQrRotation() {
     _qrTimer?.cancel();
-    _qrTimer = Timer.periodic(Duration(seconds: _qrInterval), (timer) async {
-      if (!_isSessionActive) {
-        timer.cancel();
-        return;
-      }
-      try {
-        final token = await AuthStorage.getToken() ?? '';
-        final response = await intercepted_http.post(
-          Uri.parse(
-            '${ApiService.baseUrl}/Session/rotate-qr/${widget.sessionId}',
-          ),
-          headers: {'accept': '*/*', 'Authorization': 'Bearer $token'},
-        );
-        if (response.statusCode == 200) {
-          final decoded = jsonDecode(response.body);
-          if (mounted) {
-            setState(() {
-              _currentQr = decoded['newQr'] ?? _currentQr;
-              _currentPin = decoded['newPin'] ?? _currentPin;
-            });
-          }
-        } else if (response.statusCode == 400) {
-          timer.cancel();
-          if (mounted) {
-            setState(() => _isSessionActive = false);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Session is already closed.')),
-            );
-          }
-        } else if (response.statusCode == 403) {
-          timer.cancel();
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("You don't have permission to do this."),
-                backgroundColor: AppColors.errorColor,
-              ),
-            );
-          }
-        }
-      } catch (e) {
-        // Silently ignore if QR rotation fails temporarily
-      }
+    if (widget.isResumed || _currentQr.isEmpty) {
+      _rotateQrNow();
+    }
+    _qrTimer = Timer.periodic(Duration(seconds: _qrInterval), (timer) {
+      _rotateQrNow(timer: timer);
     });
+  }
+
+  Future<void> _rotateQrNow({Timer? timer}) async {
+    if (!_isSessionActive) {
+      timer?.cancel();
+      return;
+    }
+    try {
+      final token = await AuthStorage.getToken() ?? '';
+      final response = await intercepted_http.post(
+        Uri.parse(
+          '${ApiService.baseUrl}/Session/rotate-qr/${widget.sessionId}',
+        ),
+        headers: {'accept': '*/*', 'Authorization': 'Bearer $token'},
+      );
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        if (mounted) {
+          setState(() {
+            _currentQr = decoded['newQr'] ?? _currentQr;
+            _currentPin = decoded['newPin'] ?? _currentPin;
+          });
+        }
+      } else if (response.statusCode == 400) {
+        timer?.cancel();
+        if (mounted) {
+          setState(() => _isSessionActive = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Session is already closed.')),
+          );
+        }
+      } else if (response.statusCode == 403) {
+        timer?.cancel();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("You don't have permission to do this."),
+              backgroundColor: AppColors.errorColor,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      // Silently ignore if QR rotation fails temporarily
+    }
   }
 
   Future<void> _startSseStream() async {
@@ -635,10 +642,10 @@ class _LiveDashboardPageState extends State<LiveDashboardPage>
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.indigo.withOpacity(0.2)),
+            border: Border.all(color: Colors.indigo.withValues(alpha: 0.2)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -655,7 +662,7 @@ class _LiveDashboardPageState extends State<LiveDashboardPage>
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: Colors.indigo.withOpacity(0.3),
+                        color: Colors.indigo.withValues(alpha: 0.3),
                         width: 2,
                       ),
                     ),
@@ -687,7 +694,7 @@ class _LiveDashboardPageState extends State<LiveDashboardPage>
                   vertical: 12,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.amber.withOpacity(0.2),
+                  color: Colors.amber.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.amber),
                 ),
@@ -750,7 +757,7 @@ class _LiveDashboardPageState extends State<LiveDashboardPage>
                 '${_attendees.length}',
                 style: TextStyle(
                   fontSize: 13,
-                  color: AppColors.darkColor.withOpacity(0.6),
+                  color: AppColors.darkColor.withValues(alpha: 0.6),
                 ),
               ),
             ],
@@ -832,7 +839,7 @@ class _LiveDashboardPageState extends State<LiveDashboardPage>
                             time,
                             style: TextStyle(
                               fontSize: 12,
-                              color: AppColors.darkColor.withOpacity(0.6),
+                              color: AppColors.darkColor.withValues(alpha: 0.6),
                             ),
                           ),
                       ],

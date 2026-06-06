@@ -5,14 +5,12 @@ import 'package:registering_attendance/Home/DoctorsListPage.dart';
 import 'package:registering_attendance/Home/TAsListPage.dart';
 import '../Auth/colors.dart';
 import '../Auth/auth_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../Auth/colors.dart';
-import '../widgets/AppInstructionsCard.dart';
+import '../widgets/app_instructions_card.dart';
 import '../Auth/api_service.dart';
 import '../core/responsive.dart';
 
 class DeleteUserPage extends StatefulWidget {
-  const DeleteUserPage({Key? key}) : super(key: key);
+  const DeleteUserPage({super.key});
 
   @override
   _DeleteUserPageState createState() => _DeleteUserPageState();
@@ -279,7 +277,7 @@ class _DeleteUserPageState extends State<DeleteUserPage> {
                       color: Colors.red[50],
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: Colors.red.withOpacity(0.3),
+                        color: Colors.red.withValues(alpha: 0.3),
                         width: 2,
                       ),
                     ),
@@ -308,7 +306,7 @@ class _DeleteUserPageState extends State<DeleteUserPage> {
                                 'This action will permanently delete the user and all their data. This cannot be undone.',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.red[700]!.withOpacity(0.8),
+                                  color: Colors.red[700]!.withValues(alpha: 0.8),
                                 ),
                               ),
                             ],
@@ -400,8 +398,8 @@ class _DeleteUserPageState extends State<DeleteUserPage> {
                             margin: const EdgeInsets.only(bottom: 8),
                             decoration: BoxDecoration(
                               color: _isSuccess
-                                  ? Colors.green.withOpacity(0.1)
-                                  : Colors.red.withOpacity(0.1),
+                                  ? Colors.green.withValues(alpha: 0.1)
+                                  : Colors.red.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: _isSuccess ? Colors.green : Colors.red,
@@ -461,7 +459,7 @@ class _DeleteUserPageState extends State<DeleteUserPage> {
                       color: AppColors.lightColor,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: AppColors.primaryColor.withOpacity(0.2),
+                        color: AppColors.primaryColor.withValues(alpha: 0.2),
                       ),
                     ),
                     child: Column(
@@ -540,7 +538,7 @@ class _DeleteUserPageState extends State<DeleteUserPage> {
                       color: Colors.orange[50],
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: Colors.orange.withOpacity(0.3),
+                        color: Colors.orange.withValues(alpha: 0.3),
                         width: 1,
                       ),
                     ),
@@ -617,7 +615,7 @@ class _DeleteUserPageState extends State<DeleteUserPage> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.08),
+                color: Colors.grey.withValues(alpha: 0.08),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -628,7 +626,7 @@ class _DeleteUserPageState extends State<DeleteUserPage> {
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(
-                color: AppColors.darkColor.withOpacity(0.4),
+                color: AppColors.darkColor.withValues(alpha: 0.4),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -659,7 +657,7 @@ class _DeleteUserPageState extends State<DeleteUserPage> {
               fillColor: Colors.white,
               prefixIcon: Icon(
                 prefixIcon,
-                color: AppColors.darkColor.withOpacity(0.5),
+                color: AppColors.darkColor.withValues(alpha: 0.5),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -696,7 +694,7 @@ class _DeleteUserPageState extends State<DeleteUserPage> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.08),
+                color: Colors.grey.withValues(alpha: 0.08),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -707,7 +705,7 @@ class _DeleteUserPageState extends State<DeleteUserPage> {
             decoration: InputDecoration(
               hintText: 'Type "DELETE" (case insensitive)',
               hintStyle: TextStyle(
-                color: AppColors.darkColor.withOpacity(0.4),
+                color: AppColors.darkColor.withValues(alpha: 0.4),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -738,7 +736,7 @@ class _DeleteUserPageState extends State<DeleteUserPage> {
               fillColor: Colors.white,
               prefixIcon: Icon(
                 Icons.verified_user,
-                color: Colors.red.withOpacity(0.7),
+                color: Colors.red.withValues(alpha: 0.7),
               ),
               suffixIcon: _confirmationController.text.toLowerCase() == 'delete'
                   ? Icon(
@@ -783,7 +781,7 @@ class _DeleteUserPageState extends State<DeleteUserPage> {
             description,
             style: TextStyle(
               fontSize: 12,
-              color: AppColors.darkColor.withOpacity(0.6),
+              color: AppColors.darkColor.withValues(alpha: 0.6),
             ),
           ),
         ],

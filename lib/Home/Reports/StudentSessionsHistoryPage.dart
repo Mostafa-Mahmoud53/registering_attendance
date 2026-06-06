@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -15,17 +16,18 @@ class StudentSessionsHistoryPage extends StatefulWidget {
   final String courseName;
 
   const StudentSessionsHistoryPage({
-    Key? key,
+    super.key,
     required this.courseId,
     required this.courseName,
-  }) : super(key: key);
+  });
 
   @override
   State<StudentSessionsHistoryPage> createState() =>
       _StudentSessionsHistoryPageState();
 }
 
-class _StudentSessionsHistoryPageState extends State<StudentSessionsHistoryPage> {
+class _StudentSessionsHistoryPageState
+    extends State<StudentSessionsHistoryPage> {
   bool _isLoading = true;
   String? _errorMessage;
   List<dynamic> _lectures = [];
@@ -54,20 +56,28 @@ class _StudentSessionsHistoryPageState extends State<StudentSessionsHistoryPage>
       final token = await AuthStorage.getToken() ?? '';
 
       final lecturesResponseFuture = http.get(
-        Uri.parse('${ApiService.baseUrl}/Session/course-sessions/${widget.courseId}/Lecture'),
+        Uri.parse(
+          '${ApiService.baseUrl}/Session/course-sessions/${widget.courseId}/Lecture',
+        ),
         headers: {'Authorization': 'Bearer $token', 'accept': '*/*'},
       );
 
       final sectionsResponseFuture = http.get(
-        Uri.parse('${ApiService.baseUrl}/Session/course-sessions/${widget.courseId}/Section'),
+        Uri.parse(
+          '${ApiService.baseUrl}/Session/course-sessions/${widget.courseId}/Section',
+        ),
         headers: {'Authorization': 'Bearer $token', 'accept': '*/*'},
       );
 
-      final results = await Future.wait([lecturesResponseFuture, sectionsResponseFuture]);
+      final results = await Future.wait([
+        lecturesResponseFuture,
+        sectionsResponseFuture,
+      ]);
       final lecturesResponse = results[0];
       final sectionsResponse = results[1];
 
-      if (lecturesResponse.statusCode == 200 && sectionsResponse.statusCode == 200) {
+      if (lecturesResponse.statusCode == 200 &&
+          sectionsResponse.statusCode == 200) {
         final parsedLectures = _extractList(jsonDecode(lecturesResponse.body));
         final parsedSections = _extractList(jsonDecode(sectionsResponse.body));
 
@@ -98,9 +108,13 @@ class _StudentSessionsHistoryPageState extends State<StudentSessionsHistoryPage>
   }
 
   void _handlePolling() {
-    final hasActive = _hasActiveSession(_lectures) || _hasActiveSession(_sections);
+    final hasActive =
+        _hasActiveSession(_lectures) || _hasActiveSession(_sections);
     if (hasActive && _pollTimer == null) {
-      _pollTimer = Timer.periodic(const Duration(seconds: 60), (_) => _fetchSessions());
+      _pollTimer = Timer.periodic(
+        const Duration(seconds: 60),
+        (_) => _fetchSessions(),
+      );
     } else if (!hasActive && _pollTimer != null) {
       _pollTimer?.cancel();
       _pollTimer = null;
@@ -126,7 +140,8 @@ class _StudentSessionsHistoryPageState extends State<StudentSessionsHistoryPage>
   }
 
   void _openActiveSession(Map<String, dynamic> session) {
-    final sessionId = session['id']?.toString() ?? session['sessionId']?.toString() ?? '';
+    final sessionId =
+        session['id']?.toString() ?? session['sessionId']?.toString() ?? '';
     if (sessionId.isEmpty) return;
 
     Navigator.push(
@@ -146,13 +161,22 @@ class _StudentSessionsHistoryPageState extends State<StudentSessionsHistoryPage>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error_outline, size: 64, color: AppColors.errorColor),
+          const Icon(
+            Icons.error_outline,
+            size: 64,
+            color: AppColors.errorColor,
+          ),
           const SizedBox(height: 16),
-          Text(_errorMessage ?? 'Error', style: const TextStyle(color: AppColors.errorColor)),
+          Text(
+            _errorMessage ?? 'Error',
+            style: const TextStyle(color: AppColors.errorColor),
+          ),
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _fetchSessions,
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryColor),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryColor,
+            ),
             child: const Text('Retry'),
           ),
         ],
@@ -162,7 +186,10 @@ class _StudentSessionsHistoryPageState extends State<StudentSessionsHistoryPage>
 
   @override
   Widget build(BuildContext context) {
-    final activeSessions = [..._lectures, ..._sections].where((s) => s['isActive'] == true).toList();
+    final activeSessions = [
+      ..._lectures,
+      ..._sections,
+    ].where((s) => s['isActive'] == true).toList();
 
     return Scaffold(
       backgroundColor: AppColors.lightColor2,
@@ -170,14 +197,19 @@ class _StudentSessionsHistoryPageState extends State<StudentSessionsHistoryPage>
         centerTitle: Responsive.isDesktop(context),
         title: Text(
           widget.courseName,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: Responsive.isDesktop(context) ? 22 : 18),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: Responsive.isDesktop(context) ? 22 : 18,
+          ),
         ),
         backgroundColor: AppColors.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: AppColors.primaryColor))
+          ? const Center(
+              child: CircularProgressIndicator(color: AppColors.primaryColor),
+            )
           : _errorMessage != null
           ? _buildErrorState()
           : SingleChildScrollView(
@@ -202,28 +234,41 @@ class _StudentSessionsHistoryPageState extends State<StudentSessionsHistoryPage>
                           );
                         },
                         icon: const Icon(Icons.analytics, size: 28),
-                        label: Text(AppLocalizations.of(context)!.attendanceReports),
+                        label: Text(
+                          AppLocalizations.of(context)!.attendanceReports,
+                        ),
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 20),
                           backgroundColor: Colors.white,
                           foregroundColor: AppColors.primaryColor,
                           elevation: 4,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 48),
                       const Text(
                         'Register Attendance',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.darkColor),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.darkColor,
+                        ),
                       ),
                       const SizedBox(height: 24),
                       ElevatedButton.icon(
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (_) => const QRScannerPage()),
+                            MaterialPageRoute(
+                              builder: (_) => const QRScannerPage(),
+                            ),
                           );
                         },
                         icon: const Icon(Icons.qr_code_scanner, size: 24),
@@ -232,8 +277,13 @@ class _StudentSessionsHistoryPageState extends State<StudentSessionsHistoryPage>
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           backgroundColor: AppColors.darkColor,
                           foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -243,8 +293,17 @@ class _StudentSessionsHistoryPageState extends State<StudentSessionsHistoryPage>
                             context,
                             MaterialPageRoute(
                               builder: (_) => _ActiveSessionPage(
-                                sessionId: activeSessions.isNotEmpty ? (activeSessions.first['id']?.toString() ?? activeSessions.first['sessionId']?.toString() ?? '0') : '0',
-                                sessionTitle: activeSessions.isNotEmpty ? (activeSessions.first['title']?.toString() ?? 'Register Attendance') : 'Register Attendance',
+                                sessionId: activeSessions.isNotEmpty
+                                    ? (activeSessions.first['id']?.toString() ??
+                                          activeSessions.first['sessionId']
+                                              ?.toString() ??
+                                          '0')
+                                    : '0',
+                                sessionTitle: activeSessions.isNotEmpty
+                                    ? (activeSessions.first['title']
+                                              ?.toString() ??
+                                          'Register Attendance')
+                                    : 'Register Attendance',
                                 courseId: widget.courseId,
                               ),
                             ),
@@ -256,33 +315,51 @@ class _StudentSessionsHistoryPageState extends State<StudentSessionsHistoryPage>
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           backgroundColor: AppColors.primaryColor,
                           foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       if (activeSessions.isNotEmpty) ...[
                         const SizedBox(height: 24),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           decoration: BoxDecoration(
-                            color: AppColors.successColor.withOpacity(0.1),
+                            color: AppColors.successColor.withValues(
+                              alpha: 0.1,
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.info_outline, size: 20, color: AppColors.successColor),
+                              Icon(
+                                Icons.info_outline,
+                                size: 20,
+                                color: AppColors.successColor,
+                              ),
                               SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   'An active session is open!',
-                                  style: TextStyle(color: AppColors.successColor, fontSize: 14, fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    color: AppColors.successColor,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ]
+                      ],
                     ],
                   ),
                 ),
@@ -350,7 +427,9 @@ class _ActiveGlowCardState extends State<_ActiveGlowCard>
             borderRadius: BorderRadius.circular(18),
             boxShadow: [
               BoxShadow(
-                color: AppColors.successColor.withOpacity(_animation.value),
+                color: AppColors.successColor.withValues(
+                  alpha: _animation.value,
+                ),
                 blurRadius: 18,
                 spreadRadius: 1,
               ),
@@ -413,27 +492,51 @@ class _ActiveSessionPageState extends State<_ActiveSessionPage> {
       final userData = await AuthStorage.getUserData();
       final deviceId = userData?['deviceId'] ?? 'error_device';
       final token = await AuthStorage.getToken() ?? '';
-      
+
       int finalSessionId = int.tryParse(widget.sessionId) ?? 0;
 
       if (finalSessionId == 0) {
         try {
-          final lRes = await http.get(Uri.parse('${ApiService.baseUrl}/Session/course-sessions/${widget.courseId}/Lecture'), headers: {'Authorization': 'Bearer $token', 'accept': '*/*'});
-          final sRes = await http.get(Uri.parse('${ApiService.baseUrl}/Session/course-sessions/${widget.courseId}/Section'), headers: {'Authorization': 'Bearer $token', 'accept': '*/*'});
-          
+          final lRes = await http.get(
+            Uri.parse(
+              '${ApiService.baseUrl}/Session/course-sessions/${widget.courseId}/Lecture',
+            ),
+            headers: {'Authorization': 'Bearer $token', 'accept': '*/*'},
+          );
+          final sRes = await http.get(
+            Uri.parse(
+              '${ApiService.baseUrl}/Session/course-sessions/${widget.courseId}/Section',
+            ),
+            headers: {'Authorization': 'Bearer $token', 'accept': '*/*'},
+          );
+
           List<dynamic> extractList(dynamic data) {
             if (data is List) return data;
-            if (data is Map && data.containsKey(r'$values')) return data[r'$values'] ?? [];
+            if (data is Map && data.containsKey(r'$values'))
+              return data[r'$values'] ?? [];
             return [];
           }
-          
-          final lectures = lRes.statusCode == 200 ? extractList(jsonDecode(lRes.body)) : [];
-          final sections = sRes.statusCode == 200 ? extractList(jsonDecode(sRes.body)) : [];
+
+          final lectures = lRes.statusCode == 200
+              ? extractList(jsonDecode(lRes.body))
+              : [];
+          final sections = sRes.statusCode == 200
+              ? extractList(jsonDecode(sRes.body))
+              : [];
           final allSessions = [...lectures, ...sections];
-          
-          final activeSession = allSessions.firstWhere((s) => s['isActive'] == true, orElse: () => null);
+
+          final activeSession = allSessions.firstWhere(
+            (s) => s['isActive'] == true,
+            orElse: () => null,
+          );
           if (activeSession != null) {
-            finalSessionId = int.tryParse(activeSession['id']?.toString() ?? activeSession['sessionId']?.toString() ?? '0') ?? 0;
+            finalSessionId =
+                int.tryParse(
+                  activeSession['id']?.toString() ??
+                      activeSession['sessionId']?.toString() ??
+                      '0',
+                ) ??
+                0;
           }
         } catch (_) {}
       }
@@ -504,53 +607,59 @@ class _ActiveSessionPageState extends State<_ActiveSessionPage> {
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 700),
           child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Active Session',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Please enter the 4-digit PIN provided by the Doctor to register your attendance.',
-                    style: TextStyle(
-                      color: AppColors.darkColor.withOpacity(0.6),
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Active Session',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Please enter the 4-digit PIN provided by the Doctor to register your attendance.',
+                        style: TextStyle(
+                          color: AppColors.darkColor.withValues(alpha: 0.6),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
+                ),
+                const SizedBox(height: 24),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
                         'Enter PIN',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       Container(
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withValues(alpha: 0.05),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -559,23 +668,36 @@ class _ActiveSessionPageState extends State<_ActiveSessionPage> {
                         child: TextField(
                           controller: _pinController,
                           keyboardType: TextInputType.number,
-                          style: const TextStyle(fontSize: 18, letterSpacing: 2),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            letterSpacing: 2,
+                          ),
                           decoration: InputDecoration(
                             hintText: 'PIN Code',
                             filled: true,
                             fillColor: Colors.grey.shade50,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 16,
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.grey.shade300),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.grey.shade300),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: AppColors.primaryColor, width: 2),
+                              borderSide: const BorderSide(
+                                color: AppColors.primaryColor,
+                                width: 2,
+                              ),
                             ),
                           ),
                         ),
@@ -631,11 +753,12 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => _tabBar.preferredSize.height;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      color: Colors.white,
-      child: _tabBar,
-    );
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(color: Colors.white, child: _tabBar);
   }
 
   @override
@@ -649,16 +772,19 @@ class StudentAttendanceReportPage extends StatefulWidget {
   final String courseId;
 
   const StudentAttendanceReportPage({
-    Key? key,
+    super.key,
     required this.courseName,
     required this.courseId,
-  }) : super(key: key);
+  });
 
   @override
-  State<StudentAttendanceReportPage> createState() => _StudentAttendanceReportPageState();
+  State<StudentAttendanceReportPage> createState() =>
+      _StudentAttendanceReportPageState();
 }
 
-class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPage> with SingleTickerProviderStateMixin {
+class _StudentAttendanceReportPageState
+    extends State<StudentAttendanceReportPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool _isLoading = true;
   String? _errorMessage;
@@ -691,7 +817,9 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
     try {
       final token = await AuthStorage.getToken() ?? '';
       final response = await http.get(
-        Uri.parse('${ApiService.baseUrl}/Attendance/my-history/${widget.courseId}'),
+        Uri.parse(
+          '${ApiService.baseUrl}/Attendance/my-history/${widget.courseId}',
+        ),
         headers: {'Authorization': 'Bearer $token', 'accept': '*/*'},
       );
 
@@ -705,26 +833,45 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
 
         if (decoded is Map) {
           // Check for the new JSON structure: { "lecturesData": { "history": [...] }, "sectionsData": { ... } }
-          if (decoded.containsKey('lecturesData') || decoded.containsKey('sectionsData')) {
+          if (decoded.containsKey('lecturesData') ||
+              decoded.containsKey('sectionsData')) {
             final lecData = decoded['lecturesData'] ?? {};
             final secData = decoded['sectionsData'] ?? {};
             lectures = _extractList(lecData['history'] ?? []);
             sections = _extractList(secData['history'] ?? []);
           } else {
             // Fallback for older shapes
-            lectures = _extractList(decoded['lectures'] ?? decoded['Lectures'] ?? decoded['lectureHistory'] ?? []);
-            sections = _extractList(decoded['sections'] ?? decoded['Sections'] ?? decoded['sectionHistory'] ?? []);
+            lectures = _extractList(
+              decoded['lectures'] ??
+                  decoded['Lectures'] ??
+                  decoded['lectureHistory'] ??
+                  [],
+            );
+            sections = _extractList(
+              decoded['sections'] ??
+                  decoded['Sections'] ??
+                  decoded['sectionHistory'] ??
+                  [],
+            );
           }
 
           // If the API returns a flat list, separate by type
           if (lectures.isEmpty && sections.isEmpty) {
-            final allSessions = _extractList(decoded[r'$values'] ?? decoded['sessions'] ?? decoded['data'] ?? decoded['history'] ?? []);
+            final allSessions = _extractList(
+              decoded[r'$values'] ??
+                  decoded['sessions'] ??
+                  decoded['data'] ??
+                  decoded['history'] ??
+                  [],
+            );
             if (allSessions.isEmpty && decoded.keys.length <= 3) {
               // Maybe the whole response IS a flat list wrapper
               final flatList = _extractList(decoded);
               for (final s in flatList) {
                 if (s is Map) {
-                  final type = (s['type'] ?? s['sessionType'] ?? '').toString().toLowerCase();
+                  final type = (s['type'] ?? s['sessionType'] ?? '')
+                      .toString()
+                      .toLowerCase();
                   if (type.contains('section')) {
                     sections.add(s);
                   } else {
@@ -735,7 +882,9 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
             } else {
               for (final s in allSessions) {
                 if (s is Map) {
-                  final type = (s['type'] ?? s['sessionType'] ?? '').toString().toLowerCase();
+                  final type = (s['type'] ?? s['sessionType'] ?? '')
+                      .toString()
+                      .toLowerCase();
                   if (type.contains('section')) {
                     sections.add(s);
                   } else {
@@ -749,7 +898,9 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
           // Flat list response — separate by type
           for (final s in decoded) {
             if (s is Map) {
-              final type = (s['type'] ?? s['sessionType'] ?? '').toString().toLowerCase();
+              final type = (s['type'] ?? s['sessionType'] ?? '')
+                  .toString()
+                  .toLowerCase();
               if (type.contains('section')) {
                 sections.add(s);
               } else {
@@ -769,7 +920,8 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
       } else {
         if (mounted) {
           setState(() {
-            _errorMessage = 'Failed to load attendance history (${response.statusCode})';
+            _errorMessage =
+                'Failed to load attendance history (${response.statusCode})';
             _isLoading = false;
           });
         }
@@ -786,14 +938,20 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
 
   List<dynamic> _extractList(dynamic data) {
     if (data is List) return data;
-    if (data is Map && data.containsKey(r'$values')) return data[r'$values'] ?? [];
+    if (data is Map && data.containsKey(r'$values'))
+      return data[r'$values'] ?? [];
     return [];
   }
 
   bool _didAttend(dynamic session) {
     if (session is! Map) return false;
     // Check all possible boolean field names from the API
-    final attended = session['isAttended'] ?? session['studentAttended'] ?? session['attended'] ?? session['IsAttended'] ?? session['Attended'];
+    final attended =
+        session['isAttended'] ??
+        session['studentAttended'] ??
+        session['attended'] ??
+        session['IsAttended'] ??
+        session['Attended'];
     if (attended is bool) return attended;
     if (attended is String) return attended.toLowerCase() == 'true';
     return false;
@@ -802,16 +960,35 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
   Widget _buildCounterItem(String label, int value, Color color) {
     return Column(
       children: [
-        Text(value.toString(), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color)),
-        Text(label, style: TextStyle(fontSize: 14, color: Colors.grey.shade600, fontWeight: FontWeight.w600)),
+        Text(
+          value.toString(),
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey.shade600,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ],
     );
   }
 
   Widget _buildSessionCard(dynamic sessionData) {
     final session = Map<String, dynamic>.from(sessionData);
-    final sessionId = session['id']?.toString() ?? session['sessionId']?.toString() ?? session['SessionId']?.toString() ?? '0';
-    final fallbackSessionName = session['sessionName'] ?? session['SessionName'];
+    final sessionId =
+        session['id']?.toString() ??
+        session['sessionId']?.toString() ??
+        session['SessionId']?.toString() ??
+        '0';
+    final fallbackSessionName =
+        session['sessionName'] ?? session['SessionName'];
     final titleStr =
         session['title']?.toString() ??
         session['Title']?.toString() ??
@@ -819,7 +996,11 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
         session['SessionTitle']?.toString() ??
         session['name']?.toString() ??
         session['Name']?.toString() ??
-        (fallbackSessionName != null && !fallbackSessionName.toString().startsWith('Lecture') && !fallbackSessionName.toString().startsWith('Section') ? fallbackSessionName.toString() : null) ??
+        (fallbackSessionName != null &&
+                !fallbackSessionName.toString().startsWith('Lecture') &&
+                !fallbackSessionName.toString().startsWith('Section')
+            ? fallbackSessionName.toString()
+            : null) ??
         fallbackSessionName?.toString() ??
         'Session #$sessionId';
 
@@ -830,13 +1011,19 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
-        padding: EdgeInsets.all(MediaQuery.of(context).size.width >= 850 ? 24 : 16.0),
+        padding: EdgeInsets.all(
+          MediaQuery.of(context).size.width >= 850 ? 24 : 16.0,
+        ),
         child: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(MediaQuery.of(context).size.width >= 850 ? 16 : 12),
+              padding: EdgeInsets.all(
+                MediaQuery.of(context).size.width >= 850 ? 16 : 12,
+              ),
               decoration: BoxDecoration(
-                color: isAttended ? Colors.green.withOpacity(0.1) : AppColors.errorColor.withOpacity(0.1),
+                color: isAttended
+                    ? Colors.green.withValues(alpha: 0.1)
+                    : AppColors.errorColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -854,7 +1041,9 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
                     title,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: MediaQuery.of(context).size.width >= 850 ? 18 : 16,
+                      fontSize: MediaQuery.of(context).size.width >= 850
+                          ? 18
+                          : 16,
                       color: AppColors.darkColor,
                     ),
                     maxLines: 1,
@@ -864,8 +1053,10 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
                   Text(
                     'ID: #$sessionId',
                     style: TextStyle(
-                      color: AppColors.darkColor.withOpacity(0.5),
-                      fontSize: MediaQuery.of(context).size.width >= 850 ? 15 : 13,
+                      color: AppColors.darkColor.withValues(alpha: 0.5),
+                      fontSize: MediaQuery.of(context).size.width >= 850
+                          ? 15
+                          : 13,
                     ),
                   ),
                 ],
@@ -877,13 +1068,17 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
                 vertical: MediaQuery.of(context).size.width >= 850 ? 8 : 6,
               ),
               decoration: BoxDecoration(
-                color: isAttended ? Colors.green.withOpacity(0.15) : AppColors.errorColor.withOpacity(0.15),
+                color: isAttended
+                    ? Colors.green.withValues(alpha: 0.15)
+                    : AppColors.errorColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
                 isAttended ? 'Attended' : 'Absent',
                 style: TextStyle(
-                  color: isAttended ? Colors.green.shade700 : AppColors.errorColor,
+                  color: isAttended
+                      ? Colors.green.shade700
+                      : AppColors.errorColor,
                   fontSize: MediaQuery.of(context).size.width >= 850 ? 14 : 12,
                   fontWeight: FontWeight.bold,
                 ),
@@ -901,36 +1096,54 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.history_toggle_off, size: 60, color: AppColors.primaryColor.withOpacity(0.3)),
+            Icon(
+              Icons.history_toggle_off,
+              size: 60,
+              color: AppColors.primaryColor.withValues(alpha: 0.3),
+            ),
             const SizedBox(height: 16),
-            Text('No sessions found.', style: TextStyle(fontSize: 16, color: AppColors.darkColor.withOpacity(0.5))),
+            Text(
+              'No sessions found.',
+              style: TextStyle(
+                fontSize: 16,
+                color: AppColors.darkColor.withValues(alpha: 0.5),
+              ),
+            ),
           ],
         ),
       );
     }
 
-    return LayoutBuilder(builder: (context, constraints) {
-      final w = constraints.maxWidth;
-      final cols = w >= 1100 ? 4 : w >= 850 ? 3 : w >= 600 ? 2 : 1;
-      if (cols > 1) {
-        return GridView.builder(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final w = constraints.maxWidth;
+        final cols = w >= 1100
+            ? 4
+            : w >= 850
+            ? 3
+            : w >= 600
+            ? 2
+            : 1;
+        if (cols > 1) {
+          return GridView.builder(
+            padding: const EdgeInsets.all(16),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: cols,
+              mainAxisSpacing: 20,
+              crossAxisSpacing: 20,
+              mainAxisExtent: 100,
+            ),
+            itemCount: sessions.length,
+            itemBuilder: (context, index) => _buildSessionCard(sessions[index]),
+          );
+        }
+        return ListView.builder(
           padding: const EdgeInsets.all(16),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: cols,
-            mainAxisSpacing: 20,
-            crossAxisSpacing: 20,
-            mainAxisExtent: 100,
-          ),
           itemCount: sessions.length,
           itemBuilder: (context, index) => _buildSessionCard(sessions[index]),
         );
-      }
-      return ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: sessions.length,
-        itemBuilder: (context, index) => _buildSessionCard(sessions[index]),
-      );
-    });
+      },
+    );
   }
 
   @override
@@ -939,12 +1152,17 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
       return Scaffold(
         backgroundColor: AppColors.lightColor2,
         appBar: AppBar(
-          title: const Text('Attendance Reports', style: TextStyle(fontWeight: FontWeight.bold)),
+          title: const Text(
+            'Attendance Reports',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           backgroundColor: AppColors.primaryColor,
           foregroundColor: Colors.white,
           elevation: 0,
         ),
-        body: const Center(child: CircularProgressIndicator(color: AppColors.primaryColor)),
+        body: const Center(
+          child: CircularProgressIndicator(color: AppColors.primaryColor),
+        ),
       );
     }
 
@@ -952,7 +1170,10 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
       return Scaffold(
         backgroundColor: AppColors.lightColor2,
         appBar: AppBar(
-          title: const Text('Attendance Reports', style: TextStyle(fontWeight: FontWeight.bold)),
+          title: const Text(
+            'Attendance Reports',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           backgroundColor: AppColors.primaryColor,
           foregroundColor: Colors.white,
           elevation: 0,
@@ -961,13 +1182,22 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline, size: 64, color: AppColors.errorColor),
+              const Icon(
+                Icons.error_outline,
+                size: 64,
+                color: AppColors.errorColor,
+              ),
               const SizedBox(height: 16),
-              Text(_errorMessage!, style: const TextStyle(color: AppColors.errorColor)),
+              Text(
+                _errorMessage!,
+                style: const TextStyle(color: AppColors.errorColor),
+              ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _fetchMyHistory,
-                style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryColor),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor,
+                ),
                 child: const Text('Retry'),
               ),
             ],
@@ -993,13 +1223,28 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: isDanger ? Border.all(color: AppColors.errorColor, width: 2) : null,
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
+          border: isDanger
+              ? Border.all(color: AppColors.errorColor, width: 2)
+              : null,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.darkColor)),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: AppColors.darkColor,
+              ),
+            ),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -1014,17 +1259,23 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
                 margin: const EdgeInsets.only(top: 16),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColors.errorColor.withOpacity(0.1),
+                  color: AppColors.errorColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Row(
                   children: [
-                    Icon(Icons.warning_amber_rounded, color: AppColors.errorColor),
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      color: AppColors.errorColor,
+                    ),
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         'Danger: You have exceeded the allowed absence limit (3) and may be deprived of exams.',
-                        style: TextStyle(color: AppColors.errorColor, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: AppColors.errorColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
@@ -1038,7 +1289,10 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
     return Scaffold(
       backgroundColor: AppColors.lightColor2,
       appBar: AppBar(
-        title: const Text('Attendance Reports', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Attendance Reports',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: AppColors.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -1052,9 +1306,19 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
                 children: [
                   const SizedBox(height: 8),
                   if (_tabController.index == 0)
-                    buildStatsCard('Lectures', lecturesAttended, lecturesAbsent, pastLectures.length)
+                    buildStatsCard(
+                      'Lectures',
+                      lecturesAttended,
+                      lecturesAbsent,
+                      pastLectures.length,
+                    )
                   else
-                    buildStatsCard('Sections', sectionsAttended, sectionsAbsent, pastSections.length),
+                    buildStatsCard(
+                      'Sections',
+                      sectionsAttended,
+                      sectionsAbsent,
+                      pastSections.length,
+                    ),
                   const SizedBox(height: 8),
                 ],
               ),
@@ -1068,7 +1332,10 @@ class _StudentAttendanceReportPageState extends State<StudentAttendanceReportPag
                   labelColor: AppColors.primaryColor,
                   unselectedLabelColor: Colors.grey,
                   indicatorWeight: 3,
-                  labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: Responsive.isDesktop(context) ? 18 : 16),
+                  labelStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Responsive.isDesktop(context) ? 18 : 16,
+                  ),
                   tabs: const [
                     Tab(text: 'Lectures', icon: Icon(Icons.school)),
                     Tab(text: 'Sections', icon: Icon(Icons.science)),

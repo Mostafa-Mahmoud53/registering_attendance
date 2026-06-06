@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../core/http_interceptor.dart' as http;
 import '../Auth/colors.dart';
 import '../Auth/api_service.dart';
 import '../Auth/auth_storage.dart';
 
 class QRScannerPage extends StatefulWidget {
-  const QRScannerPage({Key? key}) : super(key: key);
+  const QRScannerPage({super.key});
 
   @override
   _QRScannerPageState createState() => _QRScannerPageState();
@@ -251,7 +250,7 @@ class _QRScannerPageState extends State<QRScannerPage> with SingleTickerProvider
                     color: AppColors.successColor,
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.successColor.withOpacity(0.5),
+                        color: AppColors.successColor.withValues(alpha: 0.5),
                         blurRadius: 10,
                         spreadRadius: 2,
                       )
@@ -264,7 +263,7 @@ class _QRScannerPageState extends State<QRScannerPage> with SingleTickerProvider
           // Loading Overlay
           if (_isProcessing)
             Container(
-              color: Colors.black.withOpacity(0.8),
+              color: Colors.black.withValues(alpha: 0.8),
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -278,7 +277,7 @@ class _QRScannerPageState extends State<QRScannerPage> with SingleTickerProvider
                     const SizedBox(height: 8),
                     Text(
                       'Please keep the app open.',
-                      style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 12),
+                      style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 12),
                     ),
                   ],
                 ),
@@ -290,9 +289,9 @@ class _QRScannerPageState extends State<QRScannerPage> with SingleTickerProvider
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withOpacity(0.2)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
               ),
               child: const Row(
                 children: [
@@ -320,7 +319,7 @@ class QrScannerOverlayShape extends ShapeBorder {
   final double borderLength;
   final double cutOutSize;
 
-  QrScannerOverlayShape({
+  const QrScannerOverlayShape({
     this.borderColor = Colors.red,
     this.borderWidth = 3.0,
     this.overlayColor = const Color.fromRGBO(0, 0, 0, 0.7),
@@ -341,13 +340,13 @@ class QrScannerOverlayShape extends ShapeBorder {
 
   @override
   Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
-    Path _getLeftTopPath(Rect rect) {
+    Path getLeftTopPath(Rect rect) {
       return Path()
         ..moveTo(rect.left, rect.bottom)
         ..lineTo(rect.left, rect.top)
         ..lineTo(rect.right, rect.top);
     }
-    return _getLeftTopPath(rect)
+    return getLeftTopPath(rect)
       ..lineTo(rect.right, rect.bottom)
       ..lineTo(rect.left, rect.bottom)
       ..lineTo(rect.left, rect.top);
@@ -359,8 +358,8 @@ class QrScannerOverlayShape extends ShapeBorder {
     final borderWidthSize = width / 2;
     final height = rect.height;
     final borderOffset = borderWidth / 2;
-    final _borderLength = borderLength > cutOutSize / 2 + borderWidthSize ? cutOutSize / 2 + borderOffset : borderLength;
-    final _cutOutSize = cutOutSize < width ? cutOutSize : width - borderOffset;
+    final effectiveBorderLength = this.borderLength > this.cutOutSize / 2 + borderWidthSize ? this.cutOutSize / 2 + borderOffset : this.borderLength;
+    final effectiveCutOutSize = this.cutOutSize < width ? this.cutOutSize : width - borderOffset;
 
     final backgroundPaint = Paint()
       ..color = overlayColor
@@ -377,10 +376,10 @@ class QrScannerOverlayShape extends ShapeBorder {
       ..blendMode = BlendMode.dstOut;
 
     final cutOutRect = Rect.fromLTWH(
-      rect.left + width / 2 - _cutOutSize / 2 + borderOffset,
-      rect.top + height / 2 - _cutOutSize / 2 + borderOffset,
-      _cutOutSize - borderOffset * 2,
-      _cutOutSize - borderOffset * 2,
+      rect.left + width / 2 - effectiveCutOutSize / 2 + borderOffset,
+      rect.top + height / 2 - effectiveCutOutSize / 2 + borderOffset,
+      effectiveCutOutSize - borderOffset * 2,
+      effectiveCutOutSize - borderOffset * 2,
     );
 
     canvas
@@ -402,7 +401,7 @@ class QrScannerOverlayShape extends ShapeBorder {
       ..restore();
 
     canvas
-      ..drawRRect(
+      .drawRRect(
         RRect.fromRectAndRadius(
           cutOutRect,
           Radius.circular(borderRadius),

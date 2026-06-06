@@ -7,19 +7,19 @@ import 'package:file_picker/file_picker.dart';
 import 'package:registering_attendance/core/http_interceptor.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Auth/colors.dart';
-import '../widgets/AppInstructionsCard.dart';
+import '../widgets/app_instructions_card.dart';
 import '../core/responsive.dart';
 
 class CreateExcelStudentsPage extends StatefulWidget {
   final bool isTab;
-  const CreateExcelStudentsPage({Key? key, this.isTab = false}) : super(key: key);
+  const CreateExcelStudentsPage({super.key, this.isTab = false});
 
   @override
   _CreateExcelStudentsPageState createState() => _CreateExcelStudentsPageState();
 }
 
 class _CreateExcelStudentsPageState extends State<CreateExcelStudentsPage> {
-  List<Map<String, String>> _studentsList = [];
+  final List<Map<String, String>> _studentsList = [];
 
   bool _isLoading = false;
   String? _apiResponse;
@@ -92,7 +92,7 @@ class _CreateExcelStudentsPageState extends State<CreateExcelStudentsPage> {
       if (workbook.tables.isEmpty) throw Exception('No sheets found in the Excel file.');
 
       final sheet = workbook.tables.values.first;
-      if (sheet == null || sheet.rows.isEmpty) throw Exception('The Excel sheet is empty.');
+      if (sheet.rows.isEmpty) throw Exception('The Excel sheet is empty.');
 
       final headerRow = sheet.rows.first;
       final headerMap = <String, int>{};
@@ -320,14 +320,14 @@ class _CreateExcelStudentsPageState extends State<CreateExcelStudentsPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(AppLocalizations.of(context)!.importFromExcel, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.darkColor)),
           const SizedBox(height: 8),
-          Text(AppLocalizations.of(context)!.uploadExcelCreateHint, style: TextStyle(fontSize: 13, color: AppColors.darkColor.withOpacity(0.6))),
+          Text(AppLocalizations.of(context)!.uploadExcelCreateHint, style: TextStyle(fontSize: 13, color: AppColors.darkColor.withValues(alpha: 0.6))),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -381,7 +381,7 @@ class _CreateExcelStudentsPageState extends State<CreateExcelStudentsPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -393,7 +393,7 @@ class _CreateExcelStudentsPageState extends State<CreateExcelStudentsPage> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.successColor.withOpacity(0.1),
+                  color: AppColors.successColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: AppColors.successColor),
                 ),
@@ -421,7 +421,7 @@ class _CreateExcelStudentsPageState extends State<CreateExcelStudentsPage> {
                     Container(
                       width: 40,
                       height: 40,
-                      decoration: BoxDecoration(color: AppColors.primaryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+                      decoration: BoxDecoration(color: AppColors.primaryColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
                       child: Center(child: Text('${index + 1}', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryColor))),
                     ),
                     const SizedBox(width: 12),
@@ -430,7 +430,7 @@ class _CreateExcelStudentsPageState extends State<CreateExcelStudentsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(student['name']!, style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.darkColor)),
-                          Text('${student['universityCode']} | ${student['universityEmail']}', style: TextStyle(fontSize: 12, color: AppColors.darkColor.withOpacity(0.6))),
+                          Text('${student['universityCode']} | ${student['universityEmail']}', style: TextStyle(fontSize: 12, color: AppColors.darkColor.withValues(alpha: 0.6))),
                         ],
                       ),
                     ),
@@ -449,7 +449,7 @@ class _CreateExcelStudentsPageState extends State<CreateExcelStudentsPage> {
       duration: const Duration(milliseconds: 300),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: _isSuccess ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+        color: _isSuccess ? Colors.green.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: _isSuccess ? Colors.green : Colors.red),
       ),

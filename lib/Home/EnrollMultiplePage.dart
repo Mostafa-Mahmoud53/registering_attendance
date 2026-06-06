@@ -4,12 +4,12 @@ import '../l10n/app_localizations.dart';
 import 'package:registering_attendance/core/http_interceptor.dart' as http;
 import '../Auth/auth_storage.dart';
 import '../Auth/colors.dart';
-import '../widgets/AppInstructionsCard.dart';
+import '../widgets/app_instructions_card.dart';
 
 class EnrollMultiplePage extends StatefulWidget {
   final String courseId;
   final bool isTab;
-  const EnrollMultiplePage({Key? key, required this.courseId, this.isTab = false}) : super(key: key);
+  const EnrollMultiplePage({super.key, required this.courseId, this.isTab = false});
 
   @override
   _EnrollMultiplePageState createState() => _EnrollMultiplePageState();
@@ -148,12 +148,12 @@ class _EnrollMultiplePageState extends State<EnrollMultiplePage> {
                 const SizedBox(height: 16),
                 if (added.isNotEmpty) ...[
                   const Text('Added successfully:', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
-                  Wrap(spacing: 8, children: added.map((e) => Chip(label: Text(e, style: const TextStyle(fontSize: 12)), backgroundColor: Colors.green.withOpacity(0.2))).toList()),
+                  Wrap(spacing: 8, children: added.map((e) => Chip(label: Text(e, style: const TextStyle(fontSize: 12)), backgroundColor: Colors.green.withValues(alpha: 0.2))).toList()),
                   const SizedBox(height: 10),
                 ],
                 if (skipped.isNotEmpty) ...[
                   const Text('Skipped (Already Enrolled):', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
-                  Wrap(spacing: 8, children: skipped.map((e) => Chip(label: Text(e, style: const TextStyle(fontSize: 12)), backgroundColor: Colors.orange.withOpacity(0.2))).toList()),
+                  Wrap(spacing: 8, children: skipped.map((e) => Chip(label: Text(e, style: const TextStyle(fontSize: 12)), backgroundColor: Colors.orange.withValues(alpha: 0.2))).toList()),
                   const SizedBox(height: 10),
                 ],
                 if (notFound.isNotEmpty) ...[
@@ -182,7 +182,7 @@ class _EnrollMultiplePageState extends State<EnrollMultiplePage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           )
@@ -251,7 +251,7 @@ class _EnrollMultiplePageState extends State<EnrollMultiplePage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.08),
+            color: Colors.grey.withValues(alpha: 0.08),
             blurRadius: 10,
             offset: const Offset(0, 4),
           )
@@ -276,7 +276,7 @@ class _EnrollMultiplePageState extends State<EnrollMultiplePage> {
                     _codesList.removeAt(index);
                   });
                 },
-                backgroundColor: AppColors.primaryColor.withOpacity(0.1),
+                backgroundColor: AppColors.primaryColor.withValues(alpha: 0.1),
               );
             }).toList(),
           ),

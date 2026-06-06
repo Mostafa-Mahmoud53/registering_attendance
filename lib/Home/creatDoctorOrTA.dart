@@ -6,10 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../Auth/colors.dart';
 import '../Auth/api_service.dart';
 import '../core/responsive.dart';
-import '../widgets/AppInstructionsCard.dart';
+import '../widgets/app_instructions_card.dart';
 
 class CreateAccountPage extends StatefulWidget {
-  const CreateAccountPage({Key? key}) : super(key: key);
+  const CreateAccountPage({super.key});
 
   @override
   _CreateAccountPageState createState() => _CreateAccountPageState();
@@ -128,7 +128,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         final responseData = jsonDecode(response.body);
         final message = responseData['message'] ??
             (_isDoctor ? AppLocalizations.of(context)!.doctorAccountCreatedSuccessfully : AppLocalizations.of(context)!.taAccountCreatedSuccessfully);
-        final accountId = responseData['${_isDoctor ? 'doctorId' : 'taId'}']?.toString();
+        final accountId = responseData[_isDoctor ? 'doctorId' : 'taId']?.toString();
 
         // عرض رسالة النجاح مع خيار الخروج
         ScaffoldMessenger.of(context).showSnackBar(
@@ -267,7 +267,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       AppLocalizations.of(context)!.fillDetailsToCreate,
                       style: TextStyle(
                         fontSize: Responsive.isDesktop(context) ? 16 : 14,
-                        color: AppColors.darkColor.withOpacity(0.6),
+                        color: AppColors.darkColor.withValues(alpha: 0.6),
                       ),
                     ),
                     const SizedBox(height: 32),
@@ -366,7 +366,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       child: OutlinedButton(
                         onPressed: () => Navigator.pop(context),
                         style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: AppColors.darkColor.withOpacity(0.3)),
+                          side: BorderSide(color: AppColors.darkColor.withValues(alpha: 0.3)),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -401,7 +401,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -426,7 +426,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     color: _isDoctor ? AppColors.primaryColor : Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: _isDoctor ? Colors.transparent : Colors.grey.withOpacity(0.3),
+                      color: _isDoctor ? Colors.transparent : Colors.grey.withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
@@ -435,7 +435,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     children: [
                       Icon(
                         Icons.medical_services,
-                        color: _isDoctor ? Colors.white : AppColors.darkColor.withOpacity(0.5),
+                        color: _isDoctor ? Colors.white : AppColors.darkColor.withValues(alpha: 0.5),
                         size: 28,
                       ),
                       const SizedBox(height: 8),
@@ -468,7 +468,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     color: !_isDoctor ? Colors.orange : Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: !_isDoctor ? Colors.transparent : Colors.grey.withOpacity(0.3),
+                      color: !_isDoctor ? Colors.transparent : Colors.grey.withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
@@ -477,7 +477,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     children: [
                       Icon(
                         Icons.school,
-                        color: !_isDoctor ? Colors.white : AppColors.darkColor.withOpacity(0.5),
+                        color: !_isDoctor ? Colors.white : AppColors.darkColor.withValues(alpha: 0.5),
                         size: 28,
                       ),
                       const SizedBox(height: 8),
@@ -528,7 +528,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
+                color: Colors.grey.withValues(alpha: 0.1),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -541,7 +541,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(
-                color: AppColors.darkColor.withOpacity(0.4),
+                color: AppColors.darkColor.withValues(alpha: 0.4),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -572,7 +572,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
               fillColor: Colors.white,
               prefixIcon: Icon(
                 prefixIcon,
-                color: AppColors.darkColor.withOpacity(0.5),
+                color: AppColors.darkColor.withValues(alpha: 0.5),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -616,7 +616,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
+                color: Colors.grey.withValues(alpha: 0.1),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -628,7 +628,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(
-                color: AppColors.darkColor.withOpacity(0.4),
+                color: AppColors.darkColor.withValues(alpha: 0.4),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -659,12 +659,12 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
               fillColor: Colors.white,
               prefixIcon: Icon(
                 Icons.lock,
-                color: AppColors.darkColor.withOpacity(0.5),
+                color: AppColors.darkColor.withValues(alpha: 0.5),
               ),
               suffixIcon: IconButton(
                 icon: Icon(
                   obscureText ? Icons.visibility : Icons.visibility_off,
-                  color: AppColors.darkColor.withOpacity(0.5),
+                  color: AppColors.darkColor.withValues(alpha: 0.5),
                 ),
                 onPressed: onToggle,
               ),
@@ -692,7 +692,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
           AppLocalizations.of(context)!.passwordReqs,
           style: TextStyle(
             fontSize: 12,
-            color: AppColors.darkColor.withOpacity(0.6),
+            color: AppColors.darkColor.withValues(alpha: 0.6),
           ),
         ),
         const SizedBox(height: 4),
@@ -708,7 +708,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
               AppLocalizations.of(context)!.atLeast6Chars,
               style: TextStyle(
                 fontSize: 12,
-                color: AppColors.darkColor.withOpacity(0.6),
+                color: AppColors.darkColor.withValues(alpha: 0.6),
               ),
             ),
           ],

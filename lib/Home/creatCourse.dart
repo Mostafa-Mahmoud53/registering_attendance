@@ -8,10 +8,10 @@ import '../Auth/api_service.dart';
 import '../Auth/colors.dart';
 import '../core/responsive.dart';
 import '../l10n/app_localizations.dart';
-import '../widgets/AppInstructionsCard.dart';
+import '../widgets/app_instructions_card.dart';
 
 class CreateCoursePage extends StatefulWidget {
-  const CreateCoursePage({Key? key}) : super(key: key);
+  const CreateCoursePage({super.key});
 
   @override
   State<CreateCoursePage> createState() => _CreateCoursePageState();
@@ -244,52 +244,7 @@ class _CreateCoursePageState extends State<CreateCoursePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: AppColors.lightColor,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: AppColors.primaryColor.withOpacity(0.2),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.add_circle,
-                              color: AppColors.primaryColor,
-                              size: 24,
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    loc.createCourse,
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.darkColor,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    isArabic
-                                        ? 'املأ جميع الحقول المطلوبة لإنشاء مقرر جديد'
-                                        : 'Fill in all required fields to create a new course',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: AppColors.darkColor.withOpacity(0.6),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 24),
+
                       AppInstructionsCard(
                         title: isArabic ? 'خطوات إنشاء المقرر' : 'Course Creation Steps',
                         instructions: [
@@ -391,8 +346,8 @@ class _CreateCoursePageState extends State<CreateCoursePage> {
                                 margin: const EdgeInsets.only(bottom: 8),
                                 decoration: BoxDecoration(
                                   color: _isSuccess
-                                      ? Colors.green.withOpacity(0.1)
-                                      : Colors.red.withOpacity(0.1),
+                                      ? Colors.green.withValues(alpha: 0.1)
+                                      : Colors.red.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
                                     color:
@@ -486,7 +441,7 @@ class _CreateCoursePageState extends State<CreateCoursePage> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.08),
+                    color: Colors.grey.withValues(alpha: 0.08),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),
@@ -498,7 +453,7 @@ class _CreateCoursePageState extends State<CreateCoursePage> {
                 decoration: InputDecoration(
                   hintText: hint,
                   hintStyle: TextStyle(
-                    color: AppColors.darkColor.withOpacity(0.4),
+                    color: AppColors.darkColor.withValues(alpha: 0.4),
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -529,7 +484,7 @@ class _CreateCoursePageState extends State<CreateCoursePage> {
                   fillColor: Colors.white,
                   prefixIcon: Icon(
                     prefixIcon,
-                    color: AppColors.darkColor.withOpacity(0.5),
+                    color: AppColors.darkColor.withValues(alpha: 0.5),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -571,7 +526,7 @@ class _CreateCoursePageState extends State<CreateCoursePage> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.08),
+                    color: Colors.grey.withValues(alpha: 0.08),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),
@@ -586,7 +541,7 @@ class _CreateCoursePageState extends State<CreateCoursePage> {
                       ? 'أدخل وصف المقرر'
                       : 'Enter course description',
                   hintStyle: TextStyle(
-                    color: AppColors.darkColor.withOpacity(0.4),
+                    color: AppColors.darkColor.withValues(alpha: 0.4),
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),

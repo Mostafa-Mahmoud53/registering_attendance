@@ -4,11 +4,10 @@ import 'package:registering_attendance/Home/CoursesListPage.dart';
 import '../Auth/colors.dart';
 import '../Auth/auth_storage.dart';
 import '../Auth/api_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../widgets/AppInstructionsCard.dart';
+import '../widgets/app_instructions_card.dart';
 
 class DeleteCoursePage extends StatefulWidget {
-  const DeleteCoursePage({Key? key}) : super(key: key);
+  const DeleteCoursePage({super.key});
 
   @override
   _DeleteCoursePageState createState() => _DeleteCoursePageState();
@@ -270,7 +269,7 @@ class _DeleteCoursePageState extends State<DeleteCoursePage> {
                       color: Colors.red[50],
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: Colors.red.withOpacity(0.3),
+                        color: Colors.red.withValues(alpha: 0.3),
                         width: 2,
                       ),
                     ),
@@ -299,7 +298,7 @@ class _DeleteCoursePageState extends State<DeleteCoursePage> {
                                 'This action will permanently delete the course and all its data. This cannot be undone.',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.red[700]!.withOpacity(0.8),
+                                  color: Colors.red[700]!.withValues(alpha: 0.8),
                                 ),
                               ),
                             ],
@@ -393,8 +392,8 @@ class _DeleteCoursePageState extends State<DeleteCoursePage> {
                             margin: const EdgeInsets.only(bottom: 8),
                             decoration: BoxDecoration(
                               color: _isSuccess
-                                  ? Colors.green.withOpacity(0.1)
-                                  : Colors.red.withOpacity(0.1),
+                                  ? Colors.green.withValues(alpha: 0.1)
+                                  : Colors.red.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: _isSuccess ? Colors.green : Colors.red,
@@ -454,7 +453,7 @@ class _DeleteCoursePageState extends State<DeleteCoursePage> {
                       color: AppColors.lightColor,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: AppColors.primaryColor.withOpacity(0.2),
+                        color: AppColors.primaryColor.withValues(alpha: 0.2),
                       ),
                     ),
                     child: Column(
@@ -540,7 +539,7 @@ class _DeleteCoursePageState extends State<DeleteCoursePage> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.08),
+                color: Colors.grey.withValues(alpha: 0.08),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -552,7 +551,7 @@ class _DeleteCoursePageState extends State<DeleteCoursePage> {
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(
-                color: AppColors.darkColor.withOpacity(0.4),
+                color: AppColors.darkColor.withValues(alpha: 0.4),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -583,7 +582,7 @@ class _DeleteCoursePageState extends State<DeleteCoursePage> {
               fillColor: Colors.white,
               prefixIcon: Icon(
                 prefixIcon,
-                color: AppColors.darkColor.withOpacity(0.5),
+                color: AppColors.darkColor.withValues(alpha: 0.5),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -620,7 +619,7 @@ class _DeleteCoursePageState extends State<DeleteCoursePage> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.08),
+                color: Colors.grey.withValues(alpha: 0.08),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -631,7 +630,7 @@ class _DeleteCoursePageState extends State<DeleteCoursePage> {
             decoration: InputDecoration(
               hintText: 'Type "DELETE" (case insensitive)',
               hintStyle: TextStyle(
-                color: AppColors.darkColor.withOpacity(0.4),
+                color: AppColors.darkColor.withValues(alpha: 0.4),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -662,7 +661,7 @@ class _DeleteCoursePageState extends State<DeleteCoursePage> {
               fillColor: Colors.white,
               prefixIcon: Icon(
                 Icons.verified_user,
-                color: Colors.red.withOpacity(0.7),
+                color: Colors.red.withValues(alpha: 0.7),
               ),
               suffixIcon: _confirmationController.text.toLowerCase() == 'delete'
                   ? Icon(
@@ -707,7 +706,7 @@ class _DeleteCoursePageState extends State<DeleteCoursePage> {
             description,
             style: TextStyle(
               fontSize: 12,
-              color: AppColors.darkColor.withOpacity(0.6),
+              color: AppColors.darkColor.withValues(alpha: 0.6),
             ),
           ),
         ],

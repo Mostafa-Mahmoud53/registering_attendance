@@ -7,7 +7,7 @@ import 'BulkCourseEnrollmentPage.dart';
 
 class EnrollStudentsTabsPage extends StatelessWidget {
   final String courseId;
-  const EnrollStudentsTabsPage({Key? key, required this.courseId}) : super(key: key);
+  const EnrollStudentsTabsPage({super.key, required this.courseId});
 
   @override
   Widget build(BuildContext context) {

@@ -620,6 +620,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startNewSession => 'Start New Session';
 
   @override
+  String get resumeActiveSession => 'Resume Active Session';
+
+  @override
+  String get resumeActiveSessionSubtitle =>
+      'Continue the currently running session';
+
+  @override
   String get createSession => 'Create Session';
 
   @override

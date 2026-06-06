@@ -228,6 +228,8 @@
   "@section_session_management": "Session Management",
   "sessionManagement": "Session Management",
   "startNewSession": "Start New Session",
+  "resumeActiveSession": "Resume Active Session",
+  "resumeActiveSessionSubtitle": "Continue the currently running session",
   "createSession": "Create Session",
   "createSessionSubtitle": "Create a Lecture or Section session with GPS",
   "stopActiveSession": "Stop Active Session",

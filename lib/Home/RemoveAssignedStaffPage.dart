@@ -10,10 +10,10 @@ class RemoveAssignedStaffPage extends StatefulWidget {
   final String courseCode;
 
   const RemoveAssignedStaffPage({
-    Key? key,
+    super.key,
     required this.courseId,
     required this.courseCode,
-  }) : super(key: key);
+  });
 
   @override
   _RemoveAssignedStaffPageState createState() => _RemoveAssignedStaffPageState();
@@ -131,7 +131,7 @@ class _RemoveAssignedStaffPageState extends State<RemoveAssignedStaffPage> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.person_remove, color: Colors.white, size: 32),
@@ -287,7 +287,7 @@ class _RemoveAssignedStaffPageState extends State<RemoveAssignedStaffPage> {
           children: [
             const CircularProgressIndicator(color: AppColors.primaryColor),
             const SizedBox(height: 16),
-            Text(loc.loadingStaff, style: TextStyle(color: AppColors.darkColor.withOpacity(0.6))),
+            Text(loc.loadingStaff, style: TextStyle(color: AppColors.darkColor.withValues(alpha: 0.6))),
           ],
         ),
       );
@@ -331,12 +331,12 @@ class _RemoveAssignedStaffPageState extends State<RemoveAssignedStaffPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.people_outline, size: 80, color: AppColors.darkColor.withOpacity(0.2)),
+              Icon(Icons.people_outline, size: 80, color: AppColors.darkColor.withValues(alpha: 0.2)),
               const SizedBox(height: 16),
               Text(
                 loc.noStaffAssigned,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, color: AppColors.darkColor.withOpacity(0.5)),
+                style: TextStyle(fontSize: 18, color: AppColors.darkColor.withValues(alpha: 0.5)),
               ),
 
             ],
@@ -372,7 +372,7 @@ class _RemoveAssignedStaffPageState extends State<RemoveAssignedStaffPage> {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withOpacity(0.1),
+                        color: AppColors.primaryColor.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Center(
@@ -406,7 +406,7 @@ class _RemoveAssignedStaffPageState extends State<RemoveAssignedStaffPage> {
                               code,
                               style: TextStyle(
                                 fontSize: 13,
-                                color: AppColors.darkColor.withOpacity(0.6),
+                                color: AppColors.darkColor.withValues(alpha: 0.6),
                               ),
                             ),
                           ],
@@ -416,8 +416,8 @@ class _RemoveAssignedStaffPageState extends State<RemoveAssignedStaffPage> {
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                               decoration: BoxDecoration(
                                 color: role.toLowerCase().contains('doctor')
-                                    ? Colors.blue.withOpacity(0.1)
-                                    : Colors.grey.withOpacity(0.1),
+                                    ? Colors.blue.withValues(alpha: 0.1)
+                                    : Colors.grey.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(

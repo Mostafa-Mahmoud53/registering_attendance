@@ -11,7 +11,7 @@ import '../../Auth/colors.dart';
 
 class LectureReportPage extends StatefulWidget {
   final String courseId;
-  const LectureReportPage({Key? key, required this.courseId}) : super(key: key);
+  const LectureReportPage({super.key, required this.courseId});
 
   @override
   State<LectureReportPage> createState() => _LectureReportPageState();
@@ -257,10 +257,11 @@ class _LectureReportPageState extends State<LectureReportPage> {
   }
 
   Widget _buildBody() {
-    if (_isLoading)
+    if (_isLoading) {
       return const Center(
         child: CircularProgressIndicator(color: AppColors.primaryColor),
       );
+    }
     if (_errorMessage.isNotEmpty) return _errorState();
     if (_students.isEmpty) return _emptyState();
 
@@ -314,7 +315,7 @@ class _LectureReportPageState extends State<LectureReportPage> {
                 CircleAvatar(
                   // Mobile Layout: smaller avatar / Desktop Layout: standard avatar
                   radius: isMobile ? 18 : 18, // Mobile: 18 / Desktop: 18
-                  backgroundColor: AppColors.primaryColor.withOpacity(0.1),
+                  backgroundColor: AppColors.primaryColor.withValues(alpha: 0.1),
                   child: Text(
                     name.isNotEmpty ? name[0].toUpperCase() : '?',
                     style: TextStyle(
@@ -342,7 +343,7 @@ class _LectureReportPageState extends State<LectureReportPage> {
                       Text(
                         'Code: $code',
                         style: TextStyle(
-                          color: AppColors.darkColor.withOpacity(0.5),
+                          color: AppColors.darkColor.withValues(alpha: 0.5),
                           fontSize: isMobile ? 11 : 11, // Mobile: 11 / Desktop: 11
                         ),
                       ),
@@ -356,7 +357,7 @@ class _LectureReportPageState extends State<LectureReportPage> {
                       vertical: isMobile ? 4 : 5,    // Mobile: 4 / Desktop: 5
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.warningColor.withOpacity(0.1),
+                      color: AppColors.warningColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -421,14 +422,14 @@ class _LectureReportPageState extends State<LectureReportPage> {
         Icon(
           Icons.speaker_notes_off,
           size: 72,
-          color: AppColors.darkColor.withOpacity(0.2),
+          color: AppColors.darkColor.withValues(alpha: 0.2),
         ),
         const SizedBox(height: 16),
         Text(
           'No attendance records found',
           style: TextStyle(
             fontSize: 16,
-            color: AppColors.darkColor.withOpacity(0.5),
+            color: AppColors.darkColor.withValues(alpha: 0.5),
           ),
         ),
       ],
@@ -438,7 +439,7 @@ class _LectureReportPageState extends State<LectureReportPage> {
   Widget _pill(IconData icon, String label, Color color) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     decoration: BoxDecoration(
-      color: color.withOpacity(0.1),
+      color: color.withValues(alpha: 0.1),
       borderRadius: BorderRadius.circular(20),
     ),
     child: Row(
@@ -473,7 +474,7 @@ class _LectureReportPageState extends State<LectureReportPage> {
         label,
         style: TextStyle(
           fontSize: isMobile ? 11 : 12, // Mobile: 11 / Desktop: 12
-          color: AppColors.darkColor.withOpacity(0.5),
+          color: AppColors.darkColor.withValues(alpha: 0.5),
         ),
       ),
     ],

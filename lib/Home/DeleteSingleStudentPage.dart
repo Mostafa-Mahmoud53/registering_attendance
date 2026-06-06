@@ -4,11 +4,11 @@ import '../l10n/app_localizations.dart';
 import '../Auth/colors.dart';
 import '../Auth/auth_storage.dart';
 import '../Auth/api_service.dart';
-import '../widgets/AppInstructionsCard.dart';
+import '../widgets/app_instructions_card.dart';
 
 class DeleteSingleStudentPage extends StatefulWidget {
   final bool isTab;
-  const DeleteSingleStudentPage({Key? key, this.isTab = false}) : super(key: key);
+  const DeleteSingleStudentPage({super.key, this.isTab = false});
 
   @override
   _DeleteSingleStudentPageState createState() => _DeleteSingleStudentPageState();
@@ -157,7 +157,7 @@ class _DeleteSingleStudentPageState extends State<DeleteSingleStudentPage> {
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(16),
-                  boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+                  boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4))],
                 ),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('University Code', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.darkColor)),
@@ -166,11 +166,11 @@ class _DeleteSingleStudentPageState extends State<DeleteSingleStudentPage> {
                     controller: _codeController,
                     decoration: InputDecoration(
                       hintText: 'e.g. ST-20205522',
-                      hintStyle: TextStyle(color: AppColors.darkColor.withOpacity(0.35)),
+                      hintStyle: TextStyle(color: AppColors.darkColor.withValues(alpha: 0.35)),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Colors.red, width: 1.5)),
                       filled: true, fillColor: AppColors.lightColor2,
-                      prefixIcon: Icon(Icons.badge_outlined, color: AppColors.darkColor.withOpacity(0.4)),
+                      prefixIcon: Icon(Icons.badge_outlined, color: AppColors.darkColor.withValues(alpha: 0.4)),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     ),
                     style: TextStyle(color: AppColors.darkColor, fontSize: 15),
@@ -210,7 +210,7 @@ class _DeleteSingleStudentPageState extends State<DeleteSingleStudentPage> {
     duration: const Duration(milliseconds: 300),
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      color: _isSuccess ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+      color: _isSuccess ? Colors.green.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1),
       borderRadius: BorderRadius.circular(12),
       border: Border.all(color: _isSuccess ? Colors.green : Colors.red),
     ),
