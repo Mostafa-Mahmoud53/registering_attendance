@@ -15,6 +15,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appDescription => 'A new Flutter project.';
 
   @override
+  String get createSingle => 'Single Student';
+
+  @override
+  String get deleteSingle => 'Delete Single';
+
+  @override
+  String get deleteMultiple => 'Delete Multiple';
+
+  @override
+  String get createStudentsScreen => 'Create Students';
+
+  @override
+  String get deleteStudentsScreen => 'Delete Students';
+
+  @override
+  String get createStudentSingleBtn => 'Create Student';
+
+  @override
+  String get deleteStudentSingleBtn => 'Delete Student';
+
+  @override
+  String get studentAttendanceApplication => 'Student Attendance Application';
+
+  @override
+  String get forAssistanceContactIT =>
+      'For assistance, please contact your university IT department';
+
+  @override
   String get login => 'Login';
 
   @override
@@ -130,7 +158,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashboard => 'Dashboard';
 
   @override
-  String get collegeAttendanceSystem => 'College Attendance System';
+  String get collegeAttendanceSystem => 'Smart Attendance System';
 
   @override
   String get studentDashboard => 'Student Dashboard';
@@ -185,6 +213,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get courses => 'Courses';
+
+  @override
+  String get totalCourses => 'Total Courses';
+
+  @override
+  String get totalStudents => 'Total Students';
+
+  @override
+  String get searchCourses => 'Search courses...';
+
+  @override
+  String get noCoursesAssigned => 'No courses assigned yet';
+
+  @override
+  String get noCoursesMatch => 'No courses match your search';
 
   @override
   String get staffManagement => 'Staff Management';
@@ -577,6 +620,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startNewSession => 'Start New Session';
 
   @override
+  String get resumeActiveSession => 'Resume Active Session';
+
+  @override
+  String get resumeActiveSessionSubtitle =>
+      'Continue the currently running session';
+
+  @override
   String get createSession => 'Create Session';
 
   @override
@@ -931,217 +981,432 @@ class AppLocalizationsEn extends AppLocalizations {
   String get arabic => 'العربية';
 
   @override
-  String get assignStaffDescription =>
-      'Enter the course code and the staff university code to link them together.';
+  String get doctorsList => 'Doctors List';
 
   @override
-  String errorAssigningStaff(String error) {
-    return 'Error: $error';
+  String get teachingAssistantsList => 'Teaching Assistants List';
+
+  @override
+  String doctorsCount(String count) {
+    return '$count Doctors';
   }
 
   @override
-  String failedToConnect(String error) {
-    return 'Failed to connect: $error';
+  String taCount(String count) {
+    return '$count Teaching Assistants';
   }
 
   @override
-  String get noAttendanceRecordsFound => 'No attendance records found';
+  String get autoRefresh30 => 'Auto-refresh every 30 seconds';
 
   @override
-  String get noAttendanceRecords => 'No attendance records';
+  String get searchDoctors => '...Search doctors';
 
   @override
-  String pointsString(String marks) {
-    return '$marks pts';
-  }
+  String get searchTAs => '...Search TAs';
 
   @override
-  String codeString(String code) {
-    return 'Code: $code';
-  }
-
-  @override
-  String get totalStudents => 'Total Students';
-
-  @override
-  String get totalCourses => 'Total Courses';
-
-  @override
-  String get noCoursesAssignedYet => 'No courses assigned yet';
-
-  @override
-  String get noCoursesMatchSearch => 'No courses match your search';
-
-  @override
-  String get reportsAndAnalytics => 'Reports & Analytics';
-
-  @override
-  String get fillRequiredCourse =>
-      'Fill in all required fields to create a new course';
-
-  @override
-  String get createNewCourse => 'Create New Course';
-
-    @override
-    String get courseCreationSteps => 'Course Creation Steps';
-
-    @override
-    String get courseCreationStep1 => 'Enter a clear, descriptive name for the course.';
-
-    @override
-    String get courseCreationStep2 => 'Provide a unique Course Code (e.g., CS4710).';
-
-    @override
-    String get courseCreationStep3 =>
-      'Enter the exact University Code of the Doctor assigned to this course.';
-
-    @override
-    String get courseCreationStep4 =>
-      'Provide a brief description of the course contents.';
-
-    @override
-    String get courseCreationStep5 => 'Click "Create Course" to finalize.';
-
-    @override
-    String get doctorUniversityCode => 'Doctor University Code';
-
-    @override
-    String get enterDoctorUniversityCode =>
-      'Enter doctor university code (e.g., DR-1234)';
-
-    @override
-    String get courseNameIsRequired => 'Course name is required';
-
-    @override
-    String get courseNameMustBeAtLeast2Chars =>
-      'Course name must be at least 2 characters';
-
-    @override
-    String get courseCodeIsRequired => 'Course code is required';
-
-    @override
-    String get courseCodeMustBeAtLeast2Chars =>
-      'Course code must be at least 2 characters';
-
-    @override
-    String get courseDescriptionIsRequired => 'Description is required';
-
-    @override
-    String get courseDescriptionMustBeAtLeast5Chars =>
-      'Description must be at least 5 characters';
-
-    @override
-    String get doctorUniversityCodeIsRequired =>
-      'Doctor University Code is required';
-
-    @override
-    String get doctorUniversityCodeMustBeValid =>
-      'Please enter a valid University Code (e.g., DR-1234)';
-
-  @override
-  String get passwordRequirements => 'Password requirements:';
+  String get passwordReqs => 'Password requirements:';
 
   @override
   String get atLeast6Chars => 'At least 6 characters';
 
   @override
-  String get manualAdd => 'Manual Add';
+  String get howToDeleteStudents => 'How to delete students';
 
   @override
-  String get tryAgain => 'Try Again';
+  String get deleteOption1 =>
+      'Option 1: Use \"Import from Excel\" to upload a .xlsx file containing a \"University Code\" column';
 
   @override
-  String noSessionsFoundForType(String type) {
-    return 'No $type sessions found.';
+  String get deleteOption2 =>
+      'Option 2: Manually enter university codes one by one in the \"Add Manually\" section';
+
+  @override
+  String get deleteOption3 => 'Review the compiled list of students below.';
+
+  @override
+  String get deleteOption4 =>
+      'Click \"Delete Students\" to permanently remove them from the system';
+
+  @override
+  String get deleteOption5 => 'Warning: This action cannot be undone';
+
+  @override
+  String get uploadExcelHint =>
+      'Upload an Excel file with a column named \"university code\" or \"code\"';
+
+  @override
+  String get clearBtn => 'Clear';
+
+  @override
+  String get addManually => 'Add Manually';
+
+  @override
+  String get enterCodeAndPressAdd => 'Enter a university code and press Add';
+
+  @override
+  String get addBtn => 'Add';
+
+  @override
+  String get addStudentsBulkSubtitle => 'Add students one by one or in bulk';
+
+  @override
+  String get howToCreateStudents => 'How to create students';
+
+  @override
+  String get createOption1 =>
+      'Option 1: Use \"Import from Excel\" to upload a .xlsx file with \"Name\", \"University Email\", and \"University Code\" columns';
+
+  @override
+  String get createOption2 =>
+      'Option 2: Use the manual \"Add Student\" form to add students one by one to the list below';
+
+  @override
+  String get createOption3 =>
+      'Review the \"Students to Add\" list below to ensure accuracy';
+
+  @override
+  String get createOption4 =>
+      'Click \"Create Students\" to finalize and send to the server';
+
+  @override
+  String get uploadExcelCreateHint =>
+      'Upload an Excel file with columns: name, universityEmail, universityCode';
+
+  @override
+  String get addStudentBtn => 'Add Student';
+
+  @override
+  String get scanQrCode => 'Scan QR Code';
+
+  @override
+  String get enterPinCode => 'Enter PIN Code';
+
+  @override
+  String get totalStats => 'Total';
+
+  @override
+  String get absentStats => 'Absent';
+
+  @override
+  String get attendedStats => 'Attended';
+
+  @override
+  String get dangerAbsenceLimit =>
+      'Danger: You have exceeded the allowed absence limit (3) and may be deprived of exams';
+
+  @override
+  String get sectionsTab => 'Sections';
+
+  @override
+  String get lecturesTab => 'Lectures';
+
+  @override
+  String get activeSession => 'Active Session';
+
+  @override
+  String get enterPinDescription =>
+      'Please enter the 4-digit PIN provided by the Doctor to register your attendance';
+
+  @override
+  String get enterPinTitle => 'Enter PIN';
+
+  @override
+  String get pinCodeLabel => 'PIN Code';
+
+  @override
+  String get submitPinBtn => 'Submit PIN';
+
+  @override
+  String get reassignDoctor => 'Reassign Doctor';
+
+  @override
+  String get reassignDoctorSubtitle => 'Transfer course to another doctor';
+
+  @override
+  String get newDoctorCode => 'New Doctor Code';
+
+  @override
+  String get enterNewDoctorCode => 'e.g., DOC-XXXX';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get reassignSuccess => 'Doctor reassigned successfully!';
+
+  @override
+  String reassignError(String error) {
+    return 'Failed to reassign doctor: $error';
   }
 
   @override
-  String get removeThisStudent => 'Remove this student?';
+  String get pleaseEnterDoctorCode =>
+      'Please enter the new doctor\'s university code';
 
   @override
-  String get errorConnectingServer => 'Error connecting to server';
+  String get viewDashboard => 'View Dashboard';
 
   @override
-  String get deleteAttendance => 'Delete Attendance';
+  String get viewDashboardSubtitle => 'Analytics and session management';
 
   @override
-  String get searchDoctors => 'Search doctors...';
+  String get courseCreationSteps => 'Course Creation Steps';
 
   @override
-  String get searchTAs => 'Search TAs...';
+  String get courseCreationStep1 =>
+      'Enter a clear, descriptive name for the course.';
 
   @override
-  String get autoRefreshEvery30Seconds => 'Auto-refresh every 30 seconds';
+  String get courseCreationStep2 =>
+      'Provide a unique Course Code (e.g., CS4710).';
 
   @override
-  String doctorCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count doctors',
-      one: '1 doctor',
-      zero: '0 doctors',
-    );
-    return '$_temp0';
+  String get courseCreationStep3 =>
+      'Enter the exact University Code of the Doctor assigned to this course.';
+
+  @override
+  String get courseCreationStep4 =>
+      'Provide a brief description of the course contents.';
+
+  @override
+  String get courseCreationStep5 => 'Click \"Create Course\" to finalize.';
+
+  @override
+  String get doctorUniversityCode => 'Doctor University Code';
+
+  @override
+  String get enterDoctorUniversityCode =>
+      'Enter doctor university code (e.g., DR-1234)';
+
+  @override
+  String get courseNameIsRequired => 'Course name is required';
+
+  @override
+  String get courseNameMustBeAtLeast2Chars =>
+      'Course name must be at least 2 characters';
+
+  @override
+  String get courseCodeIsRequired => 'Course code is required';
+
+  @override
+  String get courseCodeMustBeAtLeast2Chars =>
+      'Course code must be at least 2 characters';
+
+  @override
+  String get courseDescriptionIsRequired => 'Description is required';
+
+  @override
+  String get courseDescriptionMustBeAtLeast5Chars =>
+      'Description must be at least 5 characters';
+
+  @override
+  String get doctorUniversityCodeIsRequired =>
+      'Doctor University Code is required';
+
+  @override
+  String get doctorUniversityCodeMustBeValid =>
+      'Please enter a valid University Code (e.g., DR-1234)';
+
+  @override
+  String get deleteSession => 'Delete Session';
+
+  @override
+  String get deleteSessionWarning =>
+      'Are you sure you want to delete this session? This action cannot be undone.';
+
+  @override
+  String get sessionDeletedSuccessfully => 'Session deleted successfully!';
+
+  @override
+  String deleteSessionError(String error) {
+    return 'Failed to delete session: $error';
   }
 
   @override
-  String taCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count TAs',
-      one: '1 TA',
-      zero: '0 TAs',
-    );
-    return '$_temp0';
+  String get resetSystemTitle => 'Reset System for New Year';
+
+  @override
+  String get resetSystemSubtitle =>
+      'Prepare the system for a new academic year';
+
+  @override
+  String get fullSystemReset => 'Full System Reset';
+
+  @override
+  String get resetSystemDescription =>
+      'Resets the entire system for the new academic year. This will clear all attendance records and session data while preserving user accounts and courses.';
+
+  @override
+  String get resetSystemWarning =>
+      '⚠️ Critical Warning: This will permanently delete ALL attendance records, session history, and enrollment data from the previous academic year. User accounts and courses will be preserved. This action is irreversible.';
+
+  @override
+  String get proceedReset => 'Proceed and Reset';
+
+  @override
+  String get resetEntireSystem => 'Reset Entire System';
+
+  @override
+  String get resetSystemSuccess =>
+      'System reset for new year completed successfully!';
+
+  @override
+  String resetSystemError(String error) {
+    return 'Failed to reset system: $error';
   }
 
   @override
-  String get noDoctorsAvailable => 'No doctors available';
+  String get dataPreserved => 'Users & Courses → Preserved';
 
   @override
-  String get noDoctorsFound => 'No doctors found';
+  String get dataDeleted => 'Sessions, Attendance, Enrollments → Deleted';
 
   @override
-  String get noTAsAvailable => 'No Teaching Assistants available';
+  String get singleAccount => 'Single Account';
 
   @override
-  String get noTAsFound => 'No TAs found';
+  String get newYearReset => 'New Year Reset';
 
   @override
-  String get tryDifferentSearchTerm => 'Try a different search term';
+  String get resetStudentAccount => 'Reset Student Account';
 
   @override
-  String get generalInformation => 'General Information';
+  String get enterStudentUniversityCodeReset =>
+      'Enter the student University Code to reset their account. This will allow them to use the \"Activate\" screen again.';
 
   @override
-  String get doctorProfile => 'Doctor Profile';
+  String get howToResetAccount => 'How to Reset an Account';
 
   @override
-  String get taProfile => 'Teaching Assistant Profile';
+  String get obtainStudentUniversityCode =>
+      'Obtain the student\'s University Code.';
 
   @override
-  String get doctorDeletedSuccessfully => 'Doctor deleted successfully!';
+  String get enterExactUniversityCode =>
+      'Enter the exact University Code in the field below.';
 
   @override
-  String get taDeletedSuccessfully => 'TA deleted successfully!';
+  String get clickResetAccountButton => 'Click \"Reset Account\".';
 
   @override
-  String get cannotDeleteDoctorAssigned =>
-      'Cannot delete this doctor because they are currently assigned to one or more courses. Please unassign them first.';
+  String get studentWillActivateAgain =>
+      'Once successful, the student will be able to activate their account again from their own device.';
 
   @override
-  String get cannotDeleteTAAssigned =>
-      'Cannot delete this TA because they are currently assigned to one or more courses. Please unassign them first.';
+  String get studentUniversityCodeReset => 'Student University Code';
 
   @override
-  String confirmDeleteDoctor(String name) {
-    return 'Are you sure you want to delete Dr. $name?\n\nThis will permanently remove their account and access.';
+  String get enterUniversityCodeExample =>
+      'Enter university code (e.g., ST-20205522)';
+
+  @override
+  String get resetAccount => 'Reset Account';
+
+  @override
+  String get accountResetSuccessfully => 'Account reset successfully';
+
+  @override
+  String failedToResetAccount(String error) {
+    return 'Failed to reset account: $error';
   }
 
   @override
-  String confirmDeleteTA(String name) {
-    return 'Are you sure you want to delete TA \'$name\'?\n\nThis will permanently remove their account and access.';
+  String get studentUniversityCodeRequired =>
+      'Student University Code is required';
+
+  @override
+  String get invalidUniversityCode =>
+      'Please enter a valid University Code (e.g., ST-20205522)';
+
+  @override
+  String get whatHappensResetStudent =>
+      'What happens when you reset a student account?';
+
+  @override
+  String get studentCanUseActivateScreen =>
+      'The student can use the \"Activate\" screen again';
+
+  @override
+  String get accountStatusReset => 'Their account status is reset';
+
+  @override
+  String get completeActivationAgain =>
+      'They need to complete the activation process again';
+
+  @override
+  String get previousAccountDataAffected =>
+      'Previous account data may be affected';
+
+  @override
+  String get enrollStudentsScreen => 'Enroll Students';
+
+  @override
+  String get enrollSingle => 'Enroll Single';
+
+  @override
+  String get enrollMultiple => 'Enroll Multiple';
+
+  @override
+  String get excelSheet => 'Excel Sheet';
+
+  @override
+  String get enrollAll => 'Enroll All';
+
+  @override
+  String get universityCodeHint => 'Enter University Code';
+
+  @override
+  String get multipleCodesHint =>
+      'Enter University Codes separated by commas or new lines';
+
+  @override
+  String get excelColumnNote =>
+      'The Excel file must contain a University Code column';
+
+  @override
+  String get noStaffAssigned => 'No staff assigned to this course';
+
+  @override
+  String get assignRemoveStaff => 'Assign / Remove Staff';
+
+  @override
+  String get assignRemoveStaffSubtitle =>
+      'Manage staff assigned to this course';
+
+  @override
+  String get removeAssignedStaff => 'Remove Assigned Staff';
+
+  @override
+  String confirmRemoveStaff(String name) {
+    return 'Are you sure you want to remove $name from this course?';
   }
+
+  @override
+  String get staffRemovedSuccess => 'Staff member removed successfully';
+
+  @override
+  String get courseCodeLabel => 'Code';
+
+  @override
+  String get courseIdLabel => 'ID';
+
+  @override
+  String get remove => 'Remove';
+
+  @override
+  String get loadingStaff => 'Loading staff...';
+
+  @override
+  String get errorLoadingStaff => 'Failed to load staff list';
+
+  @override
+  String get enroll => 'Enroll';
+
+  @override
+  String get createMultiple => 'Multiple Students';
+
+  @override
+  String get deleteStudentMultipleBtn => 'Delete Students';
 }

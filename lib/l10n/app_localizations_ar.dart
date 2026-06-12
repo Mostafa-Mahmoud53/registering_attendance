@@ -15,6 +15,34 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appDescription => 'مشروع فلاتر جديد.';
 
   @override
+  String get createSingle => 'طالب واحد';
+
+  @override
+  String get deleteSingle => 'حذف طالب';
+
+  @override
+  String get deleteMultiple => 'حذف عدة طلاب';
+
+  @override
+  String get createStudentsScreen => 'إضافة طلاب';
+
+  @override
+  String get deleteStudentsScreen => 'حذف طلاب';
+
+  @override
+  String get createStudentSingleBtn => 'إنشاء حساب الطالب';
+
+  @override
+  String get deleteStudentSingleBtn => 'حذف الطالب';
+
+  @override
+  String get studentAttendanceApplication => 'تطبيق حضور وغياب الطلاب';
+
+  @override
+  String get forAssistanceContactIT =>
+      'للمساعدة، يرجى التواصل مع قسم تكنولوجيا المعلومات في جامعتك';
+
+  @override
   String get login => 'تسجيل الدخول';
 
   @override
@@ -128,10 +156,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dashboard => 'لوحة التحكم';
 
   @override
-  String get collegeAttendanceSystem => 'نظام تسجيل الحضور بالجامعة';
+  String get collegeAttendanceSystem => 'Smart Attendance System';
 
   @override
-  String get studentDashboard => 'لوحة تحكم الطالب';
+  String get studentDashboard => 'لوحة الطالب';
 
   @override
   String get adminDashboard => 'لوحة تحكم الإدارة';
@@ -185,6 +213,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get courses => 'المقررات';
 
   @override
+  String get totalCourses => 'إجمالي المقررات';
+
+  @override
+  String get totalStudents => 'إجمالي الطلاب';
+
+  @override
+  String get searchCourses => 'البحث في المقررات...';
+
+  @override
+  String get noCoursesAssigned => 'لم يتم تعيين مقررات بعد';
+
+  @override
+  String get noCoursesMatch => 'لا توجد مقررات تطابق بحثك';
+
+  @override
   String get staffManagement => 'إدارة الموظفين';
 
   @override
@@ -221,7 +264,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountCreationSteps => 'خطوات إنشاء الحساب';
 
   @override
-  String get selectAccountType => 'حدد نوع الحساب (طبيب أو معيد).';
+  String get selectAccountType => 'حدد نوع الحساب (عضو هيئة تدريس أو معيد).';
 
   @override
   String get enterFullName => 'أدخل الاسم الكامل لموظف الكادر.';
@@ -280,7 +323,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get studentManagement => 'إدارة الطلاب';
 
   @override
-  String get bulkCreateStudents => 'إنشاء طلاب بكميات كبيرة';
+  String get bulkCreateStudents => 'إنشاء طلاب دفعة واحدة';
 
   @override
   String get createMultipleStudents => 'إنشاء عدة طلاب';
@@ -290,7 +333,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'إضافة الطلاب واحداً تلو الآخر أو بكميات كبيرة';
 
   @override
-  String get bulkDeleteStudents => 'حذف طلاب بكميات كبيرة';
+  String get bulkDeleteStudents => 'حذف الطلاب دفعة واحدة';
 
   @override
   String get resetAccounts => 'إعادة تعيين الحسابات';
@@ -302,10 +345,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get resetStudentsNewYear => 'إعادة تعيين الطلاب للسنة الجديدة';
 
   @override
-  String get importFromExcel => 'الاستيراد من إكسل';
+  String get importFromExcel => 'استيراد من إكسل';
 
   @override
-  String get uploadExcel => 'تحميل ملف إكسل';
+  String get uploadExcel => 'رفع ملف إكسل';
 
   @override
   String get importExcel =>
@@ -419,7 +462,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deleteUserSuccessfully => 'تم حذف المستخدم بنجاح!';
 
   @override
-  String get courseManagement => 'إدارة المقرر';
+  String get courseManagement => 'إدارة المقررات';
 
   @override
   String get createCourse => 'إنشاء مقرر';
@@ -568,6 +611,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get startNewSession => 'بدء جلسة جديدة';
 
   @override
+  String get resumeActiveSession => 'استكمال المحاضرة الحالية';
+
+  @override
+  String get resumeActiveSessionSubtitle =>
+      'فتح شاشة عرض الحضور للمحاضرة النشطة';
+
+  @override
   String get createSession => 'إنشاء جلسة';
 
   @override
@@ -664,7 +714,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enterPINCode => 'إدخال رمز PIN';
 
   @override
-  String get activeSessionOpen => 'جلسة نشطة مفتوحة!';
+  String get activeSessionOpen => '!توجد جلسة نشطة الآن';
 
   @override
   String get liveSession => 'جلسة مباشرة';
@@ -921,217 +971,422 @@ class AppLocalizationsAr extends AppLocalizations {
   String get arabic => 'العربية';
 
   @override
-  String get assignStaffDescription =>
-      'أدخل كود المقرر وكود الجامعة لعضو هيئة التدريس/المعيد لربطهما معاً.';
+  String get doctorsList => 'قائمة الأطباء';
 
   @override
-  String errorAssigningStaff(String error) {
-    return 'خطأ: $error';
+  String get teachingAssistantsList => 'قائمة المعيدين';
+
+  @override
+  String doctorsCount(String count) {
+    return '$count أطباء';
   }
 
   @override
-  String failedToConnect(String error) {
-    return 'فشل الاتصال: $error';
+  String taCount(String count) {
+    return '$count معيدين';
   }
 
   @override
-  String get noAttendanceRecordsFound => 'لا توجد سجلات حضور';
+  String get autoRefresh30 => 'تحديث تلقائي كل 30 ثانية';
 
   @override
-  String get noAttendanceRecords => 'لا توجد سجلات';
+  String get searchDoctors => '...ابحث عن الأطباء';
 
   @override
-  String pointsString(String marks) {
-    return '$marks نقطة';
-  }
+  String get searchTAs => '...ابحث عن المعيدين';
 
   @override
-  String codeString(String code) {
-    return 'الكود: $code';
-  }
-
-  @override
-  String get totalStudents => 'إجمالي الطلاب';
-
-  @override
-  String get totalCourses => 'إجمالي المقررات';
-
-  @override
-  String get noCoursesAssignedYet => 'لا توجد مقررات معينة بعد';
-
-  @override
-  String get noCoursesMatchSearch => 'لا توجد مقررات تطابق بحثك';
-
-  @override
-  String get reportsAndAnalytics => 'التقارير والتحليلات';
-
-  @override
-  String get fillRequiredCourse =>
-      'يرجى ملء جميع الحقول المطلوبة لإنشاء مقرر جديد';
-
-  @override
-  String get createNewCourse => 'إنشاء مقرر جديد';
-
-    @override
-    String get courseCreationSteps => 'خطوات إنشاء المقرر';
-
-    @override
-    String get courseCreationStep1 => 'أدخل اسمًا واضحًا ووصفيًا للمقرر.';
-
-    @override
-    String get courseCreationStep2 => 'وفر كود مقرر فريدًا (مثال: CS4710).';
-
-    @override
-    String get courseCreationStep3 =>
-      'أدخل كود الجامعة الصحيح للعضو المسؤول عن هذا المقرر.';
-
-    @override
-    String get courseCreationStep4 => 'أضف وصفًا مختصرًا لمحتوى المقرر.';
-
-    @override
-    String get courseCreationStep5 => 'اضغط "إنشاء مقرر" لإتمام العملية.';
-
-    @override
-    String get doctorUniversityCode => 'كود الأستاذ الجامعي';
-
-    @override
-    String get enterDoctorUniversityCode => 'أدخل كود الأستاذ الجامعي (مثال: DR-1234)';
-
-    @override
-    String get courseNameIsRequired => 'اسم المقرر مطلوب';
-
-    @override
-    String get courseNameMustBeAtLeast2Chars => 'اسم المقرر يجب أن يكون على الأقل حرفين';
-
-    @override
-    String get courseCodeIsRequired => 'كود المقرر مطلوب';
-
-    @override
-    String get courseCodeMustBeAtLeast2Chars => 'كود المقرر يجب أن يكون على الأقل حرفين';
-
-    @override
-    String get courseDescriptionIsRequired => 'الوصف مطلوب';
-
-    @override
-    String get courseDescriptionMustBeAtLeast5Chars => 'الوصف يجب أن يكون على الأقل 5 أحرف';
-
-    @override
-    String get doctorUniversityCodeIsRequired => 'كود الأستاذ الجامعي مطلوب';
-
-    @override
-    String get doctorUniversityCodeMustBeValid =>
-      'يرجى إدخال كود جامعي صحيح (مثال: DR-1234)';
-
-  @override
-  String get passwordRequirements => 'متطلبات كلمة المرور:';
+  String get passwordReqs => ':متطلبات كلمة المرور';
 
   @override
   String get atLeast6Chars => '6 أحرف على الأقل';
 
   @override
-  String get manualAdd => 'إضافة يدوية';
+  String get howToDeleteStudents => 'كيفية حذف الطلاب';
 
   @override
-  String get tryAgain => 'حاول مرة أخرى';
+  String get deleteOption1 =>
+      'الخيار 1: استخدم \"استيراد من إكسل\" لرفع ملف .xlsx يحتوي على عمود \"كود الجامعة\"';
 
   @override
-  String noSessionsFoundForType(String type) {
-    return 'لا توجد جلسات $type.';
+  String get deleteOption2 =>
+      'الخيار 2: أدخل أكواد الجامعة يدوياً واحداً تلو الآخر في قسم \"إضافة يدوياً\"';
+
+  @override
+  String get deleteOption3 => 'راجع القائمة المجمعة للطلاب أدناه.';
+
+  @override
+  String get deleteOption4 =>
+      'انقر على \"حذف الطلاب\" لإزالتهم نهائياً من النظام';
+
+  @override
+  String get deleteOption5 => 'تحذير: لا يمكن التراجع عن هذا الإجراء';
+
+  @override
+  String get uploadExcelHint =>
+      'قم برفع ملف إكسل يحتوي على عمود باسم \"university code\" أو \"code\"';
+
+  @override
+  String get clearBtn => 'مسح';
+
+  @override
+  String get addManually => 'إضافة يدوياً';
+
+  @override
+  String get enterCodeAndPressAdd => 'أدخل كود الجامعة واضغط إضافة';
+
+  @override
+  String get addBtn => 'إضافة';
+
+  @override
+  String get addStudentsBulkSubtitle =>
+      'أضف الطلاب واحداً تلو الآخر أو دفعة واحدة';
+
+  @override
+  String get howToCreateStudents => 'كيفية إنشاء الطلاب';
+
+  @override
+  String get createOption1 =>
+      'الخيار 1: استخدم \"استيراد من إكسل\" لرفع ملف .xlsx يحتوي على أعمدة \"Name\"، \"University Email\"، و \"University Code\"';
+
+  @override
+  String get createOption2 =>
+      'الخيار 2: استخدم نموذج \"إضافة طالب\" اليدوي لإضافة الطلاب للقائمة أدناه';
+
+  @override
+  String get createOption3 =>
+      'راجع قائمة \"الطلاب المراد إضافتهم\" أدناه لضمان الدقة';
+
+  @override
+  String get createOption4 =>
+      'انقر على \"إنشاء الطلاب\" للإنهاء والإرسال للخادم';
+
+  @override
+  String get uploadExcelCreateHint =>
+      'قم برفع ملف إكسل بأعمدة: name, universityEmail, universityCode';
+
+  @override
+  String get addStudentBtn => 'إضافة طالب';
+
+  @override
+  String get scanQrCode => 'مسح رمز QR';
+
+  @override
+  String get enterPinCode => 'إدخال كود PIN';
+
+  @override
+  String get totalStats => 'الإجمالي';
+
+  @override
+  String get absentStats => 'غياب';
+
+  @override
+  String get attendedStats => 'حضور';
+
+  @override
+  String get dangerAbsenceLimit =>
+      'خطر: لقد تجاوزت الحد المسموح للغياب (3) وقد تُحرم من الامتحانات';
+
+  @override
+  String get sectionsTab => 'سكاشن';
+
+  @override
+  String get lecturesTab => 'محاضرات';
+
+  @override
+  String get activeSession => 'الجلسة النشطة';
+
+  @override
+  String get enterPinDescription =>
+      'يرجى إدخال رمز الـ PIN المكون من 4 أرقام المقدم من الدكتور لتسجيل حضورك';
+
+  @override
+  String get enterPinTitle => 'إدخال رمز PIN';
+
+  @override
+  String get pinCodeLabel => 'رمز PIN';
+
+  @override
+  String get submitPinBtn => 'إرسال رمز PIN';
+
+  @override
+  String get reassignDoctor => 'نقل الكورس لدكتور آخر';
+
+  @override
+  String get reassignDoctorSubtitle => 'نقل المقرر إلى دكتور آخر';
+
+  @override
+  String get newDoctorCode => 'كود الدكتور الجديد';
+
+  @override
+  String get enterNewDoctorCode => 'مثال: DOC-XXXX';
+
+  @override
+  String get confirm => 'تأكيد';
+
+  @override
+  String get reassignSuccess => 'تم نقل المقرر للدكتور بنجاح!';
+
+  @override
+  String reassignError(String error) {
+    return 'فشل نقل الدكتور: $error';
   }
 
   @override
-  String get removeThisStudent => 'هل تريد إزالة هذا الطالب؟';
+  String get pleaseEnterDoctorCode => 'يرجى إدخال الكود الجامعي للدكتور الجديد';
 
   @override
-  String get errorConnectingServer => 'خطأ في الاتصال بالخادم';
+  String get viewDashboard => 'عرض لوحة التحكم';
 
   @override
-  String get deleteAttendance => 'حذف الحضور';
+  String get viewDashboardSubtitle => 'التحليلات وإدارة الجلسات';
 
   @override
-  String get searchDoctors => 'البحث عن أعضاء هيئة التدريس...';
+  String get courseCreationSteps => 'خطوات إنشاء المقرر';
 
   @override
-  String get searchTAs => 'البحث عن معيدين...';
+  String get courseCreationStep1 => 'أدخل اسمًا واضحًا ووصفيًا للمقرر.';
 
   @override
-  String get autoRefreshEvery30Seconds => 'تحديث تلقائي كل 30 ثانية';
+  String get courseCreationStep2 => 'وفر كود مقرر فريدًا (مثال: CS4710).';
 
   @override
-  String doctorCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count عضو هيئة تدريس',
-      many: '$count عضو هيئة تدريس',
-      few: '$count أعضاء هيئة تدريس',
-      two: '2 أعضاء هيئة تدريس',
-      one: '1 عضو هيئة تدريس',
-      zero: '0 عضو هيئة تدريس',
-    );
-    return '$_temp0';
+  String get courseCreationStep3 =>
+      'أدخل كود الجامعة الصحيح للعضو المسؤول عن هذا المقرر.';
+
+  @override
+  String get courseCreationStep4 => 'أضف وصفًا مختصرًا لمحتوى المقرر.';
+
+  @override
+  String get courseCreationStep5 => 'اضغط \"إنشاء مقرر\" لإتمام العملية.';
+
+  @override
+  String get doctorUniversityCode => 'كود الأستاذ الجامعي';
+
+  @override
+  String get enterDoctorUniversityCode =>
+      'أدخل كود الأستاذ الجامعي (مثال: DR-1234)';
+
+  @override
+  String get courseNameIsRequired => 'اسم المقرر مطلوب';
+
+  @override
+  String get courseNameMustBeAtLeast2Chars =>
+      'اسم المقرر يجب أن يكون على الأقل حرفين';
+
+  @override
+  String get courseCodeIsRequired => 'كود المقرر مطلوب';
+
+  @override
+  String get courseCodeMustBeAtLeast2Chars =>
+      'كود المقرر يجب أن يكون على الأقل حرفين';
+
+  @override
+  String get courseDescriptionIsRequired => 'الوصف مطلوب';
+
+  @override
+  String get courseDescriptionMustBeAtLeast5Chars =>
+      'الوصف يجب أن يكون على الأقل 5 أحرف';
+
+  @override
+  String get doctorUniversityCodeIsRequired => 'كود الأستاذ الجامعي مطلوب';
+
+  @override
+  String get doctorUniversityCodeMustBeValid =>
+      'يرجى إدخال كود جامعي صحيح (مثال: DR-1234)';
+
+  @override
+  String get deleteSession => 'حذف الجلسة';
+
+  @override
+  String get deleteSessionWarning =>
+      'هل أنت متأكد من حذف هذه الجلسة بالكامل؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get sessionDeletedSuccessfully => 'تم حذف الجلسة بنجاح!';
+
+  @override
+  String deleteSessionError(String error) {
+    return 'فشل حذف الجلسة: $error';
   }
 
   @override
-  String taCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count معيد',
-      many: '$count معيد',
-      few: '$count معيدين',
-      two: '2 معيدين',
-      one: '1 معيد',
-      zero: '0 معيدين',
-    );
-    return '$_temp0';
+  String get resetSystemTitle => 'تهيئة النظام للعام الجديد';
+
+  @override
+  String get resetSystemSubtitle => 'تحضير النظام للعام الدراسي الجديد';
+
+  @override
+  String get fullSystemReset => 'إعادة تهيئة النظام بالكامل';
+
+  @override
+  String get resetSystemDescription =>
+      'يقوم بتهيئة النظام بالكامل للعام الدراسي الجديد. سيتم حذف جميع سجلات الحضور وبيانات الجلسات مع الحفاظ على حسابات المستخدمين والمقررات.';
+
+  @override
+  String get resetSystemWarning =>
+      '⚠️ تحذير خطير: سيتم حذف جميع سجلات الحضور وتاريخ الجلسات وبيانات التسجيل للعام الدراسي السابق بشكل نهائي. سيتم الحفاظ على حسابات المستخدمين والمقررات. لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get proceedReset => 'تأكيد التهيئة';
+
+  @override
+  String get resetEntireSystem => 'تهيئة النظام بالكامل';
+
+  @override
+  String get resetSystemSuccess => 'تمت تهيئة النظام للعام الجديد بنجاح!';
+
+  @override
+  String resetSystemError(String error) {
+    return 'فشل تهيئة النظام: $error';
   }
 
   @override
-  String get noDoctorsAvailable => 'لا يوجد أعضاء هيئة تدريس متاحين';
+  String get dataPreserved => 'حسابات المستخدمين والمقررات → محفوظة';
 
   @override
-  String get noDoctorsFound => 'لم يتم العثور على أعضاء هيئة تدريس';
+  String get dataDeleted => 'الجلسات والحضور والتسجيلات → محذوفة';
 
   @override
-  String get noTAsAvailable => 'لا يوجد معيدين متاحين';
+  String get singleAccount => 'حساب واحد';
 
   @override
-  String get noTAsFound => 'لم يتم العثور على معيدين';
+  String get newYearReset => 'إعادة تعيين السنة الجديدة';
 
   @override
-  String get tryDifferentSearchTerm => 'جرب كلمة بحث أخرى';
+  String get resetStudentAccount => 'إعادة تعيين حساب الطالب';
 
   @override
-  String get generalInformation => 'معلومات عامة';
+  String get enterStudentUniversityCodeReset =>
+      'أدخل كود الجامعة للطالب لإعادة تعيين حسابه. سيسمح له هذا باستخدام شاشة \"التفعيل\" مرة أخرى.';
 
   @override
-  String get doctorProfile => 'الملف الشخصي لعضو هيئة التدريس';
+  String get howToResetAccount => 'كيفية إعادة تعيين الحساب';
 
   @override
-  String get taProfile => 'الملف الشخصي للمعيد';
+  String get obtainStudentUniversityCode => 'احصل على كود جامعة الطالب.';
 
   @override
-  String get doctorDeletedSuccessfully => 'تم حذف عضو هيئة التدريس بنجاح!';
+  String get enterExactUniversityCode =>
+      'أدخل كود الجامعة الدقيق في الحقل أدناه.';
 
   @override
-  String get taDeletedSuccessfully => 'تم حذف المعيد بنجاح!';
+  String get clickResetAccountButton => 'انقر على \"إعادة تعيين الحساب\".';
 
   @override
-  String get cannotDeleteDoctorAssigned =>
-      'لا يمكن حذف عضو هيئة التدريس لأنه معين حالياً في مقرر أو أكثر. يرجى إزالة التعيين أولاً.';
+  String get studentWillActivateAgain =>
+      'بعد النجاح، سيتمكن الطالب من تفعيل حسابه مرة أخرى من جهازه الخاص.';
 
   @override
-  String get cannotDeleteTAAssigned =>
-      'لا يمكن حذف المعيد لأنه معين حالياً في مقرر أو أكثر. يرجى إزالة التعيين أولاً.';
+  String get studentUniversityCodeReset => 'كود جامعة الطالب';
 
   @override
-  String confirmDeleteDoctor(String name) {
-    return 'هل أنت متأكد من رغبتك في حذف عضو هيئة التدريس $name؟\n\nسيؤدي هذا إلى إزالة حسابه ووصوله بشكل دائم.';
+  String get enterUniversityCodeExample =>
+      'أدخل كود الجامعة (مثال: ST-20205522)';
+
+  @override
+  String get resetAccount => 'إعادة تعيين الحساب';
+
+  @override
+  String get accountResetSuccessfully => 'تم إعادة تعيين الحساب بنجاح';
+
+  @override
+  String failedToResetAccount(String error) {
+    return 'فشل في إعادة تعيين الحساب: $error';
   }
 
   @override
-  String confirmDeleteTA(String name) {
-    return 'هل أنت متأكد من رغبتك في حذف المعيد \'$name\'؟\n\nسيؤدي هذا إلى إزالة حسابه ووصوله بشكل دائم.';
+  String get studentUniversityCodeRequired => 'كود جامعة الطالب مطلوب';
+
+  @override
+  String get invalidUniversityCode =>
+      'يرجى إدخال كود جامعة صحيح (مثال: ST-20205522)';
+
+  @override
+  String get whatHappensResetStudent =>
+      'ماذا يحدث عند إعادة تعيين حساب الطالب؟';
+
+  @override
+  String get studentCanUseActivateScreen =>
+      'يمكن للطالب استخدام شاشة ال\"التفعيل\" مرة أخرى';
+
+  @override
+  String get accountStatusReset => 'حالة الحساب معاد تعيينها';
+
+  @override
+  String get completeActivationAgain => 'يحتاج لإكمال عملية التفعيل مرة أخرى';
+
+  @override
+  String get previousAccountDataAffected => 'قد تتأثر بيانات الحساب السابقة';
+
+  @override
+  String get enrollStudentsScreen => 'تسجيل الطلاب';
+
+  @override
+  String get enrollSingle => 'تسجيل طالب واحد';
+
+  @override
+  String get enrollMultiple => 'تسجيل أكثر من طالب';
+
+  @override
+  String get excelSheet => 'ملف Excel';
+
+  @override
+  String get enrollAll => 'تسجيل الكل';
+
+  @override
+  String get universityCodeHint => 'أدخل الكود الجامعي';
+
+  @override
+  String get multipleCodesHint =>
+      'أدخل الأكواد الجامعية مفصولة بفواصل أو أسطر جديدة';
+
+  @override
+  String get excelColumnNote => 'يجب أن يحتوي الملف على عمود الكود الجامعي';
+
+  @override
+  String get noStaffAssigned =>
+      'لا يوجد معيد أو دكتور مساعد مُعيَّن لهذه المادة';
+
+  @override
+  String get assignRemoveStaff => 'تعيين / إزالة معيد أو دكتور مساعد';
+
+  @override
+  String get assignRemoveStaffSubtitle =>
+      'إدارة المعيدين والدكاترة المساعدين لهذه المادة';
+
+  @override
+  String get removeAssignedStaff => 'إزالة معيد أو دكتور مساعد';
+
+  @override
+  String confirmRemoveStaff(String name) {
+    return 'هل أنت متأكد أنك تريد إزالة $name من هذه المادة؟';
   }
+
+  @override
+  String get staffRemovedSuccess => 'تم إزالة المعيد / الدكتور المساعد بنجاح';
+
+  @override
+  String get courseCodeLabel => 'الكود';
+
+  @override
+  String get courseIdLabel => 'الرقم';
+
+  @override
+  String get remove => 'إزالة';
+
+  @override
+  String get loadingStaff => 'جاري تحميل الموظفين...';
+
+  @override
+  String get errorLoadingStaff => 'فشل في تحميل قائمة الموظفين';
+
+  @override
+  String get enroll => 'تسجيل';
+
+  @override
+  String get createMultiple => 'عدة طلاب';
+
+  @override
+  String get deleteStudentMultipleBtn => 'حذف الطلاب';
 }
