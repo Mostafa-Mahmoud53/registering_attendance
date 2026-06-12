@@ -15,14 +15,14 @@ class ApiService {
       'Server error. Please try again later.';
 
   static String loginErrorMessage(int statusCode) {
+    if (statusCode == 401) {
+      return 'Invalid Email OR Password.';
+    }
     if (statusCode == 400) {
-      return 'Incorrect email or password, or account not activated yet.';
+      return 'Account not activated yet, or you are using an unauthorized device.';
     }
     if (statusCode == 404) {
       return 'Account not found. Check your university code.';
-    }
-    if (statusCode == 401) {
-      return sessionExpiredMessage;
     }
     if (statusCode == 429) {
       return 'Too many attempts. Please wait a moment and try again.';
@@ -34,20 +34,20 @@ class ApiService {
   }
 
   static String activationErrorMessage(int statusCode) {
-    if (statusCode == 400) {
-      return 'Invalid or expired activation link.';
-    }
     if (statusCode == 404) {
-      return 'Activation link is invalid or has expired.';
+      return 'This email is not registered in the system. Please contact Student Affairs.';
+    }
+    if (statusCode == 400) {
+      return 'Invalid university code, weak password, or account is already activated.';
+    }
+    if (statusCode == 429) {
+      return 'Too many activation attempts. Please wait a moment.';
+    }
+    if (statusCode == 401) {
+      return 'Unauthorized request. Please try again.';
     }
     if (statusCode == 409) {
       return 'Account already activated.';
-    }
-    if (statusCode == 429) {
-      return 'Too many activation attempts. Please wait.';
-    }
-    if (statusCode == 401) {
-      return sessionExpiredMessage;
     }
     if (statusCode >= 500 && statusCode <= 599) {
       return serverErrorMessage;
@@ -57,10 +57,10 @@ class ApiService {
 
   static String createDoctorTaErrorMessage(int statusCode) {
     if (statusCode == 400) {
-      return 'Invalid request. Please check your input and try again.';
+      return 'Email already exists, or invalid input data. Please check and try again.';
     }
-    if (statusCode == 401) {
-      return sessionExpiredMessage;
+    if (statusCode == 401 || statusCode == 403) {
+      return 'Unauthorized. Your session may have expired.';
     }
     if (statusCode == 409) {
       return 'Email already exists.';
