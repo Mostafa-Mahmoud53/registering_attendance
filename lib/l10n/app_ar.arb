@@ -49,7 +49,7 @@
   "tooManyAttempts": "محاولات كثيرة جداً. يرجى الانتظار قليلاً ثم المحاولة مرة أخرى.",
   "@section_dashboard": "لوحة التحكم",
   "dashboard": "لوحة التحكم",
-  "collegeAttendanceSystem": "نظام تسجيل الحضور بالجامعة",
+  "collegeAttendanceSystem": "Smart Attendance System",
   "studentDashboard": "لوحة الطالب",
   "adminDashboard": "لوحة تحكم الإدارة",
   "doctorDashboard": "لوحة تحكم عضو هيئة التدريس",

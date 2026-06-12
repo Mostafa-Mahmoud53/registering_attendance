@@ -110,17 +110,45 @@ class _LoginPageState extends State<LoginPage> {
             'deviceId': widget.deviceId,
           });
         } else {
+          String errMsg = AppLocalizations.of(context)!.loginFailed;
+          if (data['message'] != null && data['message'].toString().isNotEmpty) {
+            errMsg = data['message'].toString();
+          } else if (data['title'] != null && data['title'].toString().isNotEmpty) {
+            errMsg = data['title'].toString();
+          }
           AuthWidgets.showErrorSnackBar(
             context,
             AppException(
-              message: AppLocalizations.of(context)!.loginFailed,
+              message: errMsg,
             ),
           );
         }
       } else {
+        final loc = AppLocalizations.of(context)!;
+        String errMsg = loc.somethingWentWrong;
+        int statusCode = response['statusCode'] as int;
+
+        try {
+          final errorBody = jsonDecode(response['body']);
+          if (errorBody is Map && errorBody.containsKey('message') && errorBody['message'] != null) {
+            errMsg = errorBody['message'].toString();
+          } else if (errorBody is Map && errorBody.containsKey('title') && errorBody['title'] != null) {
+            errMsg = errorBody['title'].toString();
+          } else if (errorBody is String && errorBody.isNotEmpty) {
+            errMsg = errorBody;
+          }
+        } catch (_) {}
+
+        if (errMsg == loc.somethingWentWrong) {
+          if (statusCode == 400 || statusCode == 401) errMsg = loc.loginFailed;
+          else if (statusCode == 404) errMsg = loc.accountNotFound;
+          else if (statusCode == 429) errMsg = loc.tooManyAttempts;
+          else if (statusCode >= 500 && statusCode <= 599) errMsg = loc.serverError;
+        }
+
         AuthWidgets.showErrorSnackBar(
           context,
-          AppException(message: ApiService.loginErrorMessage(response['statusCode'] as int)),
+          AppException(message: errMsg),
         );
       }
     } catch (e) {

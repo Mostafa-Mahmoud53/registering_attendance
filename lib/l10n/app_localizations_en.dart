@@ -158,7 +158,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashboard => 'Dashboard';
 
   @override
-  String get collegeAttendanceSystem => 'College Attendance System';
+  String get collegeAttendanceSystem => 'Smart Attendance System';
 
   @override
   String get studentDashboard => 'Student Dashboard';

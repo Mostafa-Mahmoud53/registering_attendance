@@ -323,8 +323,8 @@ class _ActivationLoginPageState extends State<ActivationLoginPage>
                         ],
                       ),
                       child: const Icon(
-                        Icons.school,
-                        size: 40,
+                        Icons.fingerprint,
+                        size: 45,
                         color: Colors.white,
                       ),
                     ),

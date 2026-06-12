@@ -156,7 +156,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dashboard => 'لوحة التحكم';
 
   @override
-  String get collegeAttendanceSystem => 'نظام تسجيل الحضور بالجامعة';
+  String get collegeAttendanceSystem => 'Smart Attendance System';
 
   @override
   String get studentDashboard => 'لوحة الطالب';

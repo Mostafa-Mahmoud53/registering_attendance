@@ -383,7 +383,7 @@ abstract class AppLocalizations {
   /// No description provided for @collegeAttendanceSystem.
   ///
   /// In en, this message translates to:
-  /// **'College Attendance System'**
+  /// **'Smart Attendance System'**
   String get collegeAttendanceSystem;
 
   /// No description provided for @studentDashboard.
