@@ -53,9 +53,17 @@ native_http.Response _normalizeResponse(native_http.Response res) {
 Future<native_http.Response> _withAuthRefresh(
   Future<native_http.Response> Function(Map<String, String>? currentHeaders) request,
   Map<String, String>? headers,
+  Uri url,
 ) async {
   final res = await request(headers);
   if (res.statusCode == 401) {
+    // Skip interception for Auth endpoints where 401 is an expected error
+    if (url.path.contains('/Auth/Login') || 
+        url.path.contains('/Auth/activate') ||
+        url.path.contains('/Auth/refresh-token')) {
+      return _normalizeResponse(res);
+    }
+
     final refreshed = await _attemptRefresh();
     if (refreshed) {
       final newToken = await AuthStorage.getToken();
@@ -77,6 +85,7 @@ Future<native_http.Response> get(Uri url, {Map<String, String>? headers}) async 
       (currentHeaders) => native_http.get(url, headers: currentHeaders)
           .timeout(const Duration(seconds: 30)),
       headers,
+      url,
     );
   } on SocketException {
     return _offlineResponse();
@@ -93,6 +102,7 @@ Future<native_http.Response> post(Uri url, {Map<String, String>? headers, Object
       (currentHeaders) => native_http.post(url, headers: currentHeaders, body: body, encoding: encoding)
           .timeout(const Duration(seconds: 30)),
       headers,
+      url,
     );
   } on SocketException {
     return _offlineResponse();
@@ -109,6 +119,7 @@ Future<native_http.Response> put(Uri url, {Map<String, String>? headers, Object?
       (currentHeaders) => native_http.put(url, headers: currentHeaders, body: body, encoding: encoding)
           .timeout(const Duration(seconds: 30)),
       headers,
+      url,
     );
   } on SocketException {
     return _offlineResponse();
@@ -125,6 +136,7 @@ Future<native_http.Response> delete(Uri url, {Map<String, String>? headers, Obje
       (currentHeaders) => native_http.delete(url, headers: currentHeaders, body: body, encoding: encoding)
           .timeout(const Duration(seconds: 30)),
       headers,
+      url,
     );
   } on SocketException {
     return _offlineResponse();

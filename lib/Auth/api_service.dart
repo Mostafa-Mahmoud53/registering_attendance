@@ -44,10 +44,8 @@ class ApiService {
       return 'Too many activation attempts. Please wait a moment.';
     }
     if (statusCode == 401) {
-      return 'Unauthorized request. Please try again.';
-    }
-    if (statusCode == 409) {
-      return 'Account already activated.';
+      // احتياطي لو فيه أي Guard بيعمل Block
+      return 'Unauthorized request. Please try again.'; 
     }
     if (statusCode >= 500 && statusCode <= 599) {
       return serverErrorMessage;
@@ -57,13 +55,12 @@ class ApiService {
 
   static String createDoctorTaErrorMessage(int statusCode) {
     if (statusCode == 400) {
+      // الباك إند بيرجع 400 لو الإيميل موجود أو لو الداتا ناقصة
       return 'Email already exists, or invalid input data. Please check and try again.';
     }
     if (statusCode == 401 || statusCode == 403) {
+      // احتياطي لو الـ Token خلص أو ملوش صلاحية يضيف دكتور
       return 'Unauthorized. Your session may have expired.';
-    }
-    if (statusCode == 409) {
-      return 'Email already exists.';
     }
     if (statusCode >= 500 && statusCode <= 599) {
       return serverErrorMessage;

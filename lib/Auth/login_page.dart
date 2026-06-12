@@ -125,26 +125,8 @@ class _LoginPageState extends State<LoginPage> {
         }
       } else {
         final loc = AppLocalizations.of(context)!;
-        String errMsg = loc.somethingWentWrong;
         int statusCode = response['statusCode'] as int;
-
-        try {
-          final errorBody = jsonDecode(response['body']);
-          if (errorBody is Map && errorBody.containsKey('message') && errorBody['message'] != null) {
-            errMsg = errorBody['message'].toString();
-          } else if (errorBody is Map && errorBody.containsKey('title') && errorBody['title'] != null) {
-            errMsg = errorBody['title'].toString();
-          } else if (errorBody is String && errorBody.isNotEmpty) {
-            errMsg = errorBody;
-          }
-        } catch (_) {}
-
-        if (errMsg == loc.somethingWentWrong) {
-          if (statusCode == 400 || statusCode == 401) errMsg = loc.loginFailed;
-          else if (statusCode == 404) errMsg = loc.accountNotFound;
-          else if (statusCode == 429) errMsg = loc.tooManyAttempts;
-          else if (statusCode >= 500 && statusCode <= 599) errMsg = loc.serverError;
-        }
+        String errMsg = ApiService.loginErrorMessage(statusCode);
 
         AuthWidgets.showErrorSnackBar(
           context,
