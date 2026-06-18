@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../../../l10n/app_localizations.dart';
 import 'dart:io';
@@ -95,18 +95,147 @@ class _LectureReportPageState extends State<LectureReportPage> {
 
     try {
       final workbook = excel.Excel.createExcel();
-      final sheet = workbook['Lecture Report'];
+      final sheetName = 'Lecture Report';
+      final sheet = workbook[sheetName];
 
-      sheet.appendRow([
-        excel.TextCellValue('Student Name'),
-        excel.TextCellValue('Grade'),
-      ]);
-
-      for (final student in _students) {
-        final name = student['studentName']?.toString() ?? 'Unknown';
-        sheet.appendRow([excel.TextCellValue(name), excel.TextCellValue('')]);
+      // Remove the default "Sheet1" so the file opens on the report sheet
+      if (workbook.sheets.containsKey('Sheet1')) {
+        workbook.delete('Sheet1');
       }
 
+      // ── Define styles ──────────────────────────────────────────────
+      final headerStyle = excel.CellStyle(
+        bold: true,
+        fontSize: 13,
+        fontFamily: 'Calibri',
+        fontColorHex: excel.ExcelColor.fromHexString('#FFFFFF'),
+        backgroundColorHex: excel.ExcelColor.fromHexString('#2A9D8F'),
+        horizontalAlign: excel.HorizontalAlign.Center,
+        verticalAlign: excel.VerticalAlign.Center,
+        textWrapping: excel.TextWrapping.WrapText,
+        topBorder: excel.Border(borderStyle: excel.BorderStyle.Thin, borderColorHex: excel.ExcelColor.fromHexString('#1A6B61')),
+        bottomBorder: excel.Border(borderStyle: excel.BorderStyle.Thin, borderColorHex: excel.ExcelColor.fromHexString('#1A6B61')),
+        leftBorder: excel.Border(borderStyle: excel.BorderStyle.Thin, borderColorHex: excel.ExcelColor.fromHexString('#1A6B61')),
+        rightBorder: excel.Border(borderStyle: excel.BorderStyle.Thin, borderColorHex: excel.ExcelColor.fromHexString('#1A6B61')),
+      );
+
+      final dataBorder = excel.Border(borderStyle: excel.BorderStyle.Thin, borderColorHex: excel.ExcelColor.fromHexString('#D0D0D0'));
+
+      final dataStyleEven = excel.CellStyle(
+        fontSize: 11,
+        fontFamily: 'Calibri',
+        horizontalAlign: excel.HorizontalAlign.Center,
+        verticalAlign: excel.VerticalAlign.Center,
+        backgroundColorHex: excel.ExcelColor.fromHexString('#FFFFFF'),
+        topBorder: dataBorder,
+        bottomBorder: dataBorder,
+        leftBorder: dataBorder,
+        rightBorder: dataBorder,
+      );
+
+      final dataStyleOdd = excel.CellStyle(
+        fontSize: 11,
+        fontFamily: 'Calibri',
+        horizontalAlign: excel.HorizontalAlign.Center,
+        verticalAlign: excel.VerticalAlign.Center,
+        backgroundColorHex: excel.ExcelColor.fromHexString('#F0FAF8'),
+        topBorder: dataBorder,
+        bottomBorder: dataBorder,
+        leftBorder: dataBorder,
+        rightBorder: dataBorder,
+      );
+
+      final nameStyleEven = excel.CellStyle(
+        fontSize: 11,
+        fontFamily: 'Calibri',
+        horizontalAlign: excel.HorizontalAlign.Left,
+        verticalAlign: excel.VerticalAlign.Center,
+        backgroundColorHex: excel.ExcelColor.fromHexString('#FFFFFF'),
+        topBorder: dataBorder,
+        bottomBorder: dataBorder,
+        leftBorder: dataBorder,
+        rightBorder: dataBorder,
+      );
+
+      final nameStyleOdd = excel.CellStyle(
+        fontSize: 11,
+        fontFamily: 'Calibri',
+        horizontalAlign: excel.HorizontalAlign.Left,
+        verticalAlign: excel.VerticalAlign.Center,
+        backgroundColorHex: excel.ExcelColor.fromHexString('#F0FAF8'),
+        topBorder: dataBorder,
+        bottomBorder: dataBorder,
+        leftBorder: dataBorder,
+        rightBorder: dataBorder,
+      );
+
+      // ── Set column widths ──────────────────────────────────────────
+      sheet.setColumnWidth(0, 8);   // #
+      sheet.setColumnWidth(1, 35);  // Student Name
+      sheet.setColumnWidth(2, 18);  // University Code
+      sheet.setColumnWidth(3, 16);  // Lectures Attended
+      sheet.setColumnWidth(4, 16);  // Absences
+      final bool hasMarks = _marksAssigned != null;
+      if (hasMarks) {
+        sheet.setColumnWidth(5, 16); // Earned Marks
+      }
+
+      // ── Header row ─────────────────────────────────────────────────
+      final headers = [
+        excel.TextCellValue('#'),
+        excel.TextCellValue('Student Name'),
+        excel.TextCellValue('University Code'),
+        excel.TextCellValue('Lectures Attended'),
+        excel.TextCellValue('Absences'),
+        if (hasMarks) excel.TextCellValue('Earned Marks'),
+      ];
+      sheet.appendRow(headers);
+
+      // Apply header style
+      for (int c = 0; c < headers.length; c++) {
+        sheet.cell(excel.CellIndex.indexByColumnRow(columnIndex: c, rowIndex: 0)).cellStyle = headerStyle;
+      }
+
+      // ── Data rows ──────────────────────────────────────────────────
+      for (int i = 0; i < _students.length; i++) {
+        final student = _students[i];
+        final name = student['studentName']?.toString() ?? 'Unknown';
+        final code = student['universityCode']?.toString() ?? '—';
+        final attended = student['lectureAttended'] ?? 0;
+        final backendAbsent = student['absenceInLectures'] ?? 0;
+        final absent = _totalLectures > 0 ? (_totalLectures - (attended as int)) : backendAbsent;
+        final double? marks = student['earnedMarks'] != null
+            ? (student['earnedMarks'] as num).toDouble()
+            : null;
+
+        final row = <excel.CellValue>[
+          excel.IntCellValue(i + 1),
+          excel.TextCellValue(name),
+          excel.TextCellValue(code),
+          excel.IntCellValue(attended is int ? attended : int.tryParse(attended.toString()) ?? 0),
+          excel.IntCellValue(absent is int ? absent : int.tryParse(absent.toString()) ?? 0),
+          if (hasMarks)
+            marks != null
+                ? excel.DoubleCellValue(marks)
+                : excel.TextCellValue('—'),
+        ];
+        sheet.appendRow(row);
+
+        // Apply alternating row styles
+        final isOdd = i % 2 == 1;
+        final rowIndex = i + 1; // +1 because row 0 is header
+        for (int c = 0; c < row.length; c++) {
+          final cell = sheet.cell(excel.CellIndex.indexByColumnRow(columnIndex: c, rowIndex: rowIndex));
+          if (c == 1) {
+            // Name column: left-aligned
+            cell.cellStyle = isOdd ? nameStyleOdd : nameStyleEven;
+          } else {
+            cell.cellStyle = isOdd ? dataStyleOdd : dataStyleEven;
+          }
+        }
+      }
+
+      // ── Save and share ─────────────────────────────────────────────
       final directory = await getTemporaryDirectory();
       final fileName = 'lecture_report_${widget.courseId}.xlsx';
       final filePath = '${directory.path}${Platform.pathSeparator}$fileName';

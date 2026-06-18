@@ -1,6 +1,10 @@
-﻿import 'dart:convert';
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:excel/excel.dart' as excel;
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../../core/network/api_service.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../l10n/app_localizations.dart';
@@ -18,6 +22,7 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
   String _errorMessage = '';
   List<dynamic> _warnings = [];
   int _totalLectures = 0;
+  bool _isExporting = false;
 
   @override
   void initState() {
@@ -76,6 +81,152 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
     }
   }
 
+  Future<void> _exportToExcel() async {
+    if (_warnings.isEmpty || _isExporting) return;
+    setState(() => _isExporting = true);
+
+    try {
+      final workbook = excel.Excel.createExcel();
+      final sheetName = 'Absence Warnings';
+      final sheet = workbook[sheetName];
+
+      if (workbook.sheets.containsKey('Sheet1')) {
+        workbook.delete('Sheet1');
+      }
+
+      final headerStyle = excel.CellStyle(
+        bold: true,
+        fontSize: 13,
+        fontFamily: 'Calibri',
+        fontColorHex: excel.ExcelColor.fromHexString('#FFFFFF'),
+        backgroundColorHex: excel.ExcelColor.fromHexString('#E76F51'), // AppColors.errorColor
+        horizontalAlign: excel.HorizontalAlign.Center,
+        verticalAlign: excel.VerticalAlign.Center,
+        textWrapping: excel.TextWrapping.WrapText,
+        topBorder: excel.Border(borderStyle: excel.BorderStyle.Thin, borderColorHex: excel.ExcelColor.fromHexString('#C85A3D')),
+        bottomBorder: excel.Border(borderStyle: excel.BorderStyle.Thin, borderColorHex: excel.ExcelColor.fromHexString('#C85A3D')),
+        leftBorder: excel.Border(borderStyle: excel.BorderStyle.Thin, borderColorHex: excel.ExcelColor.fromHexString('#C85A3D')),
+        rightBorder: excel.Border(borderStyle: excel.BorderStyle.Thin, borderColorHex: excel.ExcelColor.fromHexString('#C85A3D')),
+      );
+
+      final dataBorder = excel.Border(borderStyle: excel.BorderStyle.Thin, borderColorHex: excel.ExcelColor.fromHexString('#D0D0D0'));
+
+      final dataStyleEven = excel.CellStyle(
+        fontSize: 11,
+        fontFamily: 'Calibri',
+        horizontalAlign: excel.HorizontalAlign.Center,
+        verticalAlign: excel.VerticalAlign.Center,
+        backgroundColorHex: excel.ExcelColor.fromHexString('#FFFFFF'),
+        topBorder: dataBorder,
+        bottomBorder: dataBorder,
+        leftBorder: dataBorder,
+        rightBorder: dataBorder,
+      );
+
+      final dataStyleOdd = excel.CellStyle(
+        fontSize: 11,
+        fontFamily: 'Calibri',
+        horizontalAlign: excel.HorizontalAlign.Center,
+        verticalAlign: excel.VerticalAlign.Center,
+        backgroundColorHex: excel.ExcelColor.fromHexString('#FDEDEA'), // Light error color
+        topBorder: dataBorder,
+        bottomBorder: dataBorder,
+        leftBorder: dataBorder,
+        rightBorder: dataBorder,
+      );
+
+      final nameStyleEven = excel.CellStyle(
+        fontSize: 11,
+        fontFamily: 'Calibri',
+        horizontalAlign: excel.HorizontalAlign.Left,
+        verticalAlign: excel.VerticalAlign.Center,
+        backgroundColorHex: excel.ExcelColor.fromHexString('#FFFFFF'),
+        topBorder: dataBorder,
+        bottomBorder: dataBorder,
+        leftBorder: dataBorder,
+        rightBorder: dataBorder,
+      );
+
+      final nameStyleOdd = excel.CellStyle(
+        fontSize: 11,
+        fontFamily: 'Calibri',
+        horizontalAlign: excel.HorizontalAlign.Left,
+        verticalAlign: excel.VerticalAlign.Center,
+        backgroundColorHex: excel.ExcelColor.fromHexString('#FDEDEA'),
+        topBorder: dataBorder,
+        bottomBorder: dataBorder,
+        leftBorder: dataBorder,
+        rightBorder: dataBorder,
+      );
+
+      sheet.setColumnWidth(0, 8);   // #
+      sheet.setColumnWidth(1, 35);  // Student Name
+      sheet.setColumnWidth(2, 18);  // University Code
+      sheet.setColumnWidth(3, 16);  // Absences
+
+      final headers = [
+        excel.TextCellValue('#'),
+        excel.TextCellValue('Student Name'),
+        excel.TextCellValue('University Code'),
+        excel.TextCellValue('Absences'),
+      ];
+      sheet.appendRow(headers);
+
+      for (int c = 0; c < headers.length; c++) {
+        sheet.cell(excel.CellIndex.indexByColumnRow(columnIndex: c, rowIndex: 0)).cellStyle = headerStyle;
+      }
+
+      for (int i = 0; i < _warnings.length; i++) {
+        final student = _warnings[i];
+        final name = student['studentName']?.toString() ?? 'Unknown';
+        final code = student['universityCode']?.toString() ?? '—';
+        final int attended = student['lectureAttended'] ?? student['attended'] ?? 0;
+        final int backendAbsent = student['absenceInLectures'] ?? student['absent'] ?? 0;
+        final int absent = _totalLectures > 0 ? (_totalLectures - attended) : backendAbsent;
+
+        final row = <excel.CellValue>[
+          excel.IntCellValue(i + 1),
+          excel.TextCellValue(name),
+          excel.TextCellValue(code),
+          excel.IntCellValue(absent),
+        ];
+        sheet.appendRow(row);
+
+        final isOdd = i % 2 == 1;
+        final rowIndex = i + 1; 
+        for (int c = 0; c < row.length; c++) {
+          final cell = sheet.cell(excel.CellIndex.indexByColumnRow(columnIndex: c, rowIndex: rowIndex));
+          if (c == 1) {
+            cell.cellStyle = isOdd ? nameStyleOdd : nameStyleEven;
+          } else {
+            cell.cellStyle = isOdd ? dataStyleOdd : dataStyleEven;
+          }
+        }
+      }
+
+      final directory = await getTemporaryDirectory();
+      final fileName = 'absence_warnings_${widget.courseId}.xlsx';
+      final filePath = '${directory.path}${Platform.pathSeparator}$fileName';
+      final file = File(filePath);
+      final bytes = workbook.encode();
+      if (bytes == null) throw Exception('Failed to generate Excel file.');
+      await file.writeAsBytes(bytes, flush: true);
+
+      await Share.shareXFiles([XFile(filePath)], text: 'Absence Warnings export');
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Export failed: $e'),
+            backgroundColor: AppColors.errorColor,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isExporting = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
@@ -86,7 +237,23 @@ class _AbsenceWarningsPageState extends State<AbsenceWarningsPage> {
         backgroundColor: AppColors.errorColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _fetch)],
+        actions: [
+          IconButton(icon: const Icon(Icons.refresh), onPressed: _fetch),
+          IconButton(
+            icon: _isExporting
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : const Icon(Icons.file_download),
+            onPressed: _isExporting || _warnings.isEmpty ? null : _exportToExcel,
+            tooltip: 'Export to Excel',
+          ),
+        ],
       ),
       body: Center(
         child: ConstrainedBox(
